@@ -37,6 +37,12 @@ export default function Navbar(props) {
               >
                 Статистика
               </Link>
+              <Link
+                to="/register/"
+                className="text-blueGray-700 text-sm font-bold leading-relaxed inline-block mr-8  whitespace-nowrap uppercase"
+              >
+                Login
+              </Link>
             </div>
           </div>
         </div>

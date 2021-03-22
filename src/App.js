@@ -4,8 +4,9 @@ import TextBookPage from "./components/pages/TextBookPage/TextBookPage";
 import GamesPage from "./components/pages/GamesPage/GamesPage";
 import SettingsPage from "./components/pages/SettingsPage/SettingsPage";
 import StatisticsPage from "./components/pages/StatisticsPage/StatisticsPage";
-import IndexNavbar from './components/Navbar/IndexNavbar';
-import Footer from './components/Footer/Footer';
+import IndexNavbar from "./components/Navbar/IndexNavbar";
+import Footer from "./components/Footer/Footer";
+import SignUp from "./components/SignUp/SignUp";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route exact path="/games/" component={GamesPage} />
         <Route exact path="/Settings/" component={SettingsPage} />
         <Route exact path="/statistics/" component={StatisticsPage} />
+        <Route exact path="/register/" component={SignUp} />
         <Redirect from="*" to="/" />
       </Switch>
 

@@ -1,10 +1,15 @@
-import { combineReducers, createStore } from "redux";
-import SignUpReducer from "./SignUpReducer";
+import { combineReducers, createStore, applyMiddleware } from "redux";
+import user from "./auth/user";
+import logger from 'redux-logger'
+import thunk from 'redux-thunk'
 
-let reducers = combineReducers({
-    SignUpReducer : SignUpReducer,
+const reducers = combineReducers({
+    user,
 })
 
-let store = createStore(reducers);
+const middlewares = [thunk,logger]
+export default function configureStore(initialState = {}) {
+    return createStore(reducers,initialState,applyMiddleware(...middlewares))
+}
 
-export default store;
+
