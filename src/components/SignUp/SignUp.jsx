@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from 'react-redux'
 import {createUser} from '../../redux/auth/user'
 
 const SignUp = () => {
+  const [value,setValue] = useState();
 
   const [form, setForm] = useState({
     email: " ",
@@ -23,6 +24,7 @@ const SignUp = () => {
 
   const handleButtonClick = useCallback(()=> {
     dispatch(createUser(form));
+    setValue('')
   },[createUser,form])
 
   return (
@@ -36,12 +38,12 @@ const SignUp = () => {
             </div>
             <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
               <div className="text-blueGray-400 text-center mb-3 font-bold">
-                <small>Sign up</small>
+                <small>Register</small>
               </div>
               <form>
-                <TextInput  onChange={handleFormChange('name')} label='name' placeholder='Name' type='text' className='relative w-full mb-3'/>
-                <TextInput onChange={handleFormChange('email')} label='email' placeholder='Email' type='email' className='relative w-full mb-3'/>
-                <TextInput onChange={handleFormChange('password')} label='password' placeholder='Password' type='password' className='relative w-full mb-3'/>
+                <TextInput value={value} onChange={handleFormChange('name')} label='name' placeholder='Name' type='text' className='relative w-full mb-3'/>
+                <TextInput value={value} onChange={handleFormChange('email')} label='email' placeholder='Email' type='email' className='relative w-full mb-3'/>
+                <TextInput value={value} onChange={handleFormChange('password')} label='password' placeholder='Password' type='password' className='relative w-full mb-3'/>
                 <div className="text-center mt-6">
                   <button
                     onClick={handleButtonClick}

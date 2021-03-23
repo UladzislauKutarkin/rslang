@@ -7,6 +7,7 @@ import StatisticsPage from "./components/pages/StatisticsPage/StatisticsPage";
 import IndexNavbar from "./components/Navbar/IndexNavbar";
 import Footer from "./components/Footer/Footer";
 import SignUp from "./components/SignUp/SignUp";
+import SignIn from "./components/SignIn/SignIn";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route exact path="/Settings/" component={SettingsPage} />
         <Route exact path="/statistics/" component={StatisticsPage} />
         <Route exact path="/register/" component={SignUp} />
+        <Route exact path="/signin/" component={SignIn} />
         <Redirect from="*" to="/" />
       </Switch>
 

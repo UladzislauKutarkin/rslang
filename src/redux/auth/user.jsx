@@ -45,6 +45,16 @@ export const createUser = (user) => {
   };
 };
 
+export const loginUser = (user) => {
+    return dispatch => {
+      console.log(user);
+      dispatch(fetchUserRequest());
+      axios
+        .post("https://rs-lang-back.herokuapp.com/signin", { ...user })
+        .then(({ data }) => dispatch(fetchUserSucsess(data)))
+        .catch((error) => dispatch(fetchUserFailure(error)));
+    };
+  };
 
 export const fetchUserRequest = () => ({ type: FETCH_USER_REQUEST });
 export const fetchUserSucsess = (data) => ({ type: FETCH_USER_SUCSESS, payload: data });

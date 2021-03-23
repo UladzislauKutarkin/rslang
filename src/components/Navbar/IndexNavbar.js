@@ -41,7 +41,13 @@ export default function Navbar(props) {
                 to="/register/"
                 className="text-blueGray-700 text-sm font-bold leading-relaxed inline-block mr-8  whitespace-nowrap uppercase"
               >
-                Login
+                Register
+              </Link>
+              <Link
+                to="/signin/"
+                className="text-blueGray-700 text-sm font-bold leading-relaxed inline-block mr-8  whitespace-nowrap uppercase"
+              >
+                Sign In
               </Link>
             </div>
           </div>
