@@ -2,10 +2,12 @@ import React, { useCallback, useState } from "react";
 import TextInput from "../TextInput";
 import {useDispatch, useSelector} from 'react-redux'
 import {createUser} from '../../redux/auth/user'
+import { BrowserRouter, Redirect } from "react-router-dom";
 
-const SignUp = () => {
+
+const Register = () => {
   const [value,setValue] = useState();
-
+  const [isData,setIsData] = useState(false);
   const [form, setForm] = useState({
     email: " ",
     name: " ",
@@ -15,7 +17,7 @@ const SignUp = () => {
   const dispatch = useDispatch()
   const error = useSelector((state)=> state.user.error)
   const user = useSelector(({user})=> user.user)
-  console.log(user)
+  
 
 
   const handleFormChange = useCallback((type)=>{ 
@@ -24,10 +26,17 @@ const SignUp = () => {
 
   const handleButtonClick = useCallback(()=> {
     dispatch(createUser(form));
-    setValue('')
+    setTimeout(() => {
+      setValue('');
+      setIsData(true)
+    }, 1000) 
   },[createUser,form])
 
+  if(isData) {
+    return <Redirect to="/signin" />
+    }
   return (
+    <BrowserRouter>
     <div className="container mx-auto px-4 h-full">
       <div className="flex content-center items-center justify-center h-full">
         <div className="w-full lg:w-6/12 px-4">
@@ -60,8 +69,9 @@ const SignUp = () => {
         </div>
       </div>
     </div>
+    </BrowserRouter>
   );
 };
 
-export default SignUp;
-//export default connect(mapStateToProps, mapDispatchToProps)(SignUp);
+export default Register;
+//export default connect(mapStateToProps, mapDispatchToProps)(Register);

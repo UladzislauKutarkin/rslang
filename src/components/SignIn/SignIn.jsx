@@ -2,31 +2,40 @@ import React, { useCallback, useState } from "react";
 import TextInput from "../TextInput";
 import {useDispatch, useSelector} from 'react-redux'
 import {loginUser} from '../../redux/auth/user'
+import { BrowserRouter, Redirect } from "react-router-dom";
 
 const SignIn = () => {
   const [value,setValue] = useState();
-
   const [form, setForm] = useState({
     email: " ",
     password: " ",
   });
-
+  const [isData,setIsData] = useState(false);
   const dispatch = useDispatch()
   const error = useSelector((state)=> state.user.error)
   const user = useSelector(({user})=> user.user)
-  console.log(user.user)
-
 
   const handleFormChange = useCallback((type)=>{ 
-      console.log(user)
     return (value)=> setForm((prevState)=>({...prevState, [type]: value}))
   },[])
 
+
   const handleButtonClick = useCallback(()=> {
-     dispatch(loginUser(form));
+    if(user) { 
+      dispatch(loginUser(form))
+    setTimeout(() => {
+      setValue('');
+      setIsData(true)
+    }, 1000) 
+  }
   },[loginUser,form])
 
+
+  if(isData) {
+  return <Redirect to="/" />
+  }
   return (
+    <BrowserRouter>
     <div className="container mx-auto px-4 h-full">
       <div className="flex content-center items-center justify-center h-full">
         <div className="w-full lg:w-6/12 px-4">
@@ -58,6 +67,7 @@ const SignIn = () => {
         </div>
       </div>
     </div>
+    </BrowserRouter>
   );
 };
 

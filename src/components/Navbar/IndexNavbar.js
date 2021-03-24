@@ -1,8 +1,19 @@
 import { Link } from "react-router-dom";
 import img_logo from "../../assets/img/logo_rslang.png";
-
+import {useDispatch, useSelector} from 'react-redux'
 
 export default function Navbar(props) {
+  const user = useSelector(({user})=> user.user)
+  console.log(user)
+
+  const isName = () => {
+    if(!user.message) {
+      return null
+    }
+    else {
+      return <span>{user.name}</span>
+    }
+  }
   return (
     <>
       <nav className="top-0  z-50 w-full flex flex-wrap items-center justify-between px-2 py-3 navbar-expand-lg bg-white shadow  ">
@@ -49,6 +60,7 @@ export default function Navbar(props) {
               >
                 Sign In
               </Link>
+              {isName()}
             </div>
           </div>
         </div>

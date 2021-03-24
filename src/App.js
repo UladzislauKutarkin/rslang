@@ -6,7 +6,7 @@ import SettingsPage from "./components/pages/SettingsPage/SettingsPage";
 import StatisticsPage from "./components/pages/StatisticsPage/StatisticsPage";
 import IndexNavbar from "./components/Navbar/IndexNavbar";
 import Footer from "./components/Footer/Footer";
-import SignUp from "./components/SignUp/SignUp";
+import SignUp from "./components/Register/Register";
 import SignIn from "./components/SignIn/SignIn";
 
 function App() {

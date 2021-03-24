@@ -21,7 +21,7 @@ const SignUpReducer = (state = initialState, action) => {
       return { ...state, 
         isLoading: false, 
         user: action.payload,
-         error: '' };
+         error: ''};
     case FETCH_USER_FAILURE:
       return { 
         ...state, 
