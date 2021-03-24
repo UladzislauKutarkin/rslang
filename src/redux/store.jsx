@@ -4,6 +4,7 @@ import vocabulary from './vocabulary/vocabulary'
 import logger from 'redux-logger'
 import thunk from 'redux-thunk'
 
+
 const reducers = combineReducers({
     user,
     vocabulary
