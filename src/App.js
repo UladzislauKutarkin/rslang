@@ -1,13 +1,12 @@
-import { Switch, Route, Redirect } from "react-router-dom";
-import HomePage from "./components/pages/HomePage/HomePage";
-import TextBookPage from "./components/pages/TextBookPage/TextBookPage";
-import GamesPage from "./components/pages/GamesPage/GamesPage";
-import SettingsPage from "./components/pages/SettingsPage/SettingsPage";
-import StatisticsPage from "./components/pages/StatisticsPage/StatisticsPage";
-import IndexNavbar from "./components/Navbar/IndexNavbar";
-import Footer from "./components/Footer/Footer";
-import SignUp from "./components/Register/Register";
-import SignIn from "./components/SignIn/SignIn";
+import { Switch, Route, Redirect } from "react-router-dom"
+import HomePage from "./components/pages/HomePage/HomePage"
+import TextBookPage from "./components/pages/TextBookPage/TextBookPage"
+import GamesPage from "./components/pages/GamesPage/GamesPage"
+import SettingsPage from "./components/pages/SettingsPage/SettingsPage"
+import StatisticsPage from "./components/pages/StatisticsPage/StatisticsPage"
+import IndexNavbar from "./components/Navbar/IndexNavbar"
+import SignUp from "./components/Register/Register"
+import SignIn from "./components/SignIn/SignIn"
 
 function App() {
   return (
@@ -25,9 +24,9 @@ function App() {
         <Redirect from="*" to="/" />
       </Switch>
 
-     {/* <Footer />*/}
+      {/* <Footer /> */}
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

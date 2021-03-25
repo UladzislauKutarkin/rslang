@@ -1,6 +1,2 @@
-const GamesPage = () => {
-    return (
-        <div>GamesPage</div>
-    )
-}
-export default GamesPage;
+const GamesPage = () => <div>GamesPage</div>
+export default GamesPage
