@@ -7,8 +7,8 @@ import { BrowserRouter, Redirect } from "react-router-dom";
 const SignIn = () => {
   const [value,setValue] = useState();
   const [form, setForm] = useState({
-    email: " ",
-    password: " ",
+    email: "test@test.com",
+    password: "12345678",
   });
   const [isData,setIsData] = useState(false);
   const dispatch = useDispatch()
@@ -49,8 +49,8 @@ const SignIn = () => {
                 <small>Sign in</small>
               </div>
               <form>
-                <TextInput value={value} onChange={handleFormChange('email')} label='email' placeholder='Email' type='email' className='relative w-full mb-3'/>
-                <TextInput value={value} onChange={handleFormChange('password')} label='password' placeholder='Password' type='password' className='relative w-full mb-3'/>
+                <TextInput value={value || 'test@test.com'} onChange={handleFormChange('email')} label='email'  placeholder='Email' type='email' className='relative w-full mb-3'/>
+                <TextInput value={value || '12345678'} onChange={handleFormChange('password')} label='password'   placeholder='Password' type='password' className='relative w-full mb-3'/>
                 <div className="text-center mt-6">
                   <button
                     onClick={handleButtonClick}

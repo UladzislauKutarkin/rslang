@@ -16,18 +16,18 @@ const HomePage = () => {
           ></div>
           <div className="container relative mx-auto">
             <div className="items-center flex flex-wrap">
-              <div className="w-full lg:w-3/4 px-4 ml-auto mr-auto text-center  bg-opacity-60 bg-white">
+              <div className="w-full lg:w-3/4 px-4 ml-auto mr-auto text-center  bg-opacity-30 bg-white">
                 <div className="pr-12  ">
-                  <h1 className="text-black font-semibold text-5xl ">
+                  {/* <h1 className="text-black font-semibold text-5xl uppercase ">
                     Изучайте Англиский Вместе с Нами
-                  </h1>
-                  <p className="mt-4 text-lg text-blueGray-200">
+                  </h1> */}
+                  {/* <p className="mt-4 text-lg text-blueGray-200">
                     Не будет преувеличением сказать, что английский язык
                     является самым важным языком в мире. Почти половина
                     населения мира говорит на английском. Некоторые самые
                     большие страны в мире являются англоязычными, в том числе
                     США, Канада, Австралия и Великобритания.
-                  </p>
+                  </p> */}
                 </div>
               </div>
             </div>
@@ -72,7 +72,7 @@ const HomePage = () => {
                       Изучение английского языка
                     </h6>
                     <p className="mt-2 mb-4 text-blueGray-500">
-                      KАнглийский язык преподается в большинстве школ по всему
+                      Английский язык преподается в большинстве школ по всему
                       миру, так как он сегодня имеет международное значение. Во
                       многих странах изучения английского, в качестве второго
                       языка, стало просто необходимым. Страна, где он на самом

@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from 'react-redux'
 
 export default function Navbar(props) {
   const user = useSelector(({user})=> user.user)
-  console.log(user)
+  console.log('user ', user)
 
   const isName = () => {
     if(!user.message) {
@@ -49,13 +49,13 @@ export default function Navbar(props) {
                 Статистика
               </Link>
               <Link
-                to="/register/"
+                to="/register"
                 className="text-blueGray-700 text-sm font-bold leading-relaxed inline-block mr-8  whitespace-nowrap uppercase"
               >
                 Register
               </Link>
               <Link
-                to="/signin/"
+                to="/signin"
                 className="text-blueGray-700 text-sm font-bold leading-relaxed inline-block mr-8  whitespace-nowrap uppercase"
               >
                 Sign In
