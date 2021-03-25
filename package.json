@@ -37,12 +37,9 @@
   },
   "husky": {
     "hooks": { 
-      "pre-commit": "lint-staged" 
+      "pre-commit": "yarn lint" 
     }
   },
-  "lint-staged": { 
-    "**/*.js": ["eslint ./src", "git commit"]
-   },
   "browserslist": {
     "production": [
       ">0.2%",
