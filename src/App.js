@@ -13,7 +13,7 @@ import ResponsiveNavbar from "./components/Navbar/ResponsiveNavbar";
 function App() {
   return (
     <div className="App">
-      <IndexNavbar />
+      {/* <IndexNavbar /> */}
       <ResponsiveNavbar />
       <Switch>
         <Route exact path="/" component={HomePage} />

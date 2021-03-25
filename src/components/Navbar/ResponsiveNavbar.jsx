@@ -2,18 +2,28 @@ import { Link } from "react-router-dom";
 import img_logo from "../../assets/img/logo_rslang.png";
 import img_logo_sm from "../../assets/img/logo_rslang_sm.png";
 import { useDispatch, useSelector } from "react-redux";
-import { useState,useEffect } from 'react'
+import { useState,useEffect } from 'react';
+import {logoutUser} from '../../redux/auth/user'
 
 export default function ResponsiveNavbar(props) {
 
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const dispatch = useDispatch();
 
 
   const controlUserMenu = () => {
     setShowUserMenu(!showUserMenu);
   }
 
+ //
+ const handleLogoutUser =()=> {
  
+    dispatch(logoutUser())
+ 
+}
+
+
 
   const user = useSelector(({ user }) => user.user);
   console.log("user ", user);
@@ -102,7 +112,7 @@ export default function ResponsiveNavbar(props) {
                  
                   <Link
                 to="/textbook/"
-                className="text-indigo-900 hover:bg-blue-900 hover:text-white px-3 py-2 rounded-md  font-medium  text-xl "
+                className="text-indigo-900 hover:bg-blue-900 hover:text-white px-3 py-2 rounded-md  font-medium  text-xl"
                 
               >
                 Электронный Учебник
@@ -124,14 +134,12 @@ export default function ResponsiveNavbar(props) {
                 className="text-indigo-900 hover:bg-blue-900 hover:text-white px-3 py-2 rounded-md  font-medium text-xl"
               >
                 Статистика
-              </Link>       
-    
+              </Link>         
                 </div>
               </div>
             </div>
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0  ">
-           
-
+          
               {user.message ? (<div className="ml-3 relative">
                 <div>
                   <button
@@ -162,15 +170,10 @@ export default function ResponsiveNavbar(props) {
                   {isName()}
                  
                 </div>
-              </div>) : (<div> <Link
-                to="/register"
-                className="text-blueGray-700 text-sm font-bold leading-relaxed inline-block mr-8  whitespace-nowrap uppercase"
-              >
-                Register
-              </Link>
+              </div>) : (<div> 
               <Link
                 to="/signin"
-                className="text-blueGray-700 text-sm font-bold leading-relaxed inline-block mr-8  whitespace-nowrap uppercase"
+                  className="text-indigo-900 hover:bg-blue-900 hover:text-white px-3 py-2 rounded-md  font-medium  text-xl"
               >
                 Sign In
               </Link></div>)}

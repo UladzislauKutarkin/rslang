@@ -4,6 +4,10 @@ export const FETCH_USER_REQUEST = "FETCH_USER_REQUEST";
 export const FETCH_USER_SUCSESS = "FETCH_USER_SUCSESS";
 export const FETCH_USER_FAILURE = "FETCH_USER_FAILURE";
 
+//YA
+export const USER_SING_OUT = "USER_SING_OUT";
+
+
 let initialState = {
   user: {},
   isLoading: false,
@@ -29,6 +33,15 @@ const SignUpReducer = (state = initialState, action) => {
         user: {}, 
         error: action.payload 
       };
+//YA
+case USER_SING_OUT:
+  return { 
+    ...state, 
+    isLoading: false, 
+    user: {}, 
+    error: action.payload 
+  };
+
     default:
       return state;
   }
@@ -56,10 +69,21 @@ export const loginUser = (user) => {
     };
   };
 
+//YA action creator
+  export const logoutUser = () => {
+    return  initialState
+    
+  };
+
+
+
 export const fetchUserRequest = () => ({ type: FETCH_USER_REQUEST });
 export const fetchUserSucsess = (data) => ({ type: FETCH_USER_SUCSESS, payload: data });
 export const fetchUserFailure = (error) => ({
   type: FETCH_USER_FAILURE,
   payload: error.message,
 });
+
+
+
 export default SignUpReducer;
