@@ -36,10 +36,9 @@ const SignUpReducer = (state = initialState, action) => {
 //YA
 case USER_SING_OUT:
   return { 
-    ...state, 
-    isLoading: false, 
+    ...state,  
     user: {}, 
-    error: action.payload 
+  
   };
 
     default:
@@ -71,7 +70,8 @@ export const loginUser = (user) => {
 
 //YA action creator
   export const logoutUser = () => {
-    return  initialState
+    return  {type: 'USER_SING_OUT',
+  payload: {}}
     
   };
 
