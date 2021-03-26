@@ -1,41 +1,43 @@
-import React, { useCallback, useState } from "react";
-import TextInput from "../TextInput";
-import {useDispatch, useSelector} from 'react-redux'
-import {loginUser} from '../../redux/auth/user'
-import { BrowserRouter, Link, Redirect } from "react-router-dom";
+import React, { useCallback, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { BrowserRouter,Link, Redirect } from "react-router-dom"
+import TextInput from "../TextInput"
+import { loginUser } from "../../redux/auth/user"
+
+
 
 const SignIn = () => {
-  const [value,setValue] = useState();
   const [form, setForm] = useState({
-    email: "test@test.com",
-    password: "12345678",
-  });
-  const [isData,setIsData] = useState(false);
+    email: "",
+    password: "",
+  })
+  const [isData, setIsData] = useState(false)
+
   const dispatch = useDispatch()
-  const error = useSelector((state)=> state.user.error)
-  const user = useSelector(({user})=> user.user)
+  const error = useSelector((state) => state.user.error)
+  const userData = useSelector(({ user }) => user.user)
 
-  const handleFormChange = useCallback((type)=>{ 
-    return (value)=> setForm((prevState)=>({...prevState, [type]: value}))
-  },[])
+  const handleFormChange = useCallback(
+    (type) => (inputValue) =>
+      setForm((prevState) => ({ ...prevState, [type]: inputValue })),
+    []
+  )
 
-
-  const handleButtonClick = useCallback(()=> {
-    if(user) { 
+  const handleButtonClick = useCallback(() => {
+    if (userData) {
       dispatch(loginUser(form))
-    setTimeout(() => {
-      setValue('');
+      setForm({
+        email: "",
+        password: "",
+      })
       setIsData(true)
-    }, 1000) 
-  }
-  },[loginUser,form])
+    }
+  }, [userData, dispatch, form])
 
-
-  if(isData) {
-  return <Redirect to="/" />
+  if (isData) {
+    return <Redirect to="/" />
   }
   return (
-   
     <div className="container mx-auto px-4 h-full">
       <div className="flex content-center items-center justify-center h-full">
         <div className=" bg-whitew-full lg:w-6/12 px-4 mt-10 ">
@@ -44,11 +46,24 @@ const SignIn = () => {
               <div className="text-center text-indigo-900  text-3xl mb-3"> Sign in</div>
               <hr className="mt-6 border-b-1 border-blueGray-300" />
             </div>
-            <div className="flex-auto px-4 lg:px-10 py-10 pt-0 ">
-              
+            <div className="flex-auto px-4 lg:px-10 py-10 pt-0 ">  
               <form>
-                <TextInput value={value || 'test@test.com'} onChange={handleFormChange('email')} label='email'  placeholder='Email' type='email' className='relative w-full mb-3'/>
-                <TextInput value={value || '12345678'} onChange={handleFormChange('password')} label='password'   placeholder='Password' type='password' className='relative w-full mb-3'/>
+              <TextInput
+                    value={form.email}
+                    onChange={handleFormChange("email")}
+                    label="email"
+                    placeholder="Email"
+                    type="email"
+                    className="relative w-full mb-3"
+                  />
+                  <TextInput
+                    value={form.password}
+                    onChange={handleFormChange("password")}
+                    label="password"
+                    placeholder="Password"
+                    type="password"
+                    className="relative w-full mb-3"
+                  />
                 <div className="text-center mt-6 ">
                   <button
                     onClick={handleButtonClick}

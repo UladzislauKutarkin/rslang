@@ -1,8 +1,2 @@
-const SettingsPage = () => {
-    return (
-        <>
-        SettingsPage
-        </>
-    )
-}
-export default SettingsPage;
+const SettingsPage = () => <>SettingsPage</>
+export default SettingsPage
