@@ -2,8 +2,8 @@ import React, { useCallback, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import cn from "classnames"
 import PureModal from "react-pure-modal"
-import Button from "../../Button"
 import "react-pure-modal/dist/react-pure-modal.min.css"
+import { Link } from "react-router-dom"
 import settings from "../../../assets/img/settings.svg"
 import ChangeTranslate from "./ChangeTranslate"
 import { changeGroup, changePage } from "../../../redux/pagination/pagination"
@@ -44,23 +44,26 @@ const Settings = () => {
       <div>
         <div className="flex justify-between h-10">
           <div className="flex justify-between w-2/5">
-            <Button
-              className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-yellow-600 rounded shadow ripple hover:shadow-lg hover:bg-yellow-700 focus:outline-none"
-              name="Саванна"
-            />
-            <Button
-              className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-yellow-600 rounded shadow ripple hover:shadow-lg hover:bg-yellow-700 focus:outline-none"
-              name="Аудиовызов"
-            />
-            <Button
-              className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-yellow-600 rounded shadow ripple hover:shadow-lg hover:bg-yellow-700 focus:outline-none"
-              name="Спринт"
-            />
-            <Button
-              className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-yellow-600 rounded shadow ripple hover:shadow-lg hover:bg-yellow-700 focus:outline-none"
-              name="Своя игра"
-            />
+            {["Cаванна", "Аудиовызов", "Спринт", "Своя игра"].map((index) => (
+              <button
+                // eslint-disable-next-line react/no-array-index-key
+                key={index}
+                type="button"
+                className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-yellow-600 rounded shadow ripple hover:shadow-lg hover:bg-yellow-700 focus:outline-none"
+              >
+                {index}
+              </button>
+            ))}
           </div>
+          <Link to="/wordbook/">
+            <button
+              // eslint-disable-next-line react/no-array-index-key
+              type="button"
+              className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-yellow-900 rounded shadow ripple hover:shadow-lg hover:bg-yellow-700 focus:outline-none"
+            >
+              Cловарь
+            </button>
+          </Link>
           <div onClick={() => setModal(true)}>
             <img
               className="w-8 h-8 cursor-pointer"
