@@ -8,12 +8,13 @@ import IndexNavbar from "./components/Navbar/IndexNavbar";
 import Footer from "./components/Footer/Footer";
 import SignUp from "./components/Register/Register";
 import SignIn from "./components/SignIn/SignIn";
+import ResponsiveNavbar from "./components/Navbar/ResponsiveNavbar";
 
 function App() {
   return (
     <div className="App">
-      <IndexNavbar />
-
+      {/* <IndexNavbar /> */}
+      <ResponsiveNavbar />
       <Switch>
         <Route exact path="/" component={HomePage} />
         <Route exact path="/textbook/" component={TextBookPage} />
@@ -25,7 +26,7 @@ function App() {
         <Redirect from="*" to="/" />
       </Switch>
 
-     {/* <Footer />*/}
+      {/* <Footer />*/}
     </div>
   );
 }
