@@ -5,10 +5,9 @@ import TextInput from "../TextInput"
 import { loginUser } from "../../redux/auth/user"
 
 const SignIn = () => {
-  const [value, setValue] = useState()
   const [form, setForm] = useState({
-    email: " ",
-    password: " ",
+    email: "",
+    password: "",
   })
   const [isData, setIsData] = useState(false)
   const dispatch = useDispatch()
@@ -24,10 +23,11 @@ const SignIn = () => {
   const handleButtonClick = useCallback(() => {
     if (userData) {
       dispatch(loginUser(form))
-      setTimeout(() => {
-        setValue("")
-        setIsData(true)
-      }, 1000)
+      setForm({
+        email: "",
+        password: "",
+      })
+      setIsData(true)
     }
   }, [userData, dispatch, form])
 
@@ -50,7 +50,7 @@ const SignIn = () => {
                 </div>
                 <form>
                   <TextInput
-                    value={value}
+                    value={form.email}
                     onChange={handleFormChange("email")}
                     label="email"
                     placeholder="Email"
@@ -58,7 +58,7 @@ const SignIn = () => {
                     className="relative w-full mb-3"
                   />
                   <TextInput
-                    value={value}
+                    value={form.password}
                     onChange={handleFormChange("password")}
                     label="password"
                     placeholder="Password"

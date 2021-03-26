@@ -5,29 +5,30 @@ import TextInput from "../TextInput"
 import { createUser } from "../../redux/auth/user"
 
 const Register = () => {
-  const [value, setValue] = useState()
   const [isData, setIsData] = useState(false)
   const [form, setForm] = useState({
-    email: " ",
-    name: " ",
-    password: " ",
+    email: "",
+    name: "",
+    password: "",
   })
 
   const dispatch = useDispatch()
   const error = useSelector((state) => state.user.error)
-
   const handleFormChange = useCallback(
-    (type) => (inputValue) =>
-      setForm((prevState) => ({ ...prevState, [type]: inputValue })),
+    (type) => (inputValue) => {
+      setForm((prevState) => ({ ...prevState, [type]: inputValue }))
+    },
     []
   )
 
   const handleButtonClick = useCallback(() => {
     dispatch(createUser(form))
-    setTimeout(() => {
-      setValue("")
-      setIsData(true)
-    }, 1000)
+    setIsData(true)
+    setForm({
+      email: "",
+      name: "",
+      password: "",
+    })
   }, [dispatch, form])
 
   if (isData) {
@@ -49,7 +50,7 @@ const Register = () => {
                 </div>
                 <form>
                   <TextInput
-                    value={value}
+                    value={form.name}
                     onChange={handleFormChange("name")}
                     label="name"
                     placeholder="Name"
@@ -57,7 +58,7 @@ const Register = () => {
                     className="relative w-full mb-3"
                   />
                   <TextInput
-                    value={value}
+                    value={form.email}
                     onChange={handleFormChange("email")}
                     label="email"
                     placeholder="Email"
@@ -65,7 +66,7 @@ const Register = () => {
                     className="relative w-full mb-3"
                   />
                   <TextInput
-                    value={value}
+                    value={form.password}
                     onChange={handleFormChange("password")}
                     label="password"
                     placeholder="Password"

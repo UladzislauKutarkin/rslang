@@ -1,14 +1,25 @@
-import React, { useState } from "react"
-import PropTypes from "prop-types"
+import React, { useCallback, useState } from "react"
+import { useDispatch } from "react-redux"
+import cn from "classnames"
 import PureModal from "react-pure-modal"
 import Button from "../../Button"
 import "react-pure-modal/dist/react-pure-modal.min.css"
 import settings from "../../../assets/img/settings.svg"
 import ChangeTranslate from "./ChangeTranslate"
+import { changeGroup } from "../../../redux/pagination/pagination"
+import ChangeButtons from "./ChangeButtons"
 
-const Settings = ({ handleGroupClick, group }) => {
+const Settings = () => {
+  const dispatch = useDispatch()
   const [modal, setModal] = useState(false)
-
+  const [selectedIndex, setSelectedIndex] = useState(0)
+  const handleChangeGroup = useCallback(
+    (group) => () => {
+      dispatch(changeGroup(group))
+      setSelectedIndex(group)
+    },
+    [dispatch]
+  )
   return (
     <>
       <PureModal
@@ -26,10 +37,10 @@ const Settings = ({ handleGroupClick, group }) => {
         <div>Отображать перевод:</div>
         <ChangeTranslate />
         <div>Отображать кнопки:</div>
-        {/* <ChangeTranslate/> */}
+        <ChangeButtons />
       </PureModal>
 
-      <div className>
+      <div>
         <div className="flex justify-between h-10">
           <div className="flex justify-between w-2/5">
             <Button
@@ -58,46 +69,31 @@ const Settings = ({ handleGroupClick, group }) => {
           </div>
         </div>
         <div className="flex justify-center">
-          <div
-            onClick={handleGroupClick}
-            className="w-3/4 flex justify-between mt-8"
-          >
-            <Button
-              data="1"
-              group={group}
-              className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-purple-500 rounded shadow ripple hover:shadow-lg hover:bg-purple-600 focus:outline-none"
-              name="Группа 1"
-            />
-            <Button
-              data="2"
-              group={group}
-              className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-purple-500 rounded shadow ripple hover:shadow-lg hover:bg-purple-600 focus:outline-none"
-              name="Группа 2"
-            />
-            <Button
-              data="3"
-              group={group}
-              className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-purple-500 rounded shadow ripple hover:shadow-lg hover:bg-purple-600 focus:outline-none"
-              name="Группа 3"
-            />
-            <Button
-              data="4"
-              group={group}
-              className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-purple-500 rounded shadow ripple hover:shadow-lg hover:bg-purple-600 focus:outline-none"
-              name="Группа 4"
-            />
-            <Button
-              data="5"
-              group={group}
-              className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-purple-500 rounded shadow ripple hover:shadow-lg hover:bg-purple-600 focus:outline-none"
-              name="Группа 5"
-            />
-            <Button
-              data="6"
-              group={group}
-              className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-purple-500 rounded shadow ripple hover:shadow-lg hover:bg-purple-600 focus:outline-none"
-              name="Группа 6"
-            />
+          <div className="w-3/4 flex justify-between mt-8">
+            {[
+              "Группа 1",
+              "Группа 2",
+              "Группа 3",
+              "Группа 4",
+              "Группа 5",
+              "Группа 6",
+            ].map((item, index) => (
+              <button
+                // eslint-disable-next-line react/no-array-index-key
+                key={index}
+                type="button"
+                onClick={handleChangeGroup(index)}
+                className={cn(
+                  "inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-purple-500 rounded shadow ripple hover:shadow-lg hover:bg-purple-600 focus:outline-none",
+                  {
+                    "inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white border-2 border-green-800 uppercase transition bg-green-800 rounded shadow ripple hover:shadow-lg hover:bg-green-900 focus:outline-none":
+                      index === selectedIndex,
+                  }
+                )}
+              >
+                {item}
+              </button>
+            ))}
           </div>
         </div>
       </div>
@@ -106,12 +102,3 @@ const Settings = ({ handleGroupClick, group }) => {
 }
 
 export default Settings
-
-Settings.propTypes = {
-  group: PropTypes.number,
-  handleGroupClick: PropTypes.func.isRequired,
-}
-
-Settings.defaultProps = {
-  group: 0,
-}

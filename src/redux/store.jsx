@@ -4,11 +4,13 @@ import thunk from "redux-thunk"
 import user from "./auth/user"
 import vocabulary from "./vocabulary/vocabulary"
 import settings from "./settings/settings"
+import pagination from "./pagination/pagination"
 
 const reducers = combineReducers({
   user,
   vocabulary,
   settings,
+  pagination,
 })
 
 const middlewares = [thunk, logger]

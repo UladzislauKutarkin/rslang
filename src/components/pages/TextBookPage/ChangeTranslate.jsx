@@ -4,11 +4,8 @@ import { changeSettingsTranslate } from "../../../redux/settings/settings"
 
 const ChangeTranslate = () => {
   const tranlated = useSelector(({ settings }) => settings.translate)
-
   const [translate, setTranslate] = useState(tranlated)
-
   const dispatch = useDispatch()
-
   const handleSwitchTranslate = useCallback(
     (e) => {
       dispatch(changeSettingsTranslate(e.target.checked))
@@ -26,7 +23,7 @@ const ChangeTranslate = () => {
           type="checkbox"
           name="toggle"
           id="toggle"
-          className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+          className="toggle-checkbox outline-none absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
         />
         <label
           htmlFor="toggle"
@@ -34,7 +31,7 @@ const ChangeTranslate = () => {
         />
       </div>
       <label htmlFor="toggle" className="text-xs text-gray-700">
-        Toggle me.
+        Нажми меня
       </label>
     </>
   )

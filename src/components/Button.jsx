@@ -21,11 +21,12 @@ Button.propTypes = {
   name: PropTypes.string,
   data: PropTypes.string,
   className: PropTypes.string,
-  group: PropTypes.number.isRequired,
+  group: PropTypes.number,
 }
 
 Button.defaultProps = {
   name: "",
   className: "",
   data: "",
+  group: 0,
 }

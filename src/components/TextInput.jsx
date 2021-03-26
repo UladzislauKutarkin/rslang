@@ -11,6 +11,7 @@ const TextInput = ({
 }) => {
   const handleInputChange = useCallback(
     (e) => {
+      console.log("2")
       onChange(e.target.value)
     },
     [onChange]

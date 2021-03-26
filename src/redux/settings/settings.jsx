@@ -22,6 +22,8 @@ export const changeSettingsTranslate = (mode) => ({
   payload: mode,
 })
 
-export const changeSettingsButtons = () => ({ type: CHANGE_SETTINGS_BUTTONS })
-
+export const changeSettingsButtons = (mode) => ({
+  type: CHANGE_SETTINGS_BUTTONS,
+  payload: mode,
+})
 export default SettingsReducer

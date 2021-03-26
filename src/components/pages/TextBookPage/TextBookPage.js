@@ -10,7 +10,7 @@ const TextBookPage = () => {
   const [page, setPage] = useState(0)
   const dispatch = useDispatch()
   const vocabularyData = useSelector(({ vocabulary }) => vocabulary.vocabulary)
-  const [group, setGroup] = useState(0)
+  const group = useSelector(({ pagination }) => pagination.group)
 
   const getPages = () => {
     if (localStorage.getItem("page") === "") {
@@ -30,14 +30,14 @@ const TextBookPage = () => {
     localStorage.setItem("page", page)
   }
 
-  const handleGroupClick = (e) => {
-    setGroup(+e.target.dataset.page - 1)
-    localStorage.setItem("group", group)
-  }
+  // const handleGroupClick = (e) => {
+  //   setGroup(+e.target.dataset.page - 1)
+  //   localStorage.setItem("group", group)
+  // }
 
   const CustomComponent = (item) => (
     // eslint-disable-next-line react/no-danger
-    <div dangerouslySetInnerHTML={{ __html: item }} />
+    <span dangerouslySetInnerHTML={{ __html: item }} />
   )
 
   const ScrollToTopOnMount = () => {
@@ -53,10 +53,13 @@ const TextBookPage = () => {
   return (
     <div className="flex-auto flex-wrap justify-center m-5">
       <ScrollToTopOnMount />
-      <Settings group={group} handleGroupClick={handleGroupClick} />
+      <Settings group={group} />
       <div className="container mx-auto mt-20 auto-rows-fr auto-cols-max grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
         {vocabularyData.map((item) => (
-          <div className="flex-auto  self-stretch items-stretch justify-center">
+          <div
+            key={item.id}
+            className="flex-auto  self-stretch items-stretch justify-center"
+          >
             <div>
               <div className="rounded-lg overflow-hidden">
                 <div className="relative overflow-hidden pb-60">
