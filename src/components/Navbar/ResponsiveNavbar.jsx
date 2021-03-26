@@ -1,49 +1,48 @@
-import { Link } from "react-router-dom";
-import img_logo from "../../assets/img/logo_rslang.png";
-import img_logo_sm from "../../assets/img/logo_rslang_sm.png";
-import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
-import { logoutUser } from "../../redux/auth/user";
+import { Link } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux"
+import { useState } from "react"
+import imgLogo from "../../assets/img/logo_rslang.png"
+import imgLogoSm from "../../assets/img/logo_rslang_sm.png"
+import { logoutUser } from "../../redux/auth/user"
 
-export default function ResponsiveNavbar(props) {
-  const [showUserMenu, setShowUserMenu] = useState(false);
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const dispatch = useDispatch();
+export default function ResponsiveNavbar() {
+  const [showUserMenu, setShowUserMenu] = useState(false)
+  const [showMobileMenu, setShowMobileMenu] = useState(false)
+  const dispatch = useDispatch()
 
   const controlUserMenu = () => {
-    setShowUserMenu(!showUserMenu);
-  };
+    setShowUserMenu(!showUserMenu)
+  }
 
   const controlMobileMenu = () => {
-    setShowMobileMenu(!showMobileMenu);
-  };
+    setShowMobileMenu(!showMobileMenu)
+  }
 
   const handleLogoutUser = () => {
-    dispatch(logoutUser());
-  };
+    dispatch(logoutUser())
+  }
 
-  const user = useSelector(({ user }) => user.user);
+  const userCurrent = useSelector(({ user }) => user.user)
 
   const isName = () => {
-    if (!user.message) {
-      return null;
-    } else {
-      return (
-        <div className="  divide-y-2 divide-gey-600 divide-solid">
-          {" "}
-          <div className=" w-full px-4 py-2 text-gray-700 hover:bg-gray-100">
-            {user.name}
-          </div>
-          <button
-            onClick={handleLogoutUser}
-            className=" w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-          >
-            Sign out
-          </button>
-        </div>
-      );
+    if (!userCurrent.message) {
+      return null
     }
-  };
+    return (
+      <div className="  divide-y-2 divide-gey-600 divide-solid">
+        <div className=" w-full px-4 py-2 text-gray-700 hover:bg-gray-100">
+          {userCurrent.name}
+        </div>
+        <button
+          type="button"
+          onClick={handleLogoutUser}
+          className=" w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+        >
+          Sign out
+        </button>
+      </div>
+    )
+  }
 
   return (
     <>
@@ -68,9 +67,9 @@ export default function ResponsiveNavbar(props) {
                   aria-hidden="true"
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
                     d="M4 6h16M4 12h16M4 18h16"
                   />
                 </svg>
@@ -84,9 +83,9 @@ export default function ResponsiveNavbar(props) {
                   aria-hidden="true"
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
                     d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
@@ -97,19 +96,18 @@ export default function ResponsiveNavbar(props) {
                 <Link to="/">
                   <img
                     className="block lg:hidden h-14 w-auto"
-                    src={img_logo_sm}
-                    alt="img_logo"
+                    src={imgLogoSm}
+                    alt="imgLogoSm"
                   />
                 </Link>
                 <Link to="/">
                   <img
                     className="hidden lg:block h-8 w-auto"
-                    src={img_logo}
-                    alt="img_logo"
+                    src={imgLogo}
+                    alt="imgLogo"
                   />
                 </Link>
               </div>
-
               <div className="hidden sm:block sm:ml-6">
                 <div className="flex space-x-4">
                   <Link
@@ -125,12 +123,6 @@ export default function ResponsiveNavbar(props) {
                     Мини-игры
                   </Link>
                   <Link
-                    to="/settings/"
-                    className="text-indigo-900 hover:bg-blue-900 hover:text-white px-3 py-2 rounded-md  font-medium text-xl"
-                  >
-                    Настройки
-                  </Link>
-                  <Link
                     to="/statistics/"
                     className="text-indigo-900 hover:bg-blue-900 hover:text-white px-3 py-2 rounded-md  font-medium text-xl"
                   >
@@ -140,7 +132,7 @@ export default function ResponsiveNavbar(props) {
               </div>
             </div>
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0  ">
-              {user.message ? (
+              {userCurrent.message ? (
                 <div className="ml-3 relative">
                   <div>
                     <button
@@ -195,12 +187,6 @@ export default function ResponsiveNavbar(props) {
                 Мини-игры
               </Link>
               <Link
-                to="/settings/"
-                className="text-indigo-900 hover:bg-blue-900 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-              >
-                Настройки
-              </Link>
-              <Link
                 to="/statistics/"
                 className="text-indigo-900 hover:bg-blue-900 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
               >
@@ -211,5 +197,5 @@ export default function ResponsiveNavbar(props) {
         )}
       </nav>
     </>
-  );
+  )
 }

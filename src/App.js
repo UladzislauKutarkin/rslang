@@ -4,11 +4,9 @@ import TextBookPage from "./components/pages/TextBookPage/TextBookPage"
 import GamesPage from "./components/pages/GamesPage/GamesPage"
 import SettingsPage from "./components/pages/SettingsPage/SettingsPage"
 import StatisticsPage from "./components/pages/StatisticsPage/StatisticsPage"
-import IndexNavbar from "./components/Navbar/IndexNavbar"
 import SignUp from "./components/Register/Register"
 import SignIn from "./components/SignIn/SignIn"
-import ResponsiveNavbar from "./components/Navbar/ResponsiveNavbar";
-
+import ResponsiveNavbar from "./components/Navbar/ResponsiveNavbar"
 
 function App() {
   return (

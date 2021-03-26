@@ -1,10 +1,8 @@
 import React, { useCallback, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { BrowserRouter,Link, Redirect } from "react-router-dom"
+import { Link, Redirect } from "react-router-dom"
 import TextInput from "../TextInput"
 import { loginUser } from "../../redux/auth/user"
-
-
 
 const SignIn = () => {
   const [form, setForm] = useState({
@@ -43,27 +41,30 @@ const SignIn = () => {
         <div className=" bg-whitew-full lg:w-6/12 px-4 mt-10 ">
           <div className=" bg-gray-400 relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-200 border-2  ">
             <div className="rounded-t mb-0 px-6 py-6">
-              <div className="text-center text-indigo-900  text-3xl mb-3"> Sign in</div>
+              <div className="text-center text-indigo-900  text-3xl mb-3">
+                {" "}
+                Sign in
+              </div>
               <hr className="mt-6 border-b-1 border-blueGray-300" />
             </div>
-            <div className="flex-auto px-4 lg:px-10 py-10 pt-0 ">  
+            <div className="flex-auto px-4 lg:px-10 py-10 pt-0 ">
               <form>
-              <TextInput
-                    value={form.email}
-                    onChange={handleFormChange("email")}
-                    label="email"
-                    placeholder="Email"
-                    type="email"
-                    className="relative w-full mb-3"
-                  />
-                  <TextInput
-                    value={form.password}
-                    onChange={handleFormChange("password")}
-                    label="password"
-                    placeholder="Password"
-                    type="password"
-                    className="relative w-full mb-3"
-                  />
+                <TextInput
+                  value={form.email}
+                  onChange={handleFormChange("email")}
+                  label="email"
+                  placeholder="Email"
+                  type="email"
+                  className="relative w-full mb-3"
+                />
+                <TextInput
+                  value={form.password}
+                  onChange={handleFormChange("password")}
+                  label="password"
+                  placeholder="Password"
+                  type="password"
+                  className="relative w-full mb-3"
+                />
                 <div className="text-center mt-6 ">
                   <button
                     onClick={handleButtonClick}
@@ -76,12 +77,12 @@ const SignIn = () => {
                 </div>
               </form>
               <div className="text-blueGray-400 text-center mt-6 font-bold">
-              <Link
-                to="/register/"
-                className="text-indigo-900 hover:bg-blue-900 hover:text-white px-3 py-2 rounded-md  font-medium  text-xl"
-              >
-                Register
-              </Link>
+                <Link
+                  to="/register/"
+                  className="text-indigo-900 hover:bg-blue-900 hover:text-white px-3 py-2 rounded-md  font-medium  text-xl"
+                >
+                  Register
+                </Link>
               </div>
               {error && <span>{error}</span>}
             </div>
@@ -89,9 +90,7 @@ const SignIn = () => {
         </div>
       </div>
     </div>
-  
-  );
-};
+  )
+}
 
-export default SignIn;
-
+export default SignIn
