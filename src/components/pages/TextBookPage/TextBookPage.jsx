@@ -1,15 +1,13 @@
-import React, { useEffect } from "react"
+import React, { useCallback, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import cn from "classnames"
 import { getVocabulary } from "../../../redux/vocabulary/vocabulary"
 import Pragination from "./Pragination"
 import AudioComponent from "./AudioComponent"
-import Button from "../../Button"
 import Settings from "./Settings"
 import { changePage } from "../../../redux/pagination/pagination"
 
 const TextBookPage = () => {
-  //  const [page, setPage] = useState(0);
   const dispatch = useDispatch()
   const vocabularyData = useSelector(({ vocabulary }) => vocabulary.vocabulary)
   const group = useSelector(({ pagination }) => pagination.group)
@@ -39,6 +37,24 @@ const TextBookPage = () => {
     return null
   }
 
+  const deleteWord = useCallback(
+    (id) => () => {
+      const wordCard = document.getElementById(`${id}`)
+      wordCard.classList.add("hidden")
+    },
+    []
+  )
+
+  const addToHardWord = useCallback(
+    (id) => () => {
+      const wordCard = document.getElementById(`${id}`)
+      wordCard.classList.add("border-2")
+      wordCard.classList.add("border-red-800")
+      wordCard.classList.add("rounded-lg")
+    },
+    []
+  )
+
   return (
     <div className="flex-auto flex-wrap justify-center m-5">
       <ScrollToTopOnMount />
@@ -47,7 +63,8 @@ const TextBookPage = () => {
         {vocabularyData.map((item) => (
           <div
             key={item.id}
-            className="flex-auto  self-stretch items-stretch justify-center"
+            id={item.id}
+            className="flex-auto self-stretch items-stretch justify-center"
           >
             <div>
               <div className="rounded-lg overflow-hidden">
@@ -55,7 +72,7 @@ const TextBookPage = () => {
                   <img
                     className="absolute h-full w-full object-cover object-center"
                     src={`https://rs-lang-back.herokuapp.com/${item.image}`}
-                    alt=""
+                    alt="img"
                   />
                 </div>
                 <div
@@ -113,14 +130,25 @@ const TextBookPage = () => {
                     <div className="mt-10 flex justify-center items-center">
                       {isButtons && (
                         <div className="m-6 space-x-5">
-                          <Button
-                            className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-red-500 rounded shadow ripple hover:shadow-lg hover:bg-red-600 focus:outline-none"
-                            name="Удалить"
-                          />
-                          <Button
-                            className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-yellow-500 rounded shadow ripple hover:shadow-lg hover:bg-yellow-600 focus:outline-none"
-                            name="В сложные"
-                          />
+                          {["Удалить", "В сложные"].map((index) => (
+                            <button
+                              // eslint-disable-next-line react/no-array-index-key
+                              key={index}
+                              type="button"
+                              className={
+                                index === "Удалить"
+                                  ? "inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-red-500 rounded shadow ripple hover:shadow-lg hover:bg-red-600 focus:outline-none"
+                                  : "inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-yellow-500 rounded shadow ripple hover:shadow-lg hover:bg-yellow-600 focus:outline-none"
+                              }
+                              onClick={
+                                index === "Удалить"
+                                  ? deleteWord(item.id)
+                                  : addToHardWord(item.id)
+                              }
+                            >
+                              {index}
+                            </button>
+                          ))}
                         </div>
                       )}
                     </div>

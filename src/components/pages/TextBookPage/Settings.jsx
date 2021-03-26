@@ -12,14 +12,12 @@ import ChangeButtons from "./ChangeButtons"
 const Settings = () => {
   const dispatch = useDispatch()
   const [modal, setModal] = useState(false)
-  //  const [selectedIndex, setSelectedIndex] = useState(0)
   const selectedGroup = useSelector(({ pagination }) => pagination.group)
   const handleChangeGroup = useCallback(
     (group) => () => {
       dispatch(changeGroup(group))
       localStorage.setItem("group", group)
       dispatch(changePage(0))
-      //  setSelectedIndex(group)
     },
     [dispatch]
   )
