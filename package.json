@@ -42,7 +42,7 @@
   },
   "lint-staged": {
     "*.{js,jsx}": [
-      "craco test"
+      "eslint ./src --fix"
     ]
   },
   "browserslist": {
