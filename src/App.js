@@ -7,12 +7,13 @@ import StatisticsPage from "./components/pages/StatisticsPage/StatisticsPage"
 import IndexNavbar from "./components/Navbar/IndexNavbar"
 import SignUp from "./components/Register/Register"
 import SignIn from "./components/SignIn/SignIn"
+import ResponsiveNavbar from "./components/Navbar/ResponsiveNavbar";
+
 
 function App() {
   return (
     <div className="App">
-      <IndexNavbar />
-
+      <ResponsiveNavbar />
       <Switch>
         <Route exact path="/" component={HomePage} />
         <Route exact path="/textbook/" component={TextBookPage} />
@@ -23,8 +24,6 @@ function App() {
         <Route exact path="/signin/" component={SignIn} />
         <Redirect from="*" to="/" />
       </Switch>
-
-      {/* <Footer /> */}
     </div>
   )
 }

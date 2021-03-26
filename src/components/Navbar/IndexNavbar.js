@@ -4,7 +4,6 @@ import imgLogo from "../../assets/img/logo_rslang.png"
 
 export default function Navbar() {
   const userData = useSelector(({ user }) => user.user)
-
   const isName = () => {
     if (!userData.message) {
       return null
@@ -56,6 +55,7 @@ export default function Navbar() {
             Sign In
           </Link>
           {isName()}
+
         </div>
       </nav>
     </>
