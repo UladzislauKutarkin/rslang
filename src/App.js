@@ -10,17 +10,18 @@ import ResponsiveNavbar from "./components/Navbar/ResponsiveNavbar"
 
 function App() {
   return (
-    <div className="App">
-      <ResponsiveNavbar />
-      <Switch>
-        <Route exact path="/" component={HomePage} />
-        <Route exact path="/textbook/" component={TextBookPage} />
-        <Route exact path="/games/" component={GamesPage} />
-        <Route exact path="/Settings/" component={SettingsPage} />
-        <Route exact path="/statistics/" component={StatisticsPage} />
-        <Route exact path="/register/" component={SignUp} />
-        <Route exact path="/signin/" component={SignIn} />
-        <Redirect from="*" to="/" />
+<div className="App">
+<ResponsiveNavbar />
+<Switch>
+<Route exact path="/" component={HomePage} />
+<Route exact path="/textbook/"
+   component={TextBookPage} />
+<Route exact path="/games/" component={GamesPage} />
+<Route exact path="/Settings/" component={SettingsPage} />
+<Route exact path="/statistics/" component={StatisticsPage} />
+<Route exact path="/register/" component={SignUp} />
+<Route exact path="/signin/" component={SignIn} />
+<Redirect from="*" to="/" />
       </Switch>
     </div>
   )
