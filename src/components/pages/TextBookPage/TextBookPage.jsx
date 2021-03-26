@@ -1,5 +1,6 @@
 import React, { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
+import cn from "classnames"
 import { getVocabulary } from "../../../redux/vocabulary/vocabulary"
 import Pragination from "./Pragination"
 import AudioComponent from "./AudioComponent"
@@ -13,17 +14,16 @@ const TextBookPage = () => {
   const vocabularyData = useSelector(({ vocabulary }) => vocabulary.vocabulary)
   const group = useSelector(({ pagination }) => pagination.group)
   const pageNumber = useSelector(({ pagination }) => pagination.page)
+  const isTranslate = useSelector(({ settings }) => settings.translate)
+  const isButtons = useSelector(({ settings }) => settings.buttons)
   const handleButtonClick = (pageCounter) => {
     dispatch(changePage(pageCounter.selected))
+    localStorage.setItem("page", pageCounter.selected)
   }
   useEffect(() => {
+    localStorage.setItem("page", pageNumber)
     dispatch(getVocabulary(pageNumber, group))
   }, [pageNumber, group, dispatch])
-  // const handleGroupClick = (e) => {
-  //   setGroup(+e.target.dataset.page - 1)
-  //   localStorage.setItem("group", group)
-  // }
-
   const CustomComponent = (item) => (
     // eslint-disable-next-line react/no-danger
     <span dangerouslySetInnerHTML={{ __html: item }} />
@@ -58,10 +58,35 @@ const TextBookPage = () => {
                     alt=""
                   />
                 </div>
-                <div className="relative bg-blue-200">
+                <div
+                  className={cn(
+                    {
+                      "bg-red-200": group === 1,
+                    },
+                    {
+                      "bg-blue-200": group === 0,
+                    },
+                    {
+                      "bg-green-200": group === 2,
+                    },
+                    {
+                      "bg-green-600": group === 3,
+                    },
+                    {
+                      "bg-yellow-200": group === 4,
+                    },
+                    {
+                      "bg-gray-400": group === 5,
+                    }
+                  )}
+                >
                   <div className="py-10 px-8">
                     <h3 className="text-2xl font-bold">{item.word}</h3>
-                    <h3 className="text-2xl font-bold">{item.wordTranslate}</h3>
+                    {isTranslate && (
+                      <h3 className="text-2xl font-bold">
+                        {item.wordTranslate}
+                      </h3>
+                    )}
                     <div className="text-gray-600 text-sm font-medium flex mb-4 mt-2">
                       <p>{item.transcription}</p>
                     </div>
@@ -69,11 +94,15 @@ const TextBookPage = () => {
                       <p className="leading-7">
                         {CustomComponent(item.textMeaning)}
                       </p>
-                      <p>{CustomComponent(item.textMeaningTranslate)}</p>
+                      {isTranslate && (
+                        <p>{CustomComponent(item.textMeaningTranslate)}</p>
+                      )}
                       <p className="leading-7">
                         {CustomComponent(item.textExample)}
                       </p>
-                      <p>{CustomComponent(item.textExampleTranslate)}</p>
+                      {isTranslate && (
+                        <p>{CustomComponent(item.textExampleTranslate)}</p>
+                      )}
                     </div>
                     <AudioComponent
                       audio={item.audio}
@@ -82,16 +111,18 @@ const TextBookPage = () => {
                       audioMeaning={item.audioMeaning}
                     />
                     <div className="mt-10 flex justify-center items-center">
-                      <div className="m-6 space-x-5">
-                        <Button
-                          className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-red-500 rounded shadow ripple hover:shadow-lg hover:bg-red-600 focus:outline-none"
-                          name="Удалить"
-                        />
-                        <Button
-                          className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-yellow-500 rounded shadow ripple hover:shadow-lg hover:bg-yellow-600 focus:outline-none"
-                          name="В сложные"
-                        />
-                      </div>
+                      {isButtons && (
+                        <div className="m-6 space-x-5">
+                          <Button
+                            className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-red-500 rounded shadow ripple hover:shadow-lg hover:bg-red-600 focus:outline-none"
+                            name="Удалить"
+                          />
+                          <Button
+                            className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-yellow-500 rounded shadow ripple hover:shadow-lg hover:bg-yellow-600 focus:outline-none"
+                            name="В сложные"
+                          />
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

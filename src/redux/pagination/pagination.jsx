@@ -2,8 +2,8 @@ export const CHANGE_PAGE = "CHANGE_PAGE"
 export const CHANGE_GROUP = "CHANGE_GROUP"
 
 const initialState = {
-  page: 0,
-  group: 0,
+  page: 0 || +localStorage.getItem("page"),
+  group: 0 || +localStorage.getItem("group"),
 }
 
 const PaginationReducer = (state = initialState, action) => {

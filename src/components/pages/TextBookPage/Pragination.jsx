@@ -4,7 +4,7 @@ import PropTypes from "prop-types"
 
 const Pragination = ({ handleClick, pageNumber }) => (
   <ReactPaginate
-    initialPage={0}
+    initialPage={pageNumber}
     forcePage={pageNumber}
     containerClassName="flex h-12 font-medium rounded-full justify-center"
     pageCount={30}
