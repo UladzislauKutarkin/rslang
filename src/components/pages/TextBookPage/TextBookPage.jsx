@@ -1,35 +1,24 @@
-import React, { useState, useEffect } from "react"
+import React, { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { getVocabulary } from "../../../redux/vocabulary/vocabulary"
 import Pragination from "./Pragination"
 import AudioComponent from "./AudioComponent"
 import Button from "../../Button"
 import Settings from "./Settings"
+import { changePage } from "../../../redux/pagination/pagination"
 
 const TextBookPage = () => {
-  const [page, setPage] = useState(0)
+  //  const [page, setPage] = useState(0);
   const dispatch = useDispatch()
   const vocabularyData = useSelector(({ vocabulary }) => vocabulary.vocabulary)
   const group = useSelector(({ pagination }) => pagination.group)
-
-  const getPages = () => {
-    if (localStorage.getItem("page") === "") {
-      setPage("0")
-    } else {
-      setPage(localStorage.getItem("page"))
-    }
-  }
-
-  useEffect(() => {
-    getPages()
-    dispatch(getVocabulary(page, group))
-  }, [page, group, dispatch])
-
+  const pageNumber = useSelector(({ pagination }) => pagination.page)
   const handleButtonClick = (pageCounter) => {
-    setPage(pageCounter.selected)
-    localStorage.setItem("page", page)
+    dispatch(changePage(pageCounter.selected))
   }
-
+  useEffect(() => {
+    dispatch(getVocabulary(pageNumber, group))
+  }, [pageNumber, group, dispatch])
   // const handleGroupClick = (e) => {
   //   setGroup(+e.target.dataset.page - 1)
   //   localStorage.setItem("group", group)
@@ -111,7 +100,7 @@ const TextBookPage = () => {
           </div>
         ))}
       </div>
-      <Pragination handleClick={handleButtonClick} />
+      <Pragination handleClick={handleButtonClick} pageNumber={pageNumber} />
     </div>
   )
 }

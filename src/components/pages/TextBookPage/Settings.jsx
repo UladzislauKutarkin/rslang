@@ -6,7 +6,7 @@ import Button from "../../Button"
 import "react-pure-modal/dist/react-pure-modal.min.css"
 import settings from "../../../assets/img/settings.svg"
 import ChangeTranslate from "./ChangeTranslate"
-import { changeGroup } from "../../../redux/pagination/pagination"
+import { changeGroup, changePage } from "../../../redux/pagination/pagination"
 import ChangeButtons from "./ChangeButtons"
 
 const Settings = () => {
@@ -16,6 +16,7 @@ const Settings = () => {
   const handleChangeGroup = useCallback(
     (group) => () => {
       dispatch(changeGroup(group))
+      dispatch(changePage(0))
       setSelectedIndex(group)
     },
     [dispatch]
