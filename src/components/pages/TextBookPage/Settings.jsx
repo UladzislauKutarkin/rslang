@@ -1,22 +1,23 @@
 import React, { useCallback, useState } from "react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import cn from "classnames"
 import PureModal from "react-pure-modal"
 import Button from "../../Button"
 import "react-pure-modal/dist/react-pure-modal.min.css"
 import settings from "../../../assets/img/settings.svg"
 import ChangeTranslate from "./ChangeTranslate"
-import { changeGroup } from "../../../redux/pagination/pagination"
+import { changeGroup, changePage } from "../../../redux/pagination/pagination"
 import ChangeButtons from "./ChangeButtons"
 
 const Settings = () => {
   const dispatch = useDispatch()
   const [modal, setModal] = useState(false)
-  const [selectedIndex, setSelectedIndex] = useState(0)
+  const selectedGroup = useSelector(({ pagination }) => pagination.group)
   const handleChangeGroup = useCallback(
     (group) => () => {
       dispatch(changeGroup(group))
-      setSelectedIndex(group)
+      localStorage.setItem("group", group)
+      dispatch(changePage(0))
     },
     [dispatch]
   )
@@ -84,10 +85,27 @@ const Settings = () => {
                 type="button"
                 onClick={handleChangeGroup(index)}
                 className={cn(
-                  "inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-purple-500 rounded shadow ripple hover:shadow-lg hover:bg-purple-600 focus:outline-none",
+                  "inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition rounded shadow ripple hover:shadow-lg  focus:outline-none",
                   {
-                    "inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white border-2 border-green-800 uppercase transition bg-green-800 rounded shadow ripple hover:shadow-lg hover:bg-green-900 focus:outline-none":
-                      index === selectedIndex,
+                    "bg-red-200 hover:bg-red-600": index === 1,
+                  },
+                  {
+                    "bg-blue-200 hover:bg-blue-600": index === 0,
+                  },
+                  {
+                    "bg-green-200 hover:bg-green-600": index === 2,
+                  },
+                  {
+                    "bg-green-600 hover:bg-green-800": index === 3,
+                  },
+                  {
+                    "bg-yellow-200 hover:bg-yellow-600": index === 4,
+                  },
+                  {
+                    "bg-gray-400 hover:bg-gray-600": index === 5,
+                  },
+                  {
+                    "bg-blue-900 hover:bg-blue-900": index === selectedGroup,
                   }
                 )}
               >
