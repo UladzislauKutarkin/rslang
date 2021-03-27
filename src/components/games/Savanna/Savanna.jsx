@@ -5,10 +5,14 @@ import { setPageActionCreator } from "../../../redux/pages/pages"
 import savannaBack from "../../../assets/img/games/savanna_back.jpg"
 import lotos from "../../../assets/img/games/lotos_1.png"
 import { getWordsPageAC } from "../../../redux/games/games"
+import random from "../../../helpers/random"
+import forsavanna from "../../../assets/sound/forsavanna.mp3"
 
 const Savanna = () => {
   const [page] = useState({ name: "savanna", showNavbar: false })
   const [isStartGame, setIsStartGame] = useState(false)
+  const [wordGroup, setWordGroup] = useState("0")
+  const [musicON, setMusicON] = useState(false)
   // eslint-disable-next-line no-unused-vars
   const word = { word: "world" }
 
@@ -16,16 +20,37 @@ const Savanna = () => {
   dispatch(setPageActionCreator({ page, showNavbar: false }))
 
   const startGame = () => {
+    // setWordGroup
     setIsStartGame(true)
   }
 
+  const getWordPage = (e) => {
+    const group = e.target.value || 0
+    setWordGroup(group)
+    dispatch(getWordsPageAC(group, random(0, 20)))
+  }
+
   useEffect(() => {
-    dispatch(getWordsPageAC())
+    dispatch(getWordsPageAC(wordGroup, random(0, 20)))
   }, [])
 
-  const wordsPage111 = useSelector(({ wordsPage }) => wordsPage)
+  const music = new Audio(forsavanna)
 
-  console.log("wordsPage111", wordsPage111)
+  const musicControlHandler = () => {
+    music.loop = true
+
+    if (musicON) {
+      music.play()
+    } else {
+      music.pause()
+    }
+
+    setMusicON(!musicON)
+  }
+
+  const CurrentWordsPage111 = useSelector(({ wordsPage }) => wordsPage)
+
+  console.log("wordsPage111", CurrentWordsPage111)
 
   return (
     <div
@@ -33,7 +58,25 @@ const Savanna = () => {
       style={{ backgroundImage: `url(${savannaBack})` }}
     >
       <h1 className="text-5xl text-center pt-8">Savanna</h1>
+
       <div className="w-1/3  brd p-3 h-30">
+        <div className="">
+          <div className="">
+            {/* eslint-disable-next-line jsx-a11y/no-onchange */}
+            <select value={wordGroup} onChange={getWordPage}>
+              <option value="0">Easy</option>
+              <option value="1">Easy+</option>
+              <option value="2">Medium</option>
+              <option value="3">Medium+</option>
+              <option value="4">Difficult</option>
+              <option value="5">Difficult+</option>
+            </select>
+
+            <button type="button" musicControlHandler={musicControlHandler}>
+              music
+            </button>
+          </div>
+        </div>
         {/* eslint-disable-next-line react/button-has-type */}
         <button
           className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white
