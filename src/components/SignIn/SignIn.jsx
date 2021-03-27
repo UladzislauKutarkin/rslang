@@ -6,8 +6,8 @@ import { loginUser } from "../../redux/auth/user"
 
 const SignIn = () => {
   const [form, setForm] = useState({
-    email: "",
-    password: "",
+    email: "test@test.com",
+    password: "12345678",
   })
   const [isData, setIsData] = useState(false)
 
@@ -42,7 +42,6 @@ const SignIn = () => {
           <div className=" bg-gray-400 relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-200 border-2  ">
             <div className="rounded-t mb-0 px-6 py-6">
               <div className="text-center text-indigo-900  text-3xl mb-3">
-                {" "}
                 Sign in
               </div>
               <hr className="mt-6 border-b-1 border-blueGray-300" />

@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { setPageActionCreator } from "../../../redux/pages/pages"
@@ -10,10 +10,6 @@ const HomePage = () => {
   const [showNavbar] = useState(true)
   const dispatch = useDispatch()
   dispatch(setPageActionCreator({ page, showNavbar }))
-  console.log(
-    "homepage print state.page",
-    useSelector((state) => state.page)
-  )
 
   return (
     <>

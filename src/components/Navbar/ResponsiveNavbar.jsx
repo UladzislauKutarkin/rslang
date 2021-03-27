@@ -24,7 +24,6 @@ export default function ResponsiveNavbar() {
 
   const userCurrent = useSelector(({ user }) => user.user)
   const showNavbar = useSelector(({ page }) => page.page.showNavbar)
-  console.log(" Navbar -> showNavbar", showNavbar)
 
   const isName = () => {
     if (!userCurrent.message) {

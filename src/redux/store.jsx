@@ -6,6 +6,7 @@ import vocabulary from "./vocabulary/vocabulary"
 import settings from "./settings/settings"
 import pagination from "./pagination/pagination"
 import page from "./pages/pages"
+import wordsPage from "./games/games"
 
 const reducers = combineReducers({
   user,
@@ -13,6 +14,7 @@ const reducers = combineReducers({
   settings,
   pagination,
   page,
+  wordsPage,
 })
 
 const middlewares = [thunk, logger]
