@@ -1,18 +1,19 @@
 module.exports = {
   purge: ["./src/**/*.html", "./src/**/*.js"],
   darkMode: false, // or 'media' or 'class'
-  theme: {
-    extend: {},
-  },
   variants: {
     extend: {},
   },
   plugins: [],
   theme: {
+    extend: {},
     fontFamily: {
       display: ["Oswald"],
     },
-    animation: { slowGrow: "slowGrow 0.5s ease-in-out" },
+    animation: {
+      slowGrow: "slowGrow 0.5s ease-in-out",
+      lotosRotate: "lotosRotate 2s ease-in-out infinite",
+    },
 
     keyframes: {
       slowGrow: {
@@ -20,6 +21,12 @@ module.exports = {
 
         "100%": { transform: "translateY(0)", opacity: "1" },
       },
+
+      lotosRotate: {
+        "0%": { transform: "rotateY(0)" },
+
+        "100%": { transform: "rotateY(180deg)" },
+      },
     },
   },
-};
+}
