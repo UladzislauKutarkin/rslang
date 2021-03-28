@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { useEffect, useState, useMemo } from "react"
+import { useEffect, useState, useMemo, useRef } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { setPageActionCreator } from "../../../redux/pages/pages"
 import savannaBack from "../../../assets/img/games/savanna_back.jpg"
@@ -7,6 +7,9 @@ import lotos from "../../../assets/img/games/lotos_1.png"
 import { getWordsPageAC } from "../../../redux/games/games"
 import random from "../../../helpers/random"
 import forsavanna from "../../../assets/sound/forsavanna.mp3"
+import { shuffle } from "../../../helpers/shuffle"
+
+// import Counter from "./Counter"
 
 const Savanna = () => {
   const [page] = useState({ name: "savanna", showNavbar: false })
@@ -14,16 +17,57 @@ const Savanna = () => {
   const [wordGroup, setWordGroup] = useState("0")
   const [musicON, setMusicON] = useState(false)
   // eslint-disable-next-line no-unused-vars
-  const word = { word: "world" }
+  const [wordsCount, setWordsCount] = useState(20)
+  // eslint-disable-next-line no-unused-vars
+  const [CurrentWordsPage, setCurrentWordsPage] = useState("")
+  const [shuffledAnswers, setShuffledAnswers] = useState([])
+
+  const wordRef = useRef()
+  console.log("wordRef ", wordRef.current)
 
   const dispatch = useDispatch()
   dispatch(setPageActionCreator({ page, showNavbar: false }))
 
-  const startGame = () => {
-    // setWordGroup
-    setIsStartGame(true)
+  const currentWordsPage = useSelector(({ wordsPage }) => wordsPage.wordsPage)
+
+  console.log("wordsPage", currentWordsPage)
+
+  // eslint-disable-next-line no-unused-vars
+  const wordAnimate = () => {
+    console.log("wordAnimate")
   }
 
+  const startGame = () => {
+    setIsStartGame(true)
+    // currentWordsPage.word
+    wordRef.current.innerText = currentWordsPage[0].word
+
+    wordRef.current.classList.add("animate-fallWord")
+
+    const answers = [currentWordsPage[0].wordTranslate]
+    // eslint-disable-next-line no-plusplus
+    for (let index = 0; index < 3; index++) {
+      answers.push(currentWordsPage[0].wordTranslate)
+    }
+    setShuffledAnswers(shuffle(answers))
+
+    console.log("shuffledAnswers", shuffledAnswers)
+    // currentWordsPage.forEach((word) => {
+    //   console.log(`${word.word} - ${word.wordTranslate}`)
+    // })
+
+    // цикл по словам 1-20
+
+    // вывод падающего слова
+    // вывод 4 вариантов
+
+    // нажание на клавишупока палает!
+    // угадал +
+    // не -
+    // к конце результат
+
+    // конец цикла
+  }
   const getWordPage = (e) => {
     const group = e.target.value || 0
     setWordGroup(group)
@@ -35,21 +79,14 @@ const Savanna = () => {
   }, [])
 
   const music = useMemo(() => new Audio(forsavanna), [])
-  console.log("type--", typeof music)
 
   const musicControlHandler = () => {
     music.loop = true
-    console.log("musicControlHandler", musicON)
-
     // eslint-disable-next-line no-unused-expressions
     !musicON ? music.play() : music.pause()
 
     setMusicON(!musicON)
   }
-
-  const CurrentWordsPage111 = useSelector(({ wordsPage }) => wordsPage)
-
-  console.log("wordsPage111", CurrentWordsPage111)
 
   return (
     <div
@@ -95,9 +132,29 @@ const Savanna = () => {
           start
         </button>
       </div>
-      <div className="absolute animate-fallWord" style={{ left: "50vw" }}>
-        <p className="text-2xl">{word.word}</p>
+      {/* word div */}
+      <div ref={wordRef} className="-m-10 absolute text-2xl  left-1/2">
+        {" "}
       </div>
+      {/* word div */}
+
+      {/* buttons */}
+      <div className="absolute w-full text-2xl  top-2/3">
+        <div className="text-center">
+          {shuffledAnswers.map((el) => (
+            <button
+              type="button"
+              className="inline-block bg-white bg-opacity-50 mx-2 px-3 py-1 text-xs font-medium leading-6 text-center text-black
+    border-2 border-gray-600 uppercase rounded shadow ripple 
+    hover:shadow-lg hover:bg-red-500 hover:text-white focus:outline-none"
+            >
+              {el}
+            </button>
+          ))}
+        </div>
+      </div>
+      {/* buttons */}
+
       <div className="absolute bottom-10 w-full">
         <img
           className={`${
