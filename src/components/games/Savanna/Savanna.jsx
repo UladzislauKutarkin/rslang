@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { setPageActionCreator } from "../../../redux/pages/pages"
 import savannaBack from "../../../assets/img/games/savanna_back.jpg"
@@ -34,16 +34,15 @@ const Savanna = () => {
     dispatch(getWordsPageAC(wordGroup, random(0, 20)))
   }, [])
 
-  const music = new Audio(forsavanna)
+  const music = useMemo(() => new Audio(forsavanna), [])
+  console.log("type--", typeof music)
 
   const musicControlHandler = () => {
     music.loop = true
+    console.log("musicControlHandler", musicON)
 
-    if (musicON) {
-      music.play()
-    } else {
-      music.pause()
-    }
+    // eslint-disable-next-line no-unused-expressions
+    !musicON ? music.play() : music.pause()
 
     setMusicON(!musicON)
   }
@@ -61,22 +60,31 @@ const Savanna = () => {
 
       <div className="w-1/3  brd p-3 h-30">
         <div className="">
-          <div className="">
-            {/* eslint-disable-next-line jsx-a11y/no-onchange */}
-            <select value={wordGroup} onChange={getWordPage}>
-              <option value="0">Easy</option>
-              <option value="1">Easy+</option>
-              <option value="2">Medium</option>
-              <option value="3">Medium+</option>
-              <option value="4">Difficult</option>
-              <option value="5">Difficult+</option>
-            </select>
+          {/* eslint-disable-next-line jsx-a11y/no-onchange */}
+          <select
+            className="focus:border-gray-200 m-2  border-2 border-gray-500 bg-transparent h-full py-2 px-2 pr-7  text-gray-500 sm:text-sm rounded-md"
+            value={wordGroup}
+            onChange={getWordPage}
+          >
+            <option value="0">Простые </option>
+            <option value="1">Простые +</option>
+            <option value="2">Средние</option>
+            <option value="3">Средние +</option>
+            <option value="4">Сложные</option>
+            <option value="5">Сложные +</option>
+          </select>
 
-            <button type="button" musicControlHandler={musicControlHandler}>
-              music
-            </button>
-          </div>
+          <button
+            type="button"
+            className="inline-block  mx-2 px-3 py-1 text-xs font-medium leading-6 text-center text-red-500
+              border-2 border-red-500 uppercase rounded shadow ripple 
+              hover:shadow-lg hover:bg-red-500 hover:text-white focus:outline-none"
+            onClick={musicControlHandler}
+          >
+            Musuc
+          </button>
         </div>
+
         {/* eslint-disable-next-line react/button-has-type */}
         <button
           className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white
