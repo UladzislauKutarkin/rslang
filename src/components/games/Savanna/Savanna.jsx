@@ -44,7 +44,6 @@ const Savanna = () => {
     if (wordsCount >= 0) {
       InCicle.on = true
       setAlive(true)
-      setWordsCount(wordsCount - 1)
 
       wordRef.current.style.animation = "none"
       // wordRef.current.offsetHeight /* trigger reflow */
@@ -64,6 +63,10 @@ const Savanna = () => {
         setAlive(false)
         InCicle.on = false
         wordRef.current.innerText = ""
+
+        if (wordsCount > 0) {
+          setWordsCount(wordsCount - 1)
+        }
       }, 3000)
     }
   })
@@ -84,11 +87,11 @@ const Savanna = () => {
     dispatch(getWordsPageAC(wordGroup, random(0, 19)))
   }, [])
 
-  // useEffect(() => {
-  //   if (wordsCount < 19) {
-  //     runCicle()
-  //   }
-  // }, [wordsCount, runCicle])
+  useEffect(() => {
+    if (wordsCount >= 0 && isStartGame && InCicle.on === false) {
+      runCicle()
+    }
+  }, [wordsCount])
 
   const music = useMemo(() => new Audio(forsavanna), [])
 
