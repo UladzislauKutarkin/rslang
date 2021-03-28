@@ -13,7 +13,7 @@ module.exports = {
     animation: {
       slowGrow: "slowGrow 0.5s ease-in-out",
       lotosRotate: "lotosRotate 2s ease-in-out infinite",
-      fallWord: "fallWord 3s linear",
+      fallWord: "fallWord 5s linear",
     },
 
     keyframes: {
@@ -29,7 +29,7 @@ module.exports = {
         "100%": { transform: "rotateY(180deg)" },
       },
       fallWord: {
-        "0%": { top: "12vh" },
+        "0%": { top: "20vh" },
 
         "100%": { top: "65vh" },
       },

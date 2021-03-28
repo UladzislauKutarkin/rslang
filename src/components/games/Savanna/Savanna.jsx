@@ -1,38 +1,31 @@
 /* eslint-disable no-console */
-import { useEffect, useState, useMemo, useRef, useCallback } from "react"
+import { useEffect, useState, useMemo, useRef } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { setPageActionCreator } from "../../../redux/pages/pages"
 import savannaBack from "../../../assets/img/games/savanna_back.jpg"
 import lotos from "../../../assets/img/games/lotos_1.png"
+import heart from "../../../assets/img/games/heart.png"
 import { getWordsPageAC } from "../../../redux/games/games"
 import random from "../../../helpers/random"
 import forsavanna from "../../../assets/sound/forsavanna.mp3"
-// eslint-disable-next-line no-unused-vars
 import { shuffle } from "../../../helpers/shuffle"
-
-// import Counter from "./Counter"
 
 const Savanna = () => {
   const [page] = useState({ name: "savanna", showNavbar: false })
-  // eslint-disable-next-line no-unused-vars
+
   const [isStartGame, setIsStartGame] = useState(false)
 
   const [wordGroup, setWordGroup] = useState("0")
   const [musicON, setMusicON] = useState(false)
-  // eslint-disable-next-line no-unused-vars
   const [wordsCount, setWordsCount] = useState(19)
-  // eslint-disable-next-line no-unused-vars
-  // const [CurrentWordsPage, setCurrentWordsPage] = useState("")
-  // eslint-disable-next-line no-unused-vars
   const [shuffledAnswers, setShuffledAnswers] = useState([])
-  // eslint-disable-next-line no-unused-vars
   const [alive, setAlive] = useState(false)
-
+  // eslint-disable-next-line no-unused-vars
+  const [life, setLife] = useState(5)
   const wordRef = useRef()
-  // const InCicle = useRef()
-  const InCicle = useMemo(() => ({ on: false }), [])
 
-  console.log("wordRef ", wordRef.current)
+  const InCycle = useMemo(() => ({ on: false }), [])
+  const speed = 5
 
   const dispatch = useDispatch()
   dispatch(setPageActionCreator({ page, showNavbar: false }))
@@ -40,41 +33,39 @@ const Savanna = () => {
     useSelector(({ wordsPage }) => wordsPage.wordsPage) || []
   console.log("wordsPage", currentWordsPage)
 
-  const runCicle = useCallback(() => {
+  const runCycle = () => {
     if (wordsCount >= 0) {
-      InCicle.on = true
+      InCycle.on = true
       setAlive(true)
 
       wordRef.current.style.animation = "none"
-      // wordRef.current.offsetHeight /* trigger reflow */
       setTimeout(() => {
-        wordRef.current.style.animation = "fallWord 3s linear"
+        wordRef.current.style.animation = `fallWord ${speed}s linear`
       }, 20)
-      console.log("InCicle", InCicle)
+      console.log("InCycle", InCycle)
       wordRef.current.innerText = currentWordsPage[wordsCount].word
       const answers = [currentWordsPage[wordsCount].wordTranslate] || []
 
-      // eslint-disable-next-line no-plusplus
-      for (let index = 0; index < 3; index++) {
+      for (let index = 0; index < 3; index += 1) {
         answers.push(currentWordsPage[random(0, 19)].wordTranslate)
       }
       setShuffledAnswers(shuffle(answers))
       setTimeout(() => {
         setAlive(false)
-        InCicle.on = false
+        InCycle.on = false
         wordRef.current.innerText = ""
 
         if (wordsCount > 0) {
           setWordsCount(wordsCount - 1)
         }
-      }, 3000)
+      }, speed * 1000)
     }
-  })
+  }
 
   const startGame = () => {
     setIsStartGame(true)
-    if (wordsCount >= 0 && InCicle.on === false) {
-      runCicle()
+    if (wordsCount >= 0 && InCycle.on === false) {
+      runCycle()
     }
   }
   const getWordPage = (e) => {
@@ -88,8 +79,8 @@ const Savanna = () => {
   }, [])
 
   useEffect(() => {
-    if (wordsCount >= 0 && isStartGame && InCicle.on === false) {
-      runCicle()
+    if (wordsCount >= 0 && isStartGame && InCycle.on === false) {
+      runCycle()
     }
   }, [wordsCount])
 
@@ -102,16 +93,29 @@ const Savanna = () => {
 
     setMusicON(!musicON)
   }
-  console.log("alive", alive)
+  const compareHandler = (e) => {
+    if (
+      e.target.innerText.toLowerCase() ===
+      currentWordsPage[wordsCount].wordTranslate.toLowerCase()
+    ) {
+      // todo play sound
+      // todo add +
+    } else {
+      // todo add sound
+      setLife(life - 1)
+    }
+    console.log(e.target.innerText.toLowerCase())
+    console.log(currentWordsPage[wordsCount].wordTranslate)
+  }
 
   return (
     <div
       className="h-screen w-screen bg-cover bg-center"
       style={{ backgroundImage: `url(${savannaBack})` }}
     >
-      <h1 className="text-5xl text-center pt-8">Savanna</h1>
+      <h1 className="text-5xl text-center pt-8  hidden  lg:block">Savanna</h1>
 
-      <div className="w-1/3  brd p-3 h-30">
+      <div className=" absolute top-10 left-10 ">
         <div className="">
           {/* eslint-disable-next-line jsx-a11y/no-onchange */}
           <select
@@ -136,18 +140,24 @@ const Savanna = () => {
           >
             Musuc
           </button>
-        </div>
-
-        {/* eslint-disable-next-line react/button-has-type */}
-        <button
-          className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white
+          <button
+            type="button"
+            className="inline-block px-10 py-1 mx-2 text-xs font-medium leading-6 text-center text-white
          border-2 border-green-800 uppercase transition bg-green-500 rounded shadow ripple 
          hover:shadow-lg hover:bg-green-900 focus:outline-none"
-          onClick={startGame}
-        >
-          start
-        </button>
+            onClick={startGame}
+          >
+            start
+          </button>
+        </div>
       </div>
+
+      <div className="absolute  flex top-4 md:top-12 right-20">
+        {[...Array(life)].map(() => (
+          <img className="mx-0.5 w-6" src={heart} alt="life" />
+        ))}
+      </div>
+
       {/* word div */}
       <div ref={wordRef} className="-m-10 absolute text-2xl top-0 left-1/2">
         {" "}
@@ -164,6 +174,7 @@ const Savanna = () => {
                 className="inline-block bg-white bg-opacity-50 mx-2 px-3 py-1 text-xs font-medium leading-6 text-center text-black
     border-2 border-gray-600 uppercase rounded shadow ripple 
     hover:shadow-lg hover:bg-purple-500 hover:text-white focus:outline-none"
+                onClick={compareHandler}
               >
                 {el}
               </button>
