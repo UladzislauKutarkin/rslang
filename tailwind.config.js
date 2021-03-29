@@ -14,6 +14,9 @@ module.exports = {
       slowGrow: "slowGrow 0.5s ease-in-out",
       lotosRotate: "lotosRotate 2s ease-in-out infinite",
       fallWord: "fallWord 5s linear",
+      disappear: "disappear 0,5s linear",
+      appear: "appear 2s",
+      fallDrop: "fallDrop 2s",
     },
 
     keyframes: {
@@ -31,7 +34,24 @@ module.exports = {
       fallWord: {
         "0%": { top: "20vh" },
 
-        "100%": { top: "65vh" },
+        "100%": { top: "75vh" },
+      },
+      disappear: {
+        "0%": { opacity: 0.5 },
+
+        "100%": { fontSize: "4rem", opacity: 0 },
+      },
+
+      appear: {
+        "0%": { opacity: 0 },
+
+        "100%": { opacity: 1 },
+      },
+
+      fallDrop: {
+        "0%": { heigh: "10vh" },
+
+        "100%": { heigh: "75vh" },
       },
     },
   },

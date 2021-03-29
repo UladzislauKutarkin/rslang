@@ -5,9 +5,15 @@ import { setPageActionCreator } from "../../../redux/pages/pages"
 import savannaBack from "../../../assets/img/games/savanna_back.jpg"
 import lotos from "../../../assets/img/games/lotos_1.png"
 import heart from "../../../assets/img/games/heart.png"
+// eslint-disable-next-line no-unused-vars
+import drop from "../../../assets/img/games/drop.png"
+
 import { getWordsPageAC } from "../../../redux/games/games"
 import random from "../../../helpers/random"
 import forsavanna from "../../../assets/sound/forsavanna.mp3"
+import correct from "../../../assets/sound/correct.mp3"
+import wrong from "../../../assets/sound/wrong.mp3"
+
 import { shuffle } from "../../../helpers/shuffle"
 
 const Savanna = () => {
@@ -19,31 +25,45 @@ const Savanna = () => {
   const [musicON, setMusicON] = useState(false)
   const [wordsCount, setWordsCount] = useState(19)
   const [shuffledAnswers, setShuffledAnswers] = useState([])
+  const [statistics, setStatistics] = useState([])
   const [alive, setAlive] = useState(false)
+
   // eslint-disable-next-line no-unused-vars
+
   const [life, setLife] = useState(5)
+
   const wordRef = useRef()
+  const dropRef = useRef()
+  const buttonsRef = useRef()
+  const lotosRef = useRef()
 
   const InCycle = useMemo(() => ({ on: false }), [])
-  const speed = 5
+  const speed = 6
+
+  const music = useMemo(() => new Audio(forsavanna), [])
+  const correctSound = useMemo(() => new Audio(correct), [])
+  const wrongSound = useMemo(() => new Audio(wrong), [])
 
   const dispatch = useDispatch()
   dispatch(setPageActionCreator({ page, showNavbar: false }))
   const currentWordsPage =
     useSelector(({ wordsPage }) => wordsPage.wordsPage) || []
-  console.log("wordsPage", currentWordsPage)
+  // console.log("wordsPage", currentWordsPage)
 
   const runCycle = () => {
     if (wordsCount >= 0) {
       InCycle.on = true
-      setAlive(true)
 
+      setAlive(true) // не применена переменная
       wordRef.current.style.animation = "none"
+      buttonsRef.current.style.animation = "none"
+
       setTimeout(() => {
         wordRef.current.style.animation = `fallWord ${speed}s linear`
+        buttonsRef.current.style.animation = `appear 2s`
       }, 20)
-      console.log("InCycle", InCycle)
-      wordRef.current.innerText = currentWordsPage[wordsCount].word
+      //  console.log("InCycle", InCycle)
+      wordRef.current.innerHTML = currentWordsPage[wordsCount].word
       const answers = [currentWordsPage[wordsCount].wordTranslate] || []
 
       for (let index = 0; index < 3; index += 1) {
@@ -53,7 +73,8 @@ const Savanna = () => {
       setTimeout(() => {
         setAlive(false)
         InCycle.on = false
-        wordRef.current.innerText = ""
+
+        wordRef.current.innerHTML = ""
 
         if (wordsCount > 0) {
           setWordsCount(wordsCount - 1)
@@ -73,6 +94,77 @@ const Savanna = () => {
     setWordGroup(group)
     dispatch(getWordsPageAC(group, random(0, 19)))
   }
+  // -----------------------correctSelect ------------------------
+  const correctSelect = () => {
+    //  console.log("correctSelect")
+    wordRef.current.innerHTML = ""
+    correctSound.play()
+
+    // todo состояние угадал
+
+    const top = wordRef.current.offsetTop
+    dropRef.current.style.top = `${top + 50}px`
+    dropRef.current.innerHTML = `<img  class= "mx-auto" src = ${drop} alt="drop" width="20">`
+    // eslint-disable-next-line no-unused-vars
+    const dropInterval = setInterval(() => {
+      dropRef.current.style.top = `${dropRef.current.offsetTop + 27}px`
+      if (dropRef.current.offsetTop > lotosRef.current.offsetTop) {
+        clearInterval(dropInterval)
+        dropRef.current.innerHTML = ""
+      }
+    }, 1)
+    // dropRef.current.animation = "none"
+
+    setTimeout(() => {
+      wordRef.current.style.animation = `fallDrop 2s`
+    }, 20)
+    // console.log(
+    //   " correctSelect word---",
+    //   wordRef.current.offsetLeft,
+    //   wordRef.current.offsetTop
+    // )
+    setStatistics([
+      ...statistics,
+      {
+        pare: `${currentWordsPage[wordsCount].word} - ${currentWordsPage[wordsCount].wordTranslate}`,
+        ok: true,
+      },
+    ])
+    currentWordsPage[wordsCount].wordTranslate.toLowerCase()
+
+    // todo вделить перевод
+    // todo удалить анимацию падания
+    // todo анимация с каплей
+    // todo анимация поглощения
+  }
+
+  const disappearWord = () => {
+    const top = wordRef.current.offsetTop
+    wordRef.current.style.animation = "none"
+    wordRef.current.style.top = `${top + 135}px`
+    setTimeout(() => {
+      wordRef.current.style.animation = `disappear 0.5s linear`
+    }, 20)
+    setTimeout(() => {
+      wordRef.current.innerHTML = ""
+    }, 400)
+  }
+
+  const wrongSelect = () => {
+    //   console.log("wrongSelect")
+    wrongSound.play()
+    disappearWord()
+
+    setStatistics([
+      ...statistics,
+      {
+        pare: `${currentWordsPage[wordsCount].word} - ${currentWordsPage[wordsCount].wordTranslate}`,
+        ok: false,
+      },
+    ])
+
+    setLife(life - 1)
+  }
 
   useEffect(() => {
     dispatch(getWordsPageAC(wordGroup, random(0, 19)))
@@ -83,8 +175,6 @@ const Savanna = () => {
       runCycle()
     }
   }, [wordsCount])
-
-  const music = useMemo(() => new Audio(forsavanna), [])
 
   const musicControlHandler = () => {
     music.loop = true
@@ -98,14 +188,12 @@ const Savanna = () => {
       e.target.innerText.toLowerCase() ===
       currentWordsPage[wordsCount].wordTranslate.toLowerCase()
     ) {
-      // todo play sound
-      // todo add +
+      correctSelect()
     } else {
-      // todo add sound
-      setLife(life - 1)
+      wrongSelect()
     }
-    console.log(e.target.innerText.toLowerCase())
-    console.log(currentWordsPage[wordsCount].wordTranslate)
+    //   console.log(e.target.innerText.toLowerCase())
+    //   console.log(currentWordsPage[wordsCount].wordTranslate)
   }
 
   return (
@@ -159,13 +247,30 @@ const Savanna = () => {
       </div>
 
       {/* word div */}
-      <div ref={wordRef} className="-m-10 absolute text-2xl top-0 left-1/2">
+      <div
+        ref={wordRef}
+        className="-m-32  h-50 w-64  absolute text-2xl text-center"
+        style={{ top: "100px", left: "50vw" }}
+      >
         {" "}
       </div>
-      {/* word div */}
+      {/* word div end */}
+
+      {/* prop div */}
+      <div
+        ref={dropRef}
+        className="-m-6 h-50 w-12  absolute"
+        style={{ top: "200px", left: "50vw" }}
+      >
+        {" "}
+      </div>
+      {/* prop div end */}
 
       {/* buttons */}
-      <div className="absolute w-full text-2xl  top-2/3">
+      <div
+        ref={buttonsRef}
+        className=" animate-appear absolute w-full text-2xl   top-2/3"
+      >
         {alive && (
           <div className="text-center">
             {shuffledAnswers.map((el) => (
@@ -182,9 +287,9 @@ const Savanna = () => {
           </div>
         )}
       </div>
-      {/* buttons */}
+      {/* buttons  end */}
 
-      <div className="absolute bottom-10 w-full">
+      <div ref={lotosRef} className="absolute bottom-10 w-full">
         <img
           className={`${
             isStartGame ? "animate-lotosRotate " : ""
