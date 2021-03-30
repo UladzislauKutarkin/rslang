@@ -57,18 +57,11 @@ module.exports = {
 
       puffEffect: {
         "0%": {
-          opacity: 0.5,
-          transformOrigin: "50% 50%",
-          transform: "scale(2, 2)",
-          filter: "blur(2px)",
+          filter: "blur(2px) hue-rotate(180deg)",
         },
 
         "100%": {
-          opacity: 1,
-          transformOrigin: "50% 50%",
-          transform: "scale(1, 1)",
-          filter: "blur(0px)",
-          width: "0",
+          filter: "blur(0px) hue-rotate(0deg) ",
         },
       },
     },
