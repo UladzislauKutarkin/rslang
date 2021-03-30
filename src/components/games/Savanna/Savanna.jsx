@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import { useEffect, useState, useMemo, useRef } from "react"
+import { Link } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { setPageActionCreator } from "../../../redux/pages/pages"
 import savannaBack from "../../../assets/img/games/savanna_back.jpg"
@@ -27,7 +28,10 @@ const Savanna = () => {
   const [shuffledAnswers, setShuffledAnswers] = useState([])
   const [statistics, setStatistics] = useState([])
   const [alive, setAlive] = useState(false)
-  const [isSelect, setIsSelect] = useState(false)
+  // const [isSelect, setIsSelect] = useState(false)
+
+  // eslint-disable-next-line no-unused-vars
+  const [title, setTitle] = useState("Savanna")
 
   // eslint-disable-next-line no-unused-vars
 
@@ -37,6 +41,8 @@ const Savanna = () => {
   const dropRef = useRef()
   const buttonsRef = useRef()
   const lotosRef = useRef()
+  const isWrongSelectRef = useRef()
+  const isSelectRef = useRef()
 
   const InCycle = useMemo(() => ({ on: false }), [])
   const speed = 6
@@ -50,10 +56,29 @@ const Savanna = () => {
   const currentWordsPage =
     useSelector(({ wordsPage }) => wordsPage.wordsPage) || []
 
+  const endGame = () => {
+    setTimeout(() => {}, 3000)
+    console.log("end game")
+    setTimeout(() => {
+      // todo статистика
+      // todo продолжить или выйти
+
+      console.log()
+    }, 3000)
+  }
+
+  const reduceLives = () => {
+    if (life > 0) {
+      setLife(life - 1)
+    }
+  }
+
   const runCycle = () => {
-    if (wordsCount >= 0) {
+    if (wordsCount > 0) {
       InCycle.on = true
-      setIsSelect(false)
+
+      isSelectRef.current = false
+      isWrongSelectRef.current = false
 
       setAlive(true)
       wordRef.current.style.animation = "none"
@@ -76,6 +101,12 @@ const Savanna = () => {
         InCycle.on = false
 
         wordRef.current.innerHTML = ""
+        if (!isSelectRef.current || isWrongSelectRef.current) {
+          reduceLives()
+          setTitle(
+            `${currentWordsPage[wordsCount].word} - ${currentWordsPage[wordsCount].wordTranslate}`
+          )
+        } else setTitle("Savanna")
 
         if (wordsCount > 0) {
           setWordsCount(wordsCount - 1)
@@ -86,7 +117,7 @@ const Savanna = () => {
 
   const startGame = () => {
     setIsStartGame(true)
-    if (wordsCount >= 0 && InCycle.on === false) {
+    if (wordsCount >= 0 && InCycle.on === false && life > 0) {
       runCycle()
     }
   }
@@ -145,6 +176,8 @@ const Savanna = () => {
     wrongSound.play()
     disappearWord()
 
+    isWrongSelectRef.current = true
+
     setStatistics([
       ...statistics,
       {
@@ -152,8 +185,6 @@ const Savanna = () => {
         ok: false,
       },
     ])
-
-    setLife(life - 1)
   }
 
   useEffect(() => {
@@ -161,9 +192,9 @@ const Savanna = () => {
   }, [])
 
   useEffect(() => {
-    if (wordsCount >= 0 && isStartGame && InCycle.on === false) {
+    if (wordsCount >= 0 && isStartGame && InCycle.on === false && life > 0) {
       runCycle()
-    }
+    } else endGame()
   }, [wordsCount])
 
   const musicControlHandler = () => {
@@ -174,8 +205,8 @@ const Savanna = () => {
     setMusicON(!musicON)
   }
   const compareHandler = (e) => {
-    if (!isSelect) {
-      setIsSelect(true)
+    if (!isSelectRef.current) {
+      isSelectRef.current = true
       if (
         e.target.innerText.toLowerCase() ===
         currentWordsPage[wordsCount].wordTranslate.toLowerCase()
@@ -185,9 +216,6 @@ const Savanna = () => {
         wrongSelect()
       }
     }
-
-    //   console.log(e.target.innerText.toLowerCase())
-    //   console.log(currentWordsPage[wordsCount].wordTranslate)
   }
 
   return (
@@ -195,7 +223,7 @@ const Savanna = () => {
       className="h-screen w-screen bg-cover bg-center"
       style={{ backgroundImage: `url(${savannaBack})` }}
     >
-      <h1 className="text-5xl text-center pt-8  hidden  lg:block">Savanna</h1>
+      <h1 className="text-3xl text-center pt-8  hidden  lg:block">{title}</h1>
 
       <div className=" absolute top-10 left-10 ">
         <div className="">
@@ -240,6 +268,11 @@ const Savanna = () => {
         ))}
       </div>
 
+      {/* exit */}
+      <div className="absolute top-4 right-5">
+        <Link to="/games/"> X </Link>
+      </div>
+
       {/* word div */}
       <div
         ref={wordRef}
@@ -248,7 +281,6 @@ const Savanna = () => {
       >
         {" "}
       </div>
-      {/* word div end */}
 
       {/* prop div */}
       <div
@@ -291,7 +323,6 @@ const Savanna = () => {
           alt="lotos"
         />
       </div>
-      {/* lotos */}
     </div>
   )
 }
