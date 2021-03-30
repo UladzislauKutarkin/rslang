@@ -15,6 +15,7 @@
     "react": "^17.0.1",
     "react-audio-player": "^0.14.0",
     "react-dom": "^17.0.1",
+    "react-draggable": "^4.4.3",
     "react-js-pagination": "^3.0.3",
     "react-paginate": "^7.1.2",
     "react-pure-modal": "^2.0.16",
@@ -24,6 +25,7 @@
     "redux": "^4.0.5",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
+    "semantic-ui-react": "^2.0.3",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat",
     "web-vitals": "^1.1.1",
     "yarn": "^1.22.10"
