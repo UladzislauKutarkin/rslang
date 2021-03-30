@@ -1,14 +1,16 @@
 /* eslint-disable no-console */
 import { useEffect, useState, useMemo, useRef } from "react"
 import { Link } from "react-router-dom"
+
 import { useDispatch, useSelector } from "react-redux"
 import { setPageActionCreator } from "../../../redux/pages/pages"
+
+import StatisticsModal from "../gamesComponents/StatisticsModal"
+
 import savannaBack from "../../../assets/img/games/savanna_back.jpg"
 import lotos from "../../../assets/img/games/lotos_1.png"
 import heart from "../../../assets/img/games/heart.png"
-// eslint-disable-next-line no-unused-vars
 import drop from "../../../assets/img/games/drop.png"
-
 import { getWordsPageAC } from "../../../redux/games/games"
 import random from "../../../helpers/random"
 import forsavanna from "../../../assets/sound/forsavanna.mp3"
@@ -28,14 +30,10 @@ const Savanna = () => {
   const [shuffledAnswers, setShuffledAnswers] = useState([])
   const [statistics, setStatistics] = useState([])
   const [alive, setAlive] = useState(false)
-  // const [isSelect, setIsSelect] = useState(false)
-
-  // eslint-disable-next-line no-unused-vars
   const [title, setTitle] = useState("Savanna")
-
-  // eslint-disable-next-line no-unused-vars
-
   const [life, setLife] = useState(5)
+  // eslint-disable-next-line no-unused-vars
+  const [showStatistics, setShowStatistics] = useState(true)
 
   const wordRef = useRef()
   const dropRef = useRef()
@@ -73,7 +71,19 @@ const Savanna = () => {
     }
   }
 
+  const addWordSToStatistic = (flag) => {
+    setStatistics([
+      ...statistics,
+      {
+        word: `${currentWordsPage[wordsCount].word}`,
+        translate: `${currentWordsPage[wordsCount].wordTranslate}`,
+        ok: flag,
+      },
+    ])
+  }
+
   const runCycle = () => {
+    console.log("---statistics----", statistics)
     if (wordsCount > 0) {
       InCycle.on = true
 
@@ -106,6 +116,7 @@ const Savanna = () => {
           setTitle(
             `${currentWordsPage[wordsCount].word} - ${currentWordsPage[wordsCount].wordTranslate}`
           )
+          addWordSToStatistic(false)
         } else setTitle("Savanna")
 
         if (wordsCount > 0) {
@@ -127,6 +138,7 @@ const Savanna = () => {
     setWordGroup(group)
     dispatch(getWordsPageAC(group, random(0, 19)))
   }
+
   // -----------------------correctSelect ------------------------
   const correctSelect = () => {
     wordRef.current.innerHTML = ""
@@ -134,7 +146,6 @@ const Savanna = () => {
     const top = wordRef.current.offsetTop
     dropRef.current.style.top = `${top + 50}px`
     dropRef.current.innerHTML = `<img  class= "mx-auto" src = ${drop} alt="drop" width="20">`
-    // eslint-disable-next-line no-unused-vars
     const dropInterval = setInterval(() => {
       dropRef.current.style.top = `${dropRef.current.offsetTop + 27}px`
       if (dropRef.current.offsetTop > lotosRef.current.offsetTop) {
@@ -148,14 +159,7 @@ const Savanna = () => {
       }
     }, 1)
 
-    setStatistics([
-      ...statistics,
-      {
-        pare: `${currentWordsPage[wordsCount].word} - ${currentWordsPage[wordsCount].wordTranslate}`,
-        ok: true,
-      },
-    ])
-    currentWordsPage[wordsCount].wordTranslate.toLowerCase()
+    addWordSToStatistic(true)
 
     // todo  управление с клавиатуры
   }
@@ -175,16 +179,9 @@ const Savanna = () => {
   const wrongSelect = () => {
     wrongSound.play()
     disappearWord()
+    addWordSToStatistic(false)
 
     isWrongSelectRef.current = true
-
-    setStatistics([
-      ...statistics,
-      {
-        pare: `${currentWordsPage[wordsCount].word} - ${currentWordsPage[wordsCount].wordTranslate}`,
-        ok: false,
-      },
-    ])
   }
 
   useEffect(() => {
@@ -253,8 +250,8 @@ const Savanna = () => {
           <button
             type="button"
             className="inline-block px-10 py-1 mx-2 text-xs font-medium leading-6 text-center text-white
-         border-2 border-green-800 uppercase transition bg-green-500 rounded shadow ripple 
-         hover:shadow-lg hover:bg-green-900 focus:outline-none"
+        border-2 border-green-800 uppercase transition bg-green-500 rounded shadow ripple 
+        hover:shadow-lg hover:bg-green-900 focus:outline-none"
             onClick={startGame}
           >
             start
@@ -323,6 +320,7 @@ const Savanna = () => {
           alt="lotos"
         />
       </div>
+      <StatisticsModal show={showStatistics} statistics={statistics} />
     </div>
   )
 }
