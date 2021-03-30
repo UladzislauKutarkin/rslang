@@ -36,6 +36,7 @@ const Savanna = () => {
   const dropRef = useRef()
   const buttonsRef = useRef()
   const lotosRef = useRef()
+  const magicRef = useRef()
 
   const InCycle = useMemo(() => ({ on: false }), [])
   const speed = 6
@@ -48,7 +49,7 @@ const Savanna = () => {
   dispatch(setPageActionCreator({ page, showNavbar: false }))
   const currentWordsPage =
     useSelector(({ wordsPage }) => wordsPage.wordsPage) || []
-  // console.log("wordsPage", currentWordsPage)
+  // console.log("wordsPage", currentWordsPage
 
   const runCycle = () => {
     if (wordsCount >= 0) {
@@ -89,6 +90,7 @@ const Savanna = () => {
       runCycle()
     }
   }
+
   const getWordPage = (e) => {
     const group = e.target.value || 0
     setWordGroup(group)
@@ -111,13 +113,14 @@ const Savanna = () => {
       if (dropRef.current.offsetTop > lotosRef.current.offsetTop) {
         clearInterval(dropInterval)
         dropRef.current.innerHTML = ""
+        magicRef.current.style.animation = "none"
+
+        setTimeout(() => {
+          magicRef.current.style.animation = `puffEffect 5s`
+        }, 20)
       }
     }, 1)
-    // dropRef.current.animation = "none"
 
-    setTimeout(() => {
-      wordRef.current.style.animation = `fallDrop 2s`
-    }, 20)
     // console.log(
     //   " correctSelect word---",
     //   wordRef.current.offsetLeft,
@@ -132,9 +135,7 @@ const Savanna = () => {
     ])
     currentWordsPage[wordsCount].wordTranslate.toLowerCase()
 
-    // todo вделить перевод
-    // todo удалить анимацию падания
-    // todo анимация с каплей
+    // todo  управление с клавиатуры
     // todo анимация поглощения
   }
 
@@ -264,7 +265,6 @@ const Savanna = () => {
       >
         {" "}
       </div>
-      {/* prop div end */}
 
       {/* buttons */}
       <div
@@ -287,13 +287,23 @@ const Savanna = () => {
           </div>
         )}
       </div>
-      {/* buttons  end */}
 
+      {/* lotos */}
       <div ref={lotosRef} className="absolute bottom-10 w-full">
         <img
-          className={`${
-            isStartGame ? "animate-lotosRotate " : ""
-          } mx-auto bottom-10 left-1/2 w-24 h-24`}
+          className={`
+          ${isStartGame ? "animate-lotosRotate " : ""} 
+            mx-auto bottom-10 left-1/2 w-24 h-24`}
+          src={lotos}
+          alt="lotos"
+        />
+      </div>
+      {/* lotos */}
+      <div ref={magicRef} className="absolute bottom-36 w-full">
+        <img
+          className={`
+          ${isStartGame ? "animate-lotosRotate " : ""} 
+            mx-auto bottom-10 left-1/2 w-5 h-5`}
           src={lotos}
           alt="lotos"
         />

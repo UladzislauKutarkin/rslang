@@ -17,6 +17,7 @@ module.exports = {
       disappear: "disappear 0,5s linear",
       appear: "appear 2s",
       fallDrop: "fallDrop 2s",
+      puffEffect: "puffEffect 2s",
     },
 
     keyframes: {
@@ -32,7 +33,7 @@ module.exports = {
         "100%": { transform: "rotateY(180deg)" },
       },
       fallWord: {
-        "0%": { top: "20vh" },
+        "0%": { top: "22vh" },
 
         "100%": { top: "75vh" },
       },
@@ -52,6 +53,23 @@ module.exports = {
         "0%": { heigh: "10vh" },
 
         "100%": { heigh: "75vh" },
+      },
+
+      puffEffect: {
+        "0%": {
+          opacity: 0.5,
+          transformOrigin: "50% 50%",
+          transform: "scale(2, 2)",
+          filter: "blur(2px)",
+        },
+
+        "100%": {
+          opacity: 1,
+          transformOrigin: "50% 50%",
+          transform: "scale(1, 1)",
+          filter: "blur(0px)",
+          width: "0",
+        },
       },
     },
   },
