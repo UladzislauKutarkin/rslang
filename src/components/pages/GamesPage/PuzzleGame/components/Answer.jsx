@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { Container, Form } from 'semantic-ui-react';
+import React, { Component } from 'react'
+import { Container, Form } from 'semantic-ui-react'
 
 class Answer extends Component {
     constructor() {
@@ -38,4 +38,4 @@ class Answer extends Component {
     }
 }
 
-export default Answer;
+export default Answer
