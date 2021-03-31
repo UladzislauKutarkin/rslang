@@ -4,7 +4,8 @@ import { Link, withRouter } from "react-router-dom"
 import PropTypes from "prop-types"
 
 import { useDispatch, useSelector } from "react-redux"
-import { setPageActionCreator } from "../../../redux/pages/pages"
+
+import { onNavbarAC, offNavbarAC } from "../../../redux/games/navbar"
 
 import StatisticsModal from "../gamesComponents/StatisticsModal"
 
@@ -15,8 +16,6 @@ import drop from "../../../assets/img/games/drop.png"
 
 import close from "../../../assets/img/icons/icon_close.svg"
 import fullscreen from "../../../assets/img/icons/icon_fullscreen.svg"
-// eslint-disable-next-line no-unused-vars
-import rollscreen from "../../../assets/img/icons/icon_rollscreen.svg"
 
 import { getWordsPageAC } from "../../../redux/games/games"
 import random from "../../../helpers/random"
@@ -28,12 +27,6 @@ import { shuffle } from "../../../helpers/shuffle"
 
 // eslint-disable-next-line no-unused-vars
 const Savanna = ({ location }) => {
-  // console.log("props", props)
-  // eslint-disable-next-line react/destructuring-assignment
-  // console.log("props", props.location.pathname)
-
-  const [page] = useState({ name: "savanna", showNavbar: false })
-
   const [isStartGame, setIsStartGame] = useState(false)
 
   const [wordGroup, setWordGroup] = useState("0")
@@ -63,7 +56,6 @@ const Savanna = ({ location }) => {
   const wrongSound = useMemo(() => new Audio(wrong), [])
 
   const dispatch = useDispatch()
-  dispatch(setPageActionCreator({ page, showNavbar: false }))
 
   const currentWordsPage = {
     page: useSelector(({ wordsPage }) => wordsPage.wordsPage) || [],
@@ -249,8 +241,10 @@ const Savanna = ({ location }) => {
   const doFullscreen = () => {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen()
+      dispatch(offNavbarAC())
     } else if (document.exitFullscreen) {
       document.exitFullscreen()
+      dispatch(onNavbarAC())
     }
   }
 

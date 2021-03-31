@@ -1,13 +1,19 @@
 const SHOW_NAVBAR = "SHOW_NAVBAR"
 const HIDE_NAVBAR = "HIDE_NAVBAR"
 
-export const setNavbarAC = (isShowNavbar) => {
+export const onNavbarAC = () => {
   return {
-    type: isShowNavbar,
+    type: SHOW_NAVBAR,
   }
 }
 
-const navbarReducer = (state = true, action) => {
+export const offNavbarAC = () => {
+  return {
+    type: HIDE_NAVBAR,
+  }
+}
+
+const navbarReducer = (state = { showNavbar: true }, action) => {
   switch (action.type) {
     case SHOW_NAVBAR:
       return { ...state, showNavbar: true }

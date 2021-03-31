@@ -5,7 +5,7 @@ import user from "./auth/user"
 import vocabulary from "./vocabulary/vocabulary"
 import settings from "./settings/settings"
 import pagination from "./pagination/pagination"
-import page from "./pages/pages"
+// import page from "./pages/pages"
 import wordsPage from "./games/games"
 import showNavbar from "./games/navbar"
 
@@ -16,7 +16,6 @@ const reducers = combineReducers({
   vocabulary,
   settings,
   pagination,
-  page,
   wordsPage,
   showNavbar,
   wordBook,
