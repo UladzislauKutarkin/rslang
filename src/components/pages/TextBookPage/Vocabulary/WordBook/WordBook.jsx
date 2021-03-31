@@ -14,9 +14,10 @@ const WordBook = () => {
   const countPagination = Math.ceil(
     userWordsVocabulary[0]?.totalCount[0]?.count / 20
   )
+  const [restoreWord, setRestoreWord] = useState(true)
   useEffect(() => {
     dispatch(getUsersWords(page, "hard", group))
-  }, [dispatch, group, page])
+  }, [dispatch, group, page, restoreWord])
 
   const handleButtonClick = (pageCounter) => {
     setPage(pageCounter.selected)
@@ -29,7 +30,7 @@ const WordBook = () => {
     },
     []
   )
-
+  console.log(restoreWord)
   return (
     <>
       <WordCard
@@ -40,6 +41,8 @@ const WordBook = () => {
         userWordsVocabulary={userWordsVocabulary}
         handleVocavularyChangeGroup={handleVocavularyChangeGroup}
         selectedGroup={selectedGroup}
+        setRestoreWord={setRestoreWord}
+        restoredWord={restoreWord}
       />
     </>
   )

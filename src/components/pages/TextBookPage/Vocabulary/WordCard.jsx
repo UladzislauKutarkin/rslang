@@ -1,8 +1,11 @@
-import PropTypes from "prop-types"
+import React, { useCallback } from "react"
+import PropTypes, { any } from "prop-types"
 import cn from "classnames"
+import { useDispatch } from "react-redux"
 import Pragination from "../Pragination"
 import AudioComponent from "../AudioComponent"
 import Settings from "../Settings"
+import { putWordToWordBook } from "../../../../redux/wordBook/wordBook"
 
 const WordCard = ({
   handleButtonClick,
@@ -12,10 +15,20 @@ const WordCard = ({
   handleVocavularyChangeGroup,
   group,
   selectedGroup,
+  setRestoreWord,
+  restoredWord,
 }) => {
   const CustomComponent = (item) => (
     // eslint-disable-next-line react/no-danger
     <span dangerouslySetInnerHTML={{ __html: item }} />
+  )
+  const dispatch = useDispatch()
+  const restoreWord = useCallback(
+    (id) => () => {
+      dispatch(putWordToWordBook(id))
+      setRestoreWord(!restoredWord)
+    },
+    [dispatch, restoredWord]
   )
   return (
     <div className="flex-auto flex-wrap justify-center m-5">
@@ -96,6 +109,17 @@ const WordCard = ({
                               item.audioMeaning,
                             ]}
                           />
+                          <div className="mt-10 flex justify-center items-center">
+                            <div className="m-6 space-x-5">
+                              <button
+                                type="button"
+                                className="inline-block bg-purple-600 px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition rounded shadow ripple hover:shadow-lg hover:bg-purple-800 focus:outline-none"
+                                onClick={restoreWord(id)}
+                              >
+                                Восстановить
+                              </button>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -121,8 +145,16 @@ WordCard.propTypes = {
   countPagination: PropTypes.number.isRequired,
   handleButtonClick: PropTypes.func.isRequired,
   page: PropTypes.number.isRequired,
-  userWordsVocabulary: PropTypes.arrayOf(PropTypes.object).isRequired,
+  userWordsVocabulary: PropTypes.arrayOf(PropTypes.object),
   handleVocavularyChangeGroup: PropTypes.func.isRequired,
   group: PropTypes.number.isRequired,
   selectedGroup: PropTypes.number.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  setRestoreWord: PropTypes.any,
+  restoredWord: PropTypes.bool.isRequired,
+}
+
+WordCard.defaultProps = {
+  userWordsVocabulary: [],
+  setRestoreWord: any,
 }
