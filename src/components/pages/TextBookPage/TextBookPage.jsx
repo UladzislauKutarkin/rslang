@@ -10,6 +10,8 @@ import { changePage } from "../../../redux/pagination/pagination"
 
 const TextBookPage = () => {
   const dispatch = useDispatch()
+  const selectedGroup = useSelector(({ pagination }) => pagination.group)
+  const [isSetings] = useState(true)
   const vocabularyData = useSelector(({ vocabulary }) => vocabulary.vocabulary)
   const group = useSelector(({ pagination }) => pagination.group)
   const pageNumber = useSelector(({ pagination }) => pagination.page)
@@ -61,7 +63,11 @@ const TextBookPage = () => {
   return (
     <div className="flex-auto flex-wrap justify-center m-5">
       {/* <ScrollToTopOnMount /> */}
-      <Settings group={group} />
+      <Settings
+        selectedGroup={selectedGroup}
+        isSetings={isSetings}
+        group={group}
+      />
       <div className="container mx-auto mt-20 auto-rows-fr auto-cols-max grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
         {vocabularyData.map((item) => (
           <div

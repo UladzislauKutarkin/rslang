@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
+import PropTypes from "prop-types"
 import cn from "classnames"
 import PureModal from "react-pure-modal"
 import "react-pure-modal/dist/react-pure-modal.min.css"
@@ -9,10 +10,14 @@ import ChangeTranslate from "./ChangeTranslate"
 import { changeGroup, changePage } from "../../../redux/pagination/pagination"
 import ChangeButtons from "./ChangeButtons"
 
-const Settings = () => {
+const Settings = ({
+  isSetings,
+  handleVocavularyChangeGroup,
+  selectedGroup,
+}) => {
   const dispatch = useDispatch()
   const [modal, setModal] = useState(false)
-  const selectedGroup = useSelector(({ pagination }) => pagination.group)
+
   const handleChangeGroup = useCallback(
     (group) => () => {
       dispatch(changeGroup(group))
@@ -23,24 +28,25 @@ const Settings = () => {
   )
   return (
     <>
-      <PureModal
-        width="400px"
-        header="Settings"
-        isOpen={modal}
-        closeButton="x"
-        className=" justify-center h-auto w-11/12 md:w-1/2 p-5  bg-white text-center rounded-md "
-        closeButtonPosition="bottom"
-        onClose={() => {
-          setModal(false)
-          return true
-        }}
-      >
-        <div>Отображать перевод:</div>
-        <ChangeTranslate />
-        <div>Отображать кнопки:</div>
-        <ChangeButtons />
-      </PureModal>
-
+      {isSetings ? (
+        <PureModal
+          width="400px"
+          header="Settings"
+          isOpen={modal}
+          closeButton="x"
+          className=" justify-center h-auto w-11/12 md:w-1/2 p-5  bg-white text-center rounded-md "
+          closeButtonPosition="bottom"
+          onClose={() => {
+            setModal(false)
+            return true
+          }}
+        >
+          <div>Отображать перевод:</div>
+          <ChangeTranslate />
+          <div>Отображать кнопки:</div>
+          <ChangeButtons />
+        </PureModal>
+      ) : null}
       <div>
         <div className="flex justify-between h-10">
           <div className="flex justify-between w-2/5">
@@ -55,22 +61,26 @@ const Settings = () => {
               </button>
             ))}
           </div>
-          <Link to="/vocabulary/">
-            <button
-              // eslint-disable-next-line react/no-array-index-key
-              type="button"
-              className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-yellow-900 rounded shadow ripple hover:shadow-lg hover:bg-yellow-700 focus:outline-none"
-            >
-              Cловарь
-            </button>
-          </Link>
-          <div onClick={() => setModal(true)}>
-            <img
-              className="w-8 h-8 cursor-pointer"
-              src={settings}
-              alt="settings"
-            />
-          </div>
+          {isSetings ? (
+            <>
+              <Link to="/vocabulary/">
+                <button
+                  // eslint-disable-next-line react/no-array-index-key
+                  type="button"
+                  className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-yellow-900 rounded shadow ripple hover:shadow-lg hover:bg-yellow-700 focus:outline-none"
+                >
+                  Cловарь
+                </button>
+              </Link>
+              <div onClick={() => setModal(true)}>
+                <img
+                  className="w-8 h-8 cursor-pointer"
+                  src={settings}
+                  alt="settings"
+                />
+              </div>
+            </>
+          ) : null}
         </div>
         <div className="flex justify-center">
           <div className="w-3/4 flex justify-between mt-8">
@@ -86,7 +96,11 @@ const Settings = () => {
                 // eslint-disable-next-line react/no-array-index-key
                 key={index}
                 type="button"
-                onClick={handleChangeGroup(index)}
+                onClick={
+                  isSetings
+                    ? handleChangeGroup(index)
+                    : handleVocavularyChangeGroup(index)
+                }
                 className={cn(
                   "inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition rounded shadow ripple hover:shadow-lg  focus:outline-none",
                   {
@@ -123,3 +137,13 @@ const Settings = () => {
 }
 
 export default Settings
+
+Settings.propTypes = {
+  isSetings: PropTypes.bool,
+  handleVocavularyChangeGroup: PropTypes.func.isRequired,
+  selectedGroup: PropTypes.number.isRequired,
+}
+
+Settings.defaultProps = {
+  isSetings: false,
+}

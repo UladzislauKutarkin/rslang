@@ -29,12 +29,12 @@ export const AddUserWord = (mode) => ({
   type: ADD_USER_WORD,
   payload: mode,
 })
-export const getUsersWords = (page, queryDifficulty) => (dispatch) => {
+export const getUsersWords = (page, queryDifficulty, group) => (dispatch) => {
   const { token } = JSON.parse(localStorage.getItem("user"))
   const { userID } = JSON.parse(localStorage.getItem("user"))
   axios
     .get(
-      `users/${userID}/aggregatedWords?wordsPerPage=3600&page=${page}&filter={"userWord.difficulty":"${queryDifficulty}"}`,
+      `users/${userID}/aggregatedWords?wordsPerPage=20&page=${page}&group=${group}&filter={"userWord.difficulty":"${queryDifficulty}"}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
