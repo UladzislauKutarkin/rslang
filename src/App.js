@@ -19,7 +19,7 @@ function App() {
         <Route exact path="/statistics/" component={StatisticsPage} />
         <Route exact path="/register/" component={SignUp} />
         <Route exact path="/signin/" component={SignIn} />
-        <Route exact path="/savanna" component={Savanna} />
+        <Route path="/savanna" component={Savanna} />
         <Redirect from="*" to="/" />
       </Switch>
     </div>

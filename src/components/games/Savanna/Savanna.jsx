@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import { useEffect, useState, useMemo, useRef } from "react"
-import { Link } from "react-router-dom"
+import { Link, withRouter } from "react-router-dom"
+import PropTypes from "prop-types"
 
 import { useDispatch, useSelector } from "react-redux"
 import { setPageActionCreator } from "../../../redux/pages/pages"
@@ -19,7 +20,12 @@ import wrong from "../../../assets/sound/wrong.mp3"
 
 import { shuffle } from "../../../helpers/shuffle"
 
-const Savanna = () => {
+// eslint-disable-next-line no-unused-vars
+const Savanna = ({ location }) => {
+  // console.log("props", props)
+  // eslint-disable-next-line react/destructuring-assignment
+  // console.log("props", props.location.pathname)
+
   const [page] = useState({ name: "savanna", showNavbar: false })
 
   const [isStartGame, setIsStartGame] = useState(false)
@@ -32,8 +38,6 @@ const Savanna = () => {
   const [alive, setAlive] = useState(false)
   const [title, setTitle] = useState("Savanna")
   const [life, setLife] = useState(5)
-  // eslint-disable-next-line no-unused-vars
-  const [showStatistics, setShowStatistics] = useState(true)
 
   const wordRef = useRef()
   const dropRef = useRef()
@@ -43,7 +47,7 @@ const Savanna = () => {
   const isSelectRef = useRef()
 
   const InCycle = useMemo(() => ({ on: false }), [])
-  const speed = 6
+  const speed = 5
 
   const music = useMemo(() => new Audio(forsavanna), [])
   const correctSound = useMemo(() => new Audio(correct), [])
@@ -53,17 +57,6 @@ const Savanna = () => {
   dispatch(setPageActionCreator({ page, showNavbar: false }))
   const currentWordsPage =
     useSelector(({ wordsPage }) => wordsPage.wordsPage) || []
-
-  const endGame = () => {
-    setTimeout(() => {}, 3000)
-    console.log("end game")
-    setTimeout(() => {
-      // todo статистика
-      // todo продолжить или выйти
-
-      console.log()
-    }, 3000)
-  }
 
   const reduceLives = () => {
     if (life > 0) {
@@ -83,7 +76,6 @@ const Savanna = () => {
   }
 
   const runCycle = () => {
-    console.log("---statistics----", statistics)
     if (wordsCount > 0) {
       InCycle.on = true
 
@@ -191,7 +183,7 @@ const Savanna = () => {
   useEffect(() => {
     if (wordsCount >= 0 && isStartGame && InCycle.on === false && life > 0) {
       runCycle()
-    } else endGame()
+    }
   }, [wordsCount])
 
   const musicControlHandler = () => {
@@ -222,7 +214,7 @@ const Savanna = () => {
     >
       <h1 className="text-3xl text-center pt-8  hidden  lg:block">{title}</h1>
 
-      <div className=" absolute top-10 left-10 ">
+      <div className=" absolute top-15 left-10 ">
         <div className="">
           {/* eslint-disable-next-line jsx-a11y/no-onchange */}
           <select
@@ -320,8 +312,17 @@ const Savanna = () => {
           alt="lotos"
         />
       </div>
-      <StatisticsModal show={showStatistics} statistics={statistics} />
+      <StatisticsModal
+        show={!wordsCount || !life}
+        statistics={statistics}
+        setWordsCount={setWordsCount}
+        setLife={setLife}
+      />
     </div>
   )
 }
-export default Savanna
+export default withRouter(Savanna)
+Savanna.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  location: PropTypes.any.isRequired,
+}
