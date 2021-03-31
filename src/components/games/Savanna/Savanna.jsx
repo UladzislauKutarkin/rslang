@@ -12,6 +12,12 @@ import savannaBack from "../../../assets/img/games/savanna_back.jpg"
 import lotos from "../../../assets/img/games/lotos_1.png"
 import heart from "../../../assets/img/games/heart.png"
 import drop from "../../../assets/img/games/drop.png"
+
+import close from "../../../assets/img/icons/icon_close.svg"
+import fullscreen from "../../../assets/img/icons/icon_fullscreen.svg"
+// eslint-disable-next-line no-unused-vars
+import rollscreen from "../../../assets/img/icons/icon_rollscreen.svg"
+
 import { getWordsPageAC } from "../../../redux/games/games"
 import random from "../../../helpers/random"
 import forsavanna from "../../../assets/sound/forsavanna.mp3"
@@ -45,6 +51,7 @@ const Savanna = ({ location }) => {
   const lotosRef = useRef()
   const isWrongSelectRef = useRef()
   const isSelectRef = useRef()
+  const backRef = useRef()
 
   const InCycle = useMemo(() => ({ on: false }), [])
   const speed = 5
@@ -239,14 +246,23 @@ const Savanna = ({ location }) => {
     }
   }
 
+  const doFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen()
+    } else if (document.exitFullscreen) {
+      document.exitFullscreen()
+    }
+  }
+
   return (
     <div
-      className="h-screen w-screen bg-cover bg-center"
+      ref={backRef}
+      className="h-screen  w-full bg-cover bg-center"
       style={{ backgroundImage: `url(${savannaBack})` }}
     >
       <h1 className="text-3xl text-center pt-8  hidden  lg:block">{title}</h1>
 
-      <div className=" absolute top-16 left-1  md:left-10 md:top-12">
+      <div className=" absolute top-24 left-1  md:left-10 md:top-20">
         <div className="">
           {/* eslint-disable-next-line jsx-a11y/no-onchange */}
           <select
@@ -283,15 +299,23 @@ const Savanna = ({ location }) => {
         </div>
       </div>
 
-      <div className="absolute  flex top-4 md:top-12 right-20">
+      <div className="absolute  flex top-20 md:top-20 right-24">
         {[...Array(life)].map(() => (
           <img className="mx-0.5 w-6" src={heart} alt="life" />
         ))}
       </div>
 
       {/* exit */}
-      <div className="absolute top-4 right-5">
-        <Link to="/games/"> X </Link>
+      <div className="absolute top-20 right-5">
+        <Link to="/games/">
+          <img className="w-4" src={close} alt="X" />
+        </Link>
+      </div>
+
+      <div className="absolute top-20 right-14">
+        <button type="button" onClick={doFullscreen}>
+          <img className="w-6" src={fullscreen} alt="full" />
+        </button>
       </div>
 
       {/* word div */}
@@ -336,11 +360,11 @@ const Savanna = ({ location }) => {
       </div>
 
       {/* lotos */}
-      <div ref={lotosRef} className="absolute bottom-10 w-full">
+      <div ref={lotosRef} className="absolute  bottom-10 w-full">
         <img
           className={`
           ${isStartGame ? "animate-lotosRotate " : ""} 
-            mx-auto bottom-10 left-1/2 w-24 h-24`}
+          mx-auto bottom-10 left-1/2 w-24 h-24`}
           src={lotos}
           alt="lotos"
         />

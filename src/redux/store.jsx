@@ -7,6 +7,8 @@ import settings from "./settings/settings"
 import pagination from "./pagination/pagination"
 import page from "./pages/pages"
 import wordsPage from "./games/games"
+import showNavbar from "./games/navbar"
+
 import wordBook from "./wordBook/wordBook"
 
 const reducers = combineReducers({
@@ -16,6 +18,7 @@ const reducers = combineReducers({
   pagination,
   page,
   wordsPage,
+  showNavbar,
   wordBook,
 })
 
