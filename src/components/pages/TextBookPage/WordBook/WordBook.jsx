@@ -1,19 +1,17 @@
 import React, { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { getUsersWords } from "../../../../redux/wordBook/wordBook"
-import { getUserVocabulary } from "../../../../redux/wordBook/wordBookWords"
 import AudioComponent from "../AudioComponent"
 
 const WordBook = () => {
   const dispatch = useDispatch()
-  const userWords = useSelector(({ wordBook }) => wordBook.wordBook)
-  const userWordsVocabulary = useSelector(
-    ({ wordBookWords }) => wordBookWords.userVocabulary
-  )
-  useEffect(() => {
-    const dataUserWords = userWords.map((el) => el.wordId)
-    dispatch(getUsersWords())
-    dataUserWords.map((item) => dispatch(getUserVocabulary(item)))
+  const userWordsVocabulary = useSelector(({ wordBook }) => wordBook.wordBook)
+  useEffect(async () => {
+    await dispatch(getUsersWords())
+    const kek = userWordsVocabulary[0].map((item) => (
+      <div>{item.paginatedResults}</div>
+    ))
+    console.log(kek)
   }, [dispatch])
   const CustomComponent = (item) => (
     // eslint-disable-next-line react/no-danger

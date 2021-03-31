@@ -33,11 +33,14 @@ export const getUsersWords = () => (dispatch) => {
   const { token } = JSON.parse(localStorage.getItem("user"))
   const { userID } = JSON.parse(localStorage.getItem("user"))
   axios
-    .get(`/users/${userID}/words`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
+    .get(
+      `users/${userID}/aggregatedWords?wordsPerPage=3600&filter={%22userWord%22:{%22$exists%22:%20true}}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
     .then(({ data }) => dispatch(fetchUserWordsSucsess(data)))
 }
 

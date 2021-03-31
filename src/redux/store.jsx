@@ -6,12 +6,10 @@ import vocabulary from "./vocabulary/vocabulary"
 import settings from "./settings/settings"
 import pagination from "./pagination/pagination"
 import wordBook from "./wordBook/wordBook"
-import wordBookWords from "./wordBook/wordBookWords"
 
 const reducers = combineReducers({
   user,
   vocabulary,
-  wordBookWords,
   settings,
   pagination,
   wordBook,
