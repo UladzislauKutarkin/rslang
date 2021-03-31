@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import cn from "classnames"
 import { getVocabulary } from "../../../redux/vocabulary/vocabulary"
+import { addWordToWordBook } from "../../../redux/wordBook/wordBook"
 import Pragination from "./Pragination"
 import AudioComponent from "./AudioComponent"
 import Settings from "./Settings"
@@ -9,11 +10,14 @@ import { changePage } from "../../../redux/pagination/pagination"
 
 const TextBookPage = () => {
   const dispatch = useDispatch()
+  const selectedGroup = useSelector(({ pagination }) => pagination.group)
+  const [isSetings] = useState(true)
   const vocabularyData = useSelector(({ vocabulary }) => vocabulary.vocabulary)
   const group = useSelector(({ pagination }) => pagination.group)
   const pageNumber = useSelector(({ pagination }) => pagination.page)
   const isTranslate = useSelector(({ settings }) => settings.translate)
   const isButtons = useSelector(({ settings }) => settings.buttons)
+  const [complicatedWords, setComplicatedWords] = useState([])
   const handleButtonClick = (pageCounter) => {
     dispatch(changePage(pageCounter.selected))
     localStorage.setItem("page", pageCounter.selected)
@@ -27,44 +31,56 @@ const TextBookPage = () => {
     <span dangerouslySetInnerHTML={{ __html: item }} />
   )
 
-  const ScrollToTopOnMount = () => {
-    useEffect(() => {
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      })
-    }, [])
-    return null
-  }
+  // const ScrollToTopOnMount = () => {
+  //   useEffect(() => {
+  //     window.scrollTo({
+  //       top: 0,
+  //       behavior: "smooth",
+  //     })
+  //   }, [])
+  //   return null
+  // }
 
   const deleteWord = useCallback(
-    (id) => () => {
+    (id, difficulty) => () => {
+      dispatch(addWordToWordBook(id, difficulty))
       const wordCard = document.getElementById(`${id}`)
       wordCard.classList.add("hidden")
     },
-    []
+    [dispatch]
   )
 
   const addToHardWord = useCallback(
-    (id) => () => {
-      const wordCard = document.getElementById(`${id}`)
-      wordCard.classList.add("border-2")
-      wordCard.classList.add("border-red-800")
-      wordCard.classList.add("rounded-lg")
+    (wordId, difficulty) => () => {
+      dispatch(addWordToWordBook(wordId, difficulty))
+      if (!complicatedWords.includes(wordId)) {
+        setComplicatedWords([...complicatedWords, wordId])
+      }
     },
-    []
+    [complicatedWords, dispatch]
   )
 
   return (
     <div className="flex-auto flex-wrap justify-center m-5">
-      <ScrollToTopOnMount />
-      <Settings group={group} />
+      {/* <ScrollToTopOnMount /> */}
+      <Settings
+        selectedGroup={selectedGroup}
+        isSetings={isSetings}
+        group={group}
+      />
       <div className="container mx-auto mt-20 auto-rows-fr auto-cols-max grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
         {vocabularyData.map((item) => (
           <div
             key={item.id}
             id={item.id}
-            className="flex-auto self-stretch items-stretch justify-center"
+            className={cn(
+              "flex-auto self-stretch items-stretch justify-center",
+              {
+                "border-2 border-red-800 rounded-lg": complicatedWords.includes(
+                  item.id
+                ),
+              }
+            )}
           >
             <div>
               <div className="rounded-lg overflow-hidden">
@@ -122,31 +138,35 @@ const TextBookPage = () => {
                       )}
                     </div>
                     <AudioComponent
-                      audio={item.audio}
-                      id={item.id}
-                      audioExample={item.audioExample}
-                      audioMeaning={item.audioMeaning}
+                      audios={[
+                        item.audio,
+                        item.audioExample,
+                        item.audioMeaning,
+                      ]}
                     />
                     <div className="mt-10 flex justify-center items-center">
                       {isButtons && (
                         <div className="m-6 space-x-5">
-                          {["Удалить", "В сложные"].map((index) => (
+                          {["Удалить", "В сложные"].map((el) => (
                             <button
                               // eslint-disable-next-line react/no-array-index-key
-                              key={index}
+                              key={el}
                               type="button"
-                              className={
-                                index === "Удалить"
-                                  ? "inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-red-500 rounded shadow ripple hover:shadow-lg hover:bg-red-600 focus:outline-none"
-                                  : "inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-yellow-500 rounded shadow ripple hover:shadow-lg hover:bg-yellow-600 focus:outline-none"
-                              }
+                              className={cn(
+                                "inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition rounded shadow ripple hover:shadow-lg hover:bg-red-600 focus:outline-none",
+                                {
+                                  "bg-red-500": el === "Удалить",
+                                  "bg-yellow-500 hover:bg-yellow-600":
+                                    el !== "Удалить",
+                                }
+                              )}
                               onClick={
-                                index === "Удалить"
-                                  ? deleteWord(item.id)
-                                  : addToHardWord(item.id)
+                                el === "Удалить"
+                                  ? deleteWord(item.id, "deleted")
+                                  : addToHardWord(item.id, "hard")
                               }
                             >
-                              {index}
+                              {el}
                             </button>
                           ))}
                         </div>
@@ -159,7 +179,11 @@ const TextBookPage = () => {
           </div>
         ))}
       </div>
-      <Pragination handleClick={handleButtonClick} pageNumber={pageNumber} />
+      <Pragination
+        countPagination={30}
+        handleClick={handleButtonClick}
+        pageNumber={pageNumber}
+      />
     </div>
   )
 }

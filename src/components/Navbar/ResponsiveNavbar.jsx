@@ -1,18 +1,19 @@
 import { Link } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import imgLogo from "../../assets/img/logo_rslang.png"
 import imgLogoSm from "../../assets/img/logo_rslang_sm.png"
 import { logoutUser } from "../../redux/auth/user"
+import { isAuthorized } from "../../helpers/globals"
 
 export default function ResponsiveNavbar() {
-  const [showUserMenu, setShowUserMenu] = useState(false)
   const [showMobileMenu, setShowMobileMenu] = useState(false)
+  const [showUserDropDown, setShowUserDropDown] = useState(false)
+  const userCurrent = useSelector(({ user }) => user.user)
   const dispatch = useDispatch()
-
-  const controlUserMenu = () => {
-    setShowUserMenu(!showUserMenu)
-  }
+  const handleSwitchUserDropDown = useCallback(() => {
+    setShowUserDropDown(!showUserDropDown)
+  }, [showUserDropDown])
 
   const controlMobileMenu = () => {
     setShowMobileMenu(!showMobileMenu)
@@ -22,16 +23,11 @@ export default function ResponsiveNavbar() {
     dispatch(logoutUser())
   }
 
-  const userCurrent = useSelector(({ user }) => user.user)
-
-  const isName = () => {
-    if (!userCurrent.message) {
-      return null
-    }
+  const userDropDown = () => {
     return (
       <div className="  divide-y-2 divide-gey-600 divide-solid">
         <div className=" w-full px-4 py-2 text-gray-700 hover:bg-gray-100">
-          {userCurrent.name}
+          {JSON.parse(localStorage.getItem("user")).name}
         </div>
         <button
           type="button"
@@ -132,11 +128,11 @@ export default function ResponsiveNavbar() {
               </div>
             </div>
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0  ">
-              {userCurrent.message ? (
+              {isAuthorized || userCurrent.userId ? (
                 <div className="ml-3 relative">
                   <div>
                     <button
-                      onClick={controlUserMenu}
+                      onClick={handleSwitchUserDropDown}
                       type="button"
                       className="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
                     >
@@ -148,15 +144,11 @@ export default function ResponsiveNavbar() {
                       />
                     </button>
                   </div>
-
-                  <div
-                    className={` ${
-                      showUserMenu ? "block" : "hidden"
-                    } z-50 origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1
-                   bg-white ring-1 ring-black ring-opacity-5 focus:outline-none`}
-                  >
-                    {isName()}
-                  </div>
+                  {showUserDropDown && (
+                    <div className="z-50 origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      {userDropDown()}
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div>
