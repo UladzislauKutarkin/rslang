@@ -1,15 +1,15 @@
-import { useDispatch } from "react-redux"
-import { useState } from "react"
+// import { useDispatch } from "react-redux"
+// import { useState } from "react"
 import { Link } from "react-router-dom"
-import { setPageActionCreator } from "../../../redux/pages/pages"
+// import { setPageActionCreator } from "../../../redux/pages/pages"
 import TeamMarket from "./TeamMarket"
 import imgHeaderPromo from "../../../assets/img/english_promo_header.jpg"
 
 const HomePage = () => {
-  const [page] = useState("home")
-  const [showNavbar] = useState(true)
-  const dispatch = useDispatch()
-  dispatch(setPageActionCreator({ page, showNavbar }))
+  // const [page] = useState("home")
+  // const [showNavbar] = useState(true)
+  // const dispatch = useDispatch()
+  // dispatch(setPageActionCreator({ page, showNavbar }))
 
   return (
     <>

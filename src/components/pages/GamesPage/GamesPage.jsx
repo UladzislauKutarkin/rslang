@@ -2,8 +2,8 @@ import { Link } from "react-router-dom"
 import savannaPromo from "../../../assets/img/games/savanna_promo.jpg"
 
 const GamesPage = () => (
-  <div className="h-screen w-screen md:px-16 lg:px-32">
-    <div className=" brd-g  grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 ">
+  <div className=" w-full md:px-16 lg:px-32">
+    <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 ">
       <div className="bg-black max-w-lg flex max-h-96 m-4 md:m-6 rounded-lg">
         <div className="  relative group sm:w-full md:w-1/2    rounded-lg">
           <nav>
