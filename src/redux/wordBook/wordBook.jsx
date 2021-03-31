@@ -29,12 +29,12 @@ export const AddUserWord = (mode) => ({
   type: ADD_USER_WORD,
   payload: mode,
 })
-export const getUsersWords = (page) => (dispatch) => {
+export const getUsersWords = (page, queryDifficulty) => (dispatch) => {
   const { token } = JSON.parse(localStorage.getItem("user"))
   const { userID } = JSON.parse(localStorage.getItem("user"))
   axios
     .get(
-      `users/${userID}/aggregatedWords?wordsPerPage=20&page=${page}&group=0&filter={%22userWord%22:{%22$exists%22:%20true}}`,
+      `users/${userID}/aggregatedWords?wordsPerPage=3600&page=${page}&filter={"userWord.difficulty":"${queryDifficulty}"}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -44,13 +44,13 @@ export const getUsersWords = (page) => (dispatch) => {
     .then(({ data }) => dispatch(fetchUserWordsSucsess(data)))
 }
 
-export const addWordToWordBook = (wordId) => (dispatch) => {
+export const addWordToWordBook = (wordId, difficulty) => (dispatch) => {
   const { token } = JSON.parse(localStorage.getItem("user"))
   const { userID } = JSON.parse(localStorage.getItem("user"))
   axios
     .post(
       `/users/${userID}/words/${wordId}`,
-      {},
+      { difficulty: `${difficulty}` },
       {
         headers: {
           Authorization: `Bearer ${token}`,

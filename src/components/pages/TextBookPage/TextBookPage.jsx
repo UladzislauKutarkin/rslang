@@ -40,16 +40,17 @@ const TextBookPage = () => {
   // }
 
   const deleteWord = useCallback(
-    (id) => () => {
+    (id, difficulty) => () => {
+      dispatch(addWordToWordBook(id, difficulty))
       const wordCard = document.getElementById(`${id}`)
       wordCard.classList.add("hidden")
     },
-    []
+    [dispatch]
   )
 
   const addToHardWord = useCallback(
-    (wordId) => () => {
-      dispatch(addWordToWordBook(wordId))
+    (wordId, difficulty) => () => {
+      dispatch(addWordToWordBook(wordId, difficulty))
       if (!complicatedWords.includes(wordId)) {
         setComplicatedWords([...complicatedWords, wordId])
       }
@@ -155,8 +156,8 @@ const TextBookPage = () => {
                               )}
                               onClick={
                                 el === "Удалить"
-                                  ? deleteWord(item.id)
-                                  : addToHardWord(item.id)
+                                  ? deleteWord(item.id, "deleted")
+                                  : addToHardWord(item.id, "hard")
                               }
                             >
                               {el}
