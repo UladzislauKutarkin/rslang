@@ -55,7 +55,7 @@ const Settings = () => {
               </button>
             ))}
           </div>
-          <Link to="/wordbook/">
+          <Link to="/vocabulary/">
             <button
               // eslint-disable-next-line react/no-array-index-key
               type="button"

@@ -131,10 +131,11 @@ const TextBookPage = () => {
                       )}
                     </div>
                     <AudioComponent
-                      audio={item.audio}
-                      id={item.id}
-                      audioExample={item.audioExample}
-                      audioMeaning={item.audioMeaning}
+                      audios={[
+                        item.audio,
+                        item.audioExample,
+                        item.audioMeaning,
+                      ]}
                     />
                     <div className="mt-10 flex justify-center items-center">
                       {isButtons && (
@@ -171,7 +172,11 @@ const TextBookPage = () => {
           </div>
         ))}
       </div>
-      <Pragination handleClick={handleButtonClick} pageNumber={pageNumber} />
+      <Pragination
+        countPagination={30}
+        handleClick={handleButtonClick}
+        pageNumber={pageNumber}
+      />
     </div>
   )
 }
