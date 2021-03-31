@@ -12,7 +12,6 @@ import Vocabulary from "./components/pages/TextBookPage/Vocabulary/Vocabulary"
 import StudiedWords from "./components/pages/TextBookPage/Vocabulary/StudiedWords/StudiedWords"
 import DeletedWords from "./components/pages/TextBookPage/Vocabulary/DeletedWords/DeletedWords"
 
-
 function App() {
   return (
     <div className="App">
