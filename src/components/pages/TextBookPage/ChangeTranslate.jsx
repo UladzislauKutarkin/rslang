@@ -22,15 +22,15 @@ const ChangeTranslate = () => {
           onChange={handleSwitchTranslate}
           type="checkbox"
           name="toggle"
-          id="toggle"
+          id="toggl"
           className="toggle-checkbox outline-none absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
         />
         <label
-          htmlFor="toggle"
+          htmlFor="toggl"
           className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
         />
       </div>
-      <label htmlFor="toggle" className="text-xs text-gray-700">
+      <label htmlFor="toggl" className="text-xs text-gray-700">
         Нажми меня
       </label>
     </>

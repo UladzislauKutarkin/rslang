@@ -1,18 +1,19 @@
 import { Link } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import imgLogo from "../../assets/img/logo_rslang.png"
 import imgLogoSm from "../../assets/img/logo_rslang_sm.png"
 import { logoutUser } from "../../redux/auth/user"
+import { isAuthorized } from "../../helpers/globals"
 
 export default function ResponsiveNavbar() {
-  const [showUserMenu, setShowUserMenu] = useState(false)
   const [showMobileMenu, setShowMobileMenu] = useState(false)
+  const [showUserDropDown, setShowUserDropDown] = useState(false)
+  const userCurrent = useSelector(({ user }) => user.user)
   const dispatch = useDispatch()
-
-  const controlUserMenu = () => {
-    setShowUserMenu(!showUserMenu)
-  }
+  const handleSwitchUserDropDown = useCallback(() => {
+    setShowUserDropDown(!showUserDropDown)
+  }, [showUserDropDown])
 
   const controlMobileMenu = () => {
     setShowMobileMenu(!showMobileMenu)
@@ -22,17 +23,11 @@ export default function ResponsiveNavbar() {
     dispatch(logoutUser())
   }
 
-  const userCurrent = useSelector(({ user }) => user.user)
-  const showNavbar = useSelector(({ page }) => page.page.showNavbar)
-
-  const isName = () => {
-    if (!userCurrent.message) {
-      return null
-    }
+  const userDropDown = () => {
     return (
       <div className="  divide-y-2 divide-gey-600 divide-solid">
         <div className=" w-full px-4 py-2 text-gray-700 hover:bg-gray-100">
-          {userCurrent.name}
+          {JSON.parse(localStorage.getItem("user")).name}
         </div>
         <button
           type="button"
@@ -110,17 +105,16 @@ export default function ResponsiveNavbar() {
                     />
                   </Link>
                 </div>
-                <div className="hidden sm:block sm:ml-6">
-                  <div className="flex space-x-4">
-                    <Link
-                      to="/textbook/"
-                      className="text-indigo-900 hover:bg-blue-900 hover:text-white px-3 py-2 rounded-md  font-medium  text-xl"
-                    >
-                      Электронный Учебник
-                    </Link>
-                    <Link
-                      to="/games/"
-                      className="text-indigo-900 hover:bg-blue-900 hover:text-white px-3 py-2 rounded-md  font-medium text-xl"
+              </div>
+            </div>
+            <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0  ">
+              {isAuthorized || userCurrent.userId ? (
+                <div className="ml-3 relative">
+                  <div>
+                    <button
+                      onClick={handleSwitchUserDropDown}
+                      type="button"
+                      className="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
                     >
                       Мини-игры
                     </Link>
@@ -131,46 +125,22 @@ export default function ResponsiveNavbar() {
                       Статистика
                     </Link>
                   </div>
+                  {showUserDropDown && (
+                    <div className="z-50 origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      {userDropDown()}
+                    </div>
+                  )}
                 </div>
-              </div>
-              <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0  ">
-                {userCurrent.message ? (
-                  <div className="ml-3 relative">
-                    <div>
-                      <button
-                        onClick={controlUserMenu}
-                        type="button"
-                        className="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
-                      >
-                        <span className="sr-only">Open user menu</span>
-                        <img
-                          className="h-8 w-8 rounded-full"
-                          src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                          alt=""
-                        />
-                      </button>
-                    </div>
-
-                    <div
-                      className={` ${
-                        showUserMenu ? "block" : "hidden"
-                      } z-50 origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1
-                   bg-white ring-1 ring-black ring-opacity-5 focus:outline-none`}
-                    >
-                      {isName()}
-                    </div>
-                  </div>
-                ) : (
-                  <div>
-                    <Link
-                      to="/signin"
-                      className="text-indigo-900 hover:bg-blue-900 hover:text-white px-3 py-2 rounded-md  font-medium  text-xl"
-                    >
-                      Sign In
-                    </Link>
-                  </div>
-                )}
-              </div>
+              ) : (
+                <div>
+                  <Link
+                    to="/signin"
+                    className="text-indigo-900 hover:bg-blue-900 hover:text-white px-3 py-2 rounded-md  font-medium  text-xl"
+                  >
+                    Sign In
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
           {showMobileMenu && (

@@ -49,8 +49,16 @@ export const logoutUser = () => ({ type: "USER_SING_OUT", payload: {} })
 export const loginUser = (user) => (dispatch) => {
   dispatch(fetchUserRequest())
   axios
-    .post("https://rs-lang-back.herokuapp.com/signin", { ...user })
-    .then(({ data }) => dispatch(fetchUserSucsess(data)))
+    .post("/signin", { ...user })
+    .then(({ data }) => {
+      const userData = {
+        userID: data.userId,
+        token: data.token,
+        name: data.name,
+      }
+      localStorage.setItem("user", JSON.stringify(userData))
+      dispatch(fetchUserSucsess(data))
+    })
     .catch((error) => dispatch(fetchUserFailure(error)))
 }
 

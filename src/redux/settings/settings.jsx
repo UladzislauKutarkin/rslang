@@ -11,7 +11,7 @@ const SettingsReducer = (state = initialState, action) => {
     case CHANGE_SETTINGS_TRANSLATE:
       return { ...state, translate: action.payload }
     case CHANGE_SETTINGS_BUTTONS:
-      return { ...state, buttons: false }
+      return { ...state, buttons: action.payload }
     default:
       return state
   }

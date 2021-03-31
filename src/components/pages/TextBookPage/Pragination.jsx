@@ -2,11 +2,12 @@ import React from "react"
 import ReactPaginate from "react-paginate"
 import PropTypes from "prop-types"
 
-const Pragination = ({ handleClick }) => (
+const Pragination = ({ countPagination, handleClick, pageNumber }) => (
   <ReactPaginate
-    initialPage={0}
+    initialPage={pageNumber}
+    forcePage={pageNumber}
     containerClassName="flex h-12 font-medium rounded-full justify-center"
-    pageCount={30}
+    pageCount={countPagination}
     pageRangeDisplayed={3}
     marginPagesDisplayed={1}
     pageClassName="w-12 md:flex justify-center items-center hidden  cursor-pointer leading-5 transition duration-50 ease-in  rounded-full"
@@ -55,5 +56,7 @@ const Pragination = ({ handleClick }) => (
 export default Pragination
 
 Pragination.propTypes = {
+  countPagination: PropTypes.number.isRequired,
+  pageNumber: PropTypes.number.isRequired,
   handleClick: PropTypes.func.isRequired,
 }
