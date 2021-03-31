@@ -33,7 +33,7 @@ const Savanna = ({ location }) => {
   const [wordGroup, setWordGroup] = useState("0")
   const [musicON, setMusicON] = useState(false)
   const [wordsCount, setWordsCount] = useState(19)
-  const [shuffledAnswers, setShuffledAnswers] = useState([])
+  const [shuffledAnswers, setShuffledAnswers] = useState(["dump"])
   const [statistics, setStatistics] = useState([])
   const [alive, setAlive] = useState(false)
   const [title, setTitle] = useState("Savanna")
@@ -49,14 +49,18 @@ const Savanna = ({ location }) => {
   const InCycle = useMemo(() => ({ on: false }), [])
   const speed = 5
 
+  const shuffledAnswersGlob = useMemo(() => ({ shufl: ["test"] }), [])
+
   const music = useMemo(() => new Audio(forsavanna), [])
   const correctSound = useMemo(() => new Audio(correct), [])
   const wrongSound = useMemo(() => new Audio(wrong), [])
 
   const dispatch = useDispatch()
   dispatch(setPageActionCreator({ page, showNavbar: false }))
-  const currentWordsPage =
-    useSelector(({ wordsPage }) => wordsPage.wordsPage) || []
+
+  const currentWordsPage = {
+    page: useSelector(({ wordsPage }) => wordsPage.wordsPage) || [],
+  }
 
   const reduceLives = () => {
     if (life > 0) {
@@ -68,8 +72,8 @@ const Savanna = ({ location }) => {
     setStatistics([
       ...statistics,
       {
-        word: `${currentWordsPage[wordsCount].word}`,
-        translate: `${currentWordsPage[wordsCount].wordTranslate}`,
+        word: `${shuffledAnswersGlob.word}`,
+        translate: `${shuffledAnswersGlob.translate}`,
         ok: flag,
       },
     ])
@@ -91,13 +95,18 @@ const Savanna = ({ location }) => {
         buttonsRef.current.style.animation = `appear 2s`
       }, 20)
 
-      wordRef.current.innerHTML = currentWordsPage[wordsCount].word
-      const answers = [currentWordsPage[wordsCount].wordTranslate] || []
+      wordRef.current.innerHTML = currentWordsPage.page[wordsCount].word
+      const answers = [currentWordsPage.page[wordsCount].wordTranslate] || []
+      shuffledAnswersGlob.translate =
+        currentWordsPage.page[wordsCount].wordTranslate
+      shuffledAnswersGlob.word = currentWordsPage.page[wordsCount].word
 
       for (let index = 0; index < 3; index += 1) {
-        answers.push(currentWordsPage[random(0, 19)].wordTranslate)
+        answers.push(currentWordsPage.page[random(0, 19)].wordTranslate)
       }
-      setShuffledAnswers(shuffle(answers))
+      shuffledAnswersGlob.shufl = shuffle(answers)
+
+      setShuffledAnswers(shuffledAnswersGlob.shufl)
       setTimeout(() => {
         setAlive(false)
         InCycle.on = false
@@ -106,7 +115,7 @@ const Savanna = ({ location }) => {
         if (!isSelectRef.current || isWrongSelectRef.current) {
           reduceLives()
           setTitle(
-            `${currentWordsPage[wordsCount].word} - ${currentWordsPage[wordsCount].wordTranslate}`
+            `${currentWordsPage.page[wordsCount].word} - ${currentWordsPage.page[wordsCount].wordTranslate}`
           )
           addWordSToStatistic(false)
         } else setTitle("Savanna")
@@ -131,7 +140,6 @@ const Savanna = ({ location }) => {
     dispatch(getWordsPageAC(group, random(0, 19)))
   }
 
-  // -----------------------correctSelect ------------------------
   const correctSelect = () => {
     wordRef.current.innerHTML = ""
     correctSound.play()
@@ -186,6 +194,29 @@ const Savanna = ({ location }) => {
     }
   }, [wordsCount])
 
+  const keyCompareHandler = (e) => {
+    if (e.key === "1" || e.key === "2" || e.key === "3" || e.key === "4") {
+      if (!isSelectRef.current) {
+        isSelectRef.current = true
+        if (
+          shuffledAnswersGlob.shufl[+e.key - 1].toLowerCase() ===
+          shuffledAnswersGlob.translate.toLowerCase()
+        ) {
+          correctSelect()
+        } else {
+          wrongSelect()
+        }
+      }
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener("keypress", keyCompareHandler)
+    return () => {
+      document.removeEventListener("keypress", keyCompareHandler)
+    }
+  }, [])
+
   const musicControlHandler = () => {
     music.loop = true
     // eslint-disable-next-line no-unused-expressions
@@ -193,12 +224,13 @@ const Savanna = ({ location }) => {
 
     setMusicON(!musicON)
   }
+
   const compareHandler = (e) => {
     if (!isSelectRef.current) {
       isSelectRef.current = true
       if (
         e.target.innerText.toLowerCase() ===
-        currentWordsPage[wordsCount].wordTranslate.toLowerCase()
+        shuffledAnswersGlob.translate.toLowerCase()
       ) {
         correctSelect()
       } else {
@@ -214,7 +246,7 @@ const Savanna = ({ location }) => {
     >
       <h1 className="text-3xl text-center pt-8  hidden  lg:block">{title}</h1>
 
-      <div className=" absolute top-15 left-10 ">
+      <div className=" absolute top-16 left-1  md:left-10 md:top-12">
         <div className="">
           {/* eslint-disable-next-line jsx-a11y/no-onchange */}
           <select
@@ -287,9 +319,10 @@ const Savanna = ({ location }) => {
       >
         {alive && (
           <div className="text-center">
-            {shuffledAnswers.map((el) => (
+            {shuffledAnswers.map((el, idx) => (
               <button
                 type="button"
+                key={`${idx + 1}`}
                 className="inline-block bg-white bg-opacity-50 mx-2 px-3 py-1 text-xs font-medium leading-6 text-center text-black
     border-2 border-gray-600 uppercase rounded shadow ripple 
     hover:shadow-lg hover:bg-purple-500 hover:text-white focus:outline-none"
