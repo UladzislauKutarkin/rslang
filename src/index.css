@@ -5,6 +5,7 @@
 
 
 .brd { border:2px solid blue}
+.brd-g { border:2px solid greenyellow}
 .toggle-checkbox:checked {
 
   right: 0;
