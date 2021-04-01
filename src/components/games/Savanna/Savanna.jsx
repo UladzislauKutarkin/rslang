@@ -27,6 +27,7 @@ import { shuffle } from "../../../helpers/shuffle"
 
 // eslint-disable-next-line no-unused-vars
 const Savanna = ({ location }) => {
+  console.log("location", location)
   const [isStartGame, setIsStartGame] = useState(false)
 
   const [wordGroup, setWordGroup] = useState("0")
@@ -47,7 +48,7 @@ const Savanna = ({ location }) => {
   const backRef = useRef()
 
   const InCycle = useMemo(() => ({ on: false }), [])
-  const speed = 5
+  const speed = 1
 
   const shuffledAnswersGlob = useMemo(() => ({ shufl: ["test"] }), [])
 
@@ -110,7 +111,7 @@ const Savanna = ({ location }) => {
         setAlive(false)
         InCycle.on = false
 
-        wordRef.current.innerHTML = ""
+        if (wordRef.current) wordRef.current.innerHTML = ""
         if (!isSelectRef.current || isWrongSelectRef.current) {
           reduceLives()
           setTitle(
