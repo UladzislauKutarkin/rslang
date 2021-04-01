@@ -41,7 +41,7 @@ const StatisticsModal = ({ show, statistics, setWordsCount, setLife }) => {
         {statistics
           .filter((el) => el.ok)
           .map((filteredEl) => (
-            <div>
+            <div key={filteredEl.word}>
               <strong>{`${filteredEl.word}`} </strong> -
               {`${filteredEl.translate}`}
             </div>
@@ -57,7 +57,7 @@ const StatisticsModal = ({ show, statistics, setWordsCount, setLife }) => {
         {statistics
           .filter((el) => !el.ok)
           .map((filteredEl) => (
-            <div>
+            <div key={filteredEl.word}>
               <strong>{`${filteredEl.word}`} </strong> -
               {`${filteredEl.translate}`}
             </div>

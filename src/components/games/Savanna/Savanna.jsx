@@ -160,8 +160,6 @@ const Savanna = ({ location }) => {
     }, 1)
 
     addWordSToStatistic(true)
-
-    // todo  управление с клавиатуры
   }
 
   const disappearWord = () => {
@@ -295,8 +293,9 @@ const Savanna = ({ location }) => {
       </div>
 
       <div className="absolute  flex top-20 md:top-20 right-24">
-        {[...Array(life)].map(() => (
-          <img className="mx-0.5 w-6" src={heart} alt="life" />
+        {[...Array(life)].map((el, idx) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <img key={idx} className="mx-0.5 w-6" src={heart} alt="life" />
         ))}
       </div>
 
