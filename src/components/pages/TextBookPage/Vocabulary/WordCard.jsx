@@ -1,11 +1,11 @@
 import React, { useCallback } from "react"
-import PropTypes, { any } from "prop-types"
+import PropTypes from "prop-types"
 import cn from "classnames"
 import { useDispatch } from "react-redux"
 import Pragination from "../Pragination"
 import AudioComponent from "../AudioComponent"
 import Settings from "../Settings"
-import { putWordToWordBook } from "../../../../redux/wordBook/wordBook"
+import { restoreWordBook } from "../../../../redux/wordBook/wordBook"
 
 const WordCard = ({
   handleButtonClick,
@@ -15,8 +15,6 @@ const WordCard = ({
   handleVocavularyChangeGroup,
   group,
   selectedGroup,
-  setRestoreWord,
-  restoredWord,
 }) => {
   const CustomComponent = (item) => (
     // eslint-disable-next-line react/no-danger
@@ -25,11 +23,11 @@ const WordCard = ({
   const dispatch = useDispatch()
   const restoreWord = useCallback(
     (id) => () => {
-      dispatch(putWordToWordBook(id))
-      setRestoreWord(!restoredWord)
+      dispatch(restoreWordBook(id, page, "hard", group))
     },
-    [dispatch, restoredWord]
+    [dispatch, group, page]
   )
+
   return (
     <div className="flex-auto flex-wrap justify-center m-5">
       <Settings
@@ -149,12 +147,8 @@ WordCard.propTypes = {
   handleVocavularyChangeGroup: PropTypes.func.isRequired,
   group: PropTypes.number.isRequired,
   selectedGroup: PropTypes.number.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  setRestoreWord: PropTypes.any,
-  restoredWord: PropTypes.bool.isRequired,
 }
 
 WordCard.defaultProps = {
   userWordsVocabulary: [],
-  setRestoreWord: any,
 }

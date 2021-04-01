@@ -12,9 +12,10 @@ const DeletedWords = () => {
   const countPagination = Math.ceil(
     userWordsVocabulary[0]?.totalCount[0]?.count / 20
   )
+  const [restoreWord, setRestoreWord] = useState(true)
   useEffect(() => {
     dispatch(getUsersWords(page, "deleted", group))
-  }, [dispatch, page, group])
+  }, [dispatch, page, group, restoreWord])
 
   const handleButtonClick = (pageCounter) => {
     //  dispatch(changePage(pageCounter.selected))
@@ -38,6 +39,8 @@ const DeletedWords = () => {
         userWordsVocabulary={userWordsVocabulary}
         handleVocavularyChangeGroup={handleVocavularyChangeGroup}
         selectedGroup={selectedGroup}
+        setRestoreWord={setRestoreWord}
+        restoredWord={restoreWord}
       />
     </>
   )

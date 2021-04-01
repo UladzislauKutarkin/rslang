@@ -51,4 +51,27 @@ export const getVocabulary = (page, group) => (dispatch) => {
     .then(({ data }) => dispatch(fetchVocabularySucsess(data)))
     .catch((error) => dispatch(fetchVocabularyFailure(error)))
 }
+
+export const getUserWordsVocabulary = (page, group) => (dispatch) => {
+  const { token } = JSON.parse(localStorage.getItem("user"))
+  const { userID } = JSON.parse(localStorage.getItem("user"))
+  axios
+    .get(
+      `/users/${userID}/aggregatedWords?wordsPerPage=20&page=${page}&group=${group}&filter=%7B%22$or%22:[%7B%22userWord.difficulty%22:%22hard%22%7D,%7B%22userWord%22:null%7D]%7D`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    .then(({ data }) => {
+      const result = data[0].paginatedResults.map((item) => ({
+        // eslint-disable-next-line no-underscore-dangle
+        id: item._id,
+        ...item,
+      }))
+      return dispatch(fetchVocabularySucsess(result))
+    })
+    .catch((error) => dispatch(fetchVocabularyFailure(error)))
+}
 export default VocabularyReducer

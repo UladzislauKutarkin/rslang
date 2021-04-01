@@ -11,6 +11,7 @@ export default function ResponsiveNavbar() {
   const [showUserDropDown, setShowUserDropDown] = useState(false)
   const userCurrent = useSelector(({ user }) => user.user)
   const dispatch = useDispatch()
+
   const handleSwitchUserDropDown = useCallback(() => {
     setShowUserDropDown(!showUserDropDown)
   }, [showUserDropDown])

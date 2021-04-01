@@ -31,10 +31,13 @@ export const AddUserWord = (mode) => ({
   type: ADD_USER_WORD,
   payload: mode,
 })
-export const RestoreUserWord = (mode) => ({
-  type: RESTORE_USER_WORD,
-  payload: mode,
-})
+export const RestoreUserWord = (mode) => {
+  return {
+    type: RESTORE_USER_WORD,
+    payload: mode,
+  }
+}
+
 export const getUsersWords = (page, queryDifficulty, group) => (dispatch) => {
   const { token } = JSON.parse(localStorage.getItem("user"))
   const { userID } = JSON.parse(localStorage.getItem("user"))
@@ -68,7 +71,9 @@ export const addWordToWordBook = (wordId, difficulty) => (dispatch) => {
     .then(({ data }) => dispatch(AddUserWord(data)))
 }
 
-export const putWordToWordBook = (wordId) => (dispatch) => {
+export const restoreWordBook = (wordId, page, queryDifficulty, group) => (
+  dispatch
+) => {
   const { token } = JSON.parse(localStorage.getItem("user"))
   const { userID } = JSON.parse(localStorage.getItem("user"))
   axios
@@ -79,7 +84,7 @@ export const putWordToWordBook = (wordId) => (dispatch) => {
         "Content-Type": "application/json",
       },
     })
-    .then(({ data }) => dispatch(RestoreUserWord(data)))
+    .then(() => dispatch(getUsersWords(page, queryDifficulty, group)))
 }
 
 export default wordBookReducer
