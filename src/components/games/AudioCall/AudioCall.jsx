@@ -9,40 +9,38 @@ import { onNavbarAC, offNavbarAC } from "../../../redux/games/navbar"
 
 import StatisticsModal from "../gamesComponents/StatisticsModal"
 
-import savannaBack from "../../../assets/img/games/savanna_back.jpg"
-import lotos from "../../../assets/img/games/lotos_1.png"
+import savannaBack from "../../../assets/img/games/back_audio.jpg"
 import heart from "../../../assets/img/games/heart.png"
-import drop from "../../../assets/img/games/drop.png"
 
 import close from "../../../assets/img/icons/icon_close.svg"
 import fullscreen from "../../../assets/img/icons/icon_fullscreen.svg"
 
 import { getWordsPageAC } from "../../../redux/games/games"
 import random from "../../../helpers/random"
-import forsavanna from "../../../assets/sound/forsavanna.mp3"
+
 import correct from "../../../assets/sound/correct.mp3"
 import wrong from "../../../assets/sound/wrong.mp3"
 
 import { shuffle } from "../../../helpers/shuffle"
 
 // eslint-disable-next-line no-unused-vars
-const Savanna = ({ location }) => {
+const AudioCall = ({ location }) => {
   console.log("location", location)
   const [isStartGame, setIsStartGame] = useState(false)
 
   const [wordGroup, setWordGroup] = useState("0")
-  const [musicON, setMusicON] = useState(false)
+
   const [wordsCount, setWordsCount] = useState(19)
   const [shuffledAnswers, setShuffledAnswers] = useState(["dump"])
   const [statistics, setStatistics] = useState([])
   const [alive, setAlive] = useState(false)
-  const [title, setTitle] = useState("Savanna")
+  const [title, setTitle] = useState("Audio Call")
   const [life, setLife] = useState(5)
 
   const wordRef = useRef()
   const dropRef = useRef()
   const buttonsRef = useRef()
-  const lotosRef = useRef()
+
   const isWrongSelectRef = useRef()
   const isSelectRef = useRef()
   const backRef = useRef()
@@ -50,9 +48,8 @@ const Savanna = ({ location }) => {
   const InCycle = useMemo(() => ({ on: false }), [])
   const speed = 5
 
-  const shuffledAnswersGlob = useMemo(() => ({ shufl: ["test"] }), [])
+  const shuffledAnswersGlob = useMemo(() => ({ shufl: [] }), [])
 
-  const music = useMemo(() => new Audio(forsavanna), [])
   const correctSound = useMemo(() => new Audio(correct), [])
   const wrongSound = useMemo(() => new Audio(wrong), [])
 
@@ -143,42 +140,13 @@ const Savanna = ({ location }) => {
   const correctSelect = () => {
     wordRef.current.innerHTML = ""
     correctSound.play()
-    const top = wordRef.current.offsetTop
-    dropRef.current.style.top = `${top + 50}px`
-    dropRef.current.innerHTML = `<img  class= "mx-auto" src = ${drop} alt="drop" width="20">`
-    const dropInterval = setInterval(() => {
-      dropRef.current.style.top = `${dropRef.current.offsetTop + 27}px`
-      if (dropRef.current.offsetTop > lotosRef.current.offsetTop) {
-        clearInterval(dropInterval)
-        dropRef.current.innerHTML = ""
-        lotosRef.current.style.animation = "none"
-
-        setTimeout(() => {
-          lotosRef.current.style.animation = `puffEffect 5s`
-        }, 20)
-      }
-    }, 1)
 
     addWordSToStatistic(true)
-
-    // todo  управление с клавиатуры
-  }
-
-  const disappearWord = () => {
-    const top = wordRef.current.offsetTop
-    wordRef.current.style.animation = "none"
-    wordRef.current.style.top = `${top + 135}px`
-    setTimeout(() => {
-      wordRef.current.style.animation = `disappear 0.5s linear`
-    }, 20)
-    setTimeout(() => {
-      wordRef.current.innerHTML = ""
-    }, 400)
   }
 
   const wrongSelect = () => {
     wrongSound.play()
-    disappearWord()
+
     addWordSToStatistic(false)
 
     isWrongSelectRef.current = true
@@ -195,7 +163,13 @@ const Savanna = ({ location }) => {
   }, [wordsCount])
 
   const keyCompareHandler = (e) => {
-    if (e.key === "1" || e.key === "2" || e.key === "3" || e.key === "4") {
+    if (
+      e.key === "1" ||
+      e.key === "2" ||
+      e.key === "3" ||
+      e.key === "4" ||
+      e.key === "4"
+    ) {
       if (!isSelectRef.current) {
         isSelectRef.current = true
         if (
@@ -217,15 +191,8 @@ const Savanna = ({ location }) => {
     }
   }, [])
 
-  const musicControlHandler = () => {
-    music.loop = true
-    // eslint-disable-next-line no-unused-expressions
-    !musicON ? music.play() : music.pause()
-
-    setMusicON(!musicON)
-  }
-
   const compareHandler = (e) => {
+    // todo new functional
     if (!isSelectRef.current) {
       isSelectRef.current = true
       if (
@@ -255,13 +222,15 @@ const Savanna = ({ location }) => {
       className="h-screen  w-full bg-cover bg-center"
       style={{ backgroundImage: `url(${savannaBack})` }}
     >
-      <h1 className="text-3xl text-center pt-8  hidden  lg:block">{title}</h1>
+      <h1 className="text-3xl text-center text-gray-400 pt-8  hidden  lg:block">
+        {title}
+      </h1>
 
       <div className=" absolute top-24 left-1  md:left-10 md:top-20">
         <div className="">
           {/* eslint-disable-next-line jsx-a11y/no-onchange */}
           <select
-            className="focus:border-gray-200 m-2  border-2 border-gray-500 bg-transparent h-full py-2 px-2 pr-7  text-gray-800 sm:text-sm rounded-md"
+            className="focus:border-gray-200 m-2  border-2 border-gray-500 bg-transparent h-full py-2 px-2 pr-7  text-gray-200 sm:text-sm rounded-md"
             value={wordGroup}
             onChange={getWordPage}
           >
@@ -273,15 +242,6 @@ const Savanna = ({ location }) => {
             <option value="5">Сложные +</option>
           </select>
 
-          <button
-            type="button"
-            className="inline-block  mx-2 px-3 py-1 text-xs font-medium leading-6 text-center text-red-500
-              border-2 border-red-500 uppercase rounded shadow ripple 
-              hover:shadow-lg hover:bg-red-500 hover:text-white focus:outline-none"
-            onClick={musicControlHandler}
-          >
-            Musuc
-          </button>
           <button
             type="button"
             className="inline-block px-10 py-1 mx-2 text-xs font-medium leading-6 text-center text-white
@@ -354,16 +314,6 @@ const Savanna = ({ location }) => {
         )}
       </div>
 
-      {/* lotos */}
-      <div ref={lotosRef} className="absolute  bottom-10 w-full">
-        <img
-          className={`
-          ${isStartGame ? "animate-lotosRotate " : ""} 
-          mx-auto bottom-10 left-1/2 w-24 h-24`}
-          src={lotos}
-          alt="lotos"
-        />
-      </div>
       <StatisticsModal
         show={!wordsCount || !life}
         statistics={statistics}
@@ -373,8 +323,8 @@ const Savanna = ({ location }) => {
     </div>
   )
 }
-export default withRouter(Savanna)
-Savanna.propTypes = {
+export default withRouter(AudioCall)
+AudioCall.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   location: PropTypes.any.isRequired,
 }

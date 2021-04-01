@@ -7,6 +7,8 @@ import SignUp from "./components/Register/Register"
 import SignIn from "./components/SignIn/SignIn"
 import ResponsiveNavbar from "./components/Navbar/ResponsiveNavbar"
 import Savanna from "./components/games/Savanna/Savanna"
+import AudioCall from "./components/games/AudioCall/AudioCall"
+
 import WordBook from "./components/pages/TextBookPage/Vocabulary/WordBook/WordBook"
 import Vocabulary from "./components/pages/TextBookPage/Vocabulary/Vocabulary"
 import StudiedWords from "./components/pages/TextBookPage/Vocabulary/StudiedWords/StudiedWords"
@@ -24,6 +26,7 @@ function App() {
         <Route exact path="/register/" component={SignUp} />
         <Route exact path="/signin/" component={SignIn} />
         <Route path="/savanna" component={Savanna} />
+        <Route path="/audiocall" component={AudioCall} />
         <Route exact path="/vocabulary/" component={Vocabulary} />
         <Route exact path="/wordbook/" component={WordBook} />
         <Route exact path="/studied/" component={StudiedWords} />
