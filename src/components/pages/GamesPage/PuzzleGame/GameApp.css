@@ -1,0 +1,139 @@
+.App {
+    text-align: center;
+    height: 100vh;
+    background-color: #143b91;
+    background-color: white;
+  }
+  
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+    height: 80px;
+  }
+  
+  .App-header {
+    background-color: #222;
+    height: 150px;
+    padding: 20px;
+    color: white;
+  }
+  
+  .App-intro {
+    font-size: large;
+  }
+  
+  #header{
+    height: 60px;
+    width: 100%;
+    background-color: #2750aa;
+    color: white;
+    text-align: center;
+  }
+  
+  .narrow{
+    width: 60%;
+    margin: 0 auto;
+  }
+  
+  .menu-icon{
+    cursor: pointer;
+    float: left;
+  }
+  
+  #menu-bg{
+    color: white;
+    background-color: #595959;
+  }
+  
+  @keyframes App-logo-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  
+  #main-game{
+    text-align: center;
+  }
+  
+  .difficulty-box{
+    font-size: 10px;
+    height: 60px;
+    width: 60px;
+    padding: 10px 0px;
+    display: inline-block;
+    color: black;
+    margin: 0px 20px;
+    cursor: pointer;
+    line-height: 1em;
+    border-radius: 10px;
+  }
+  
+  .highlighted{
+    background-color: #efefef;
+  }
+  
+  .regular{
+    background-color: white;
+  }
+  
+  .letter{
+    color: black;
+    height: 45px;
+    width: 45px;
+    font-size: 30px;
+    padding-top: 10px;
+    display: inline-block;
+    cursor: move;
+    border-radius: 4px;
+  }
+  
+  #difficulties{
+    margin: 10px;
+  }
+  
+  #phrase-box{
+    width: 60%;
+    height: 220px;
+    margin: 0 auto;
+    border: 1px solid black;
+    padding: 5px;
+    position: relative;
+  }
+  
+  .tile-red{
+    background-color: #ff5151;
+  }
+  
+  .tile-blue-green{
+    background-color: #51ffa5;
+  }
+  
+  .tile-blue{
+    background-color: #51adff;
+  }
+  
+  .tile-purple{
+    background-color: #a430f2;
+  }
+  
+  .tile-pink{
+    background-color: #f12f97;
+  }
+  
+  .tile-orange{
+    background-color: #f49024;
+  }
+  
+  .tile-green{
+    background-color: #6fe544;
+  }
+  
+  .answer-container{
+    padding: 10px;
+  }
+  
+  .answer-input{
+    margin: 0 auto;
+  }
+  
+  .no-show{
+    display: none;
+  }

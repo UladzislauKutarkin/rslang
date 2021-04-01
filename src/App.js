@@ -1,3 +1,5 @@
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/no-this-in-sfc */
 import { Switch, Route, Redirect } from "react-router-dom"
 import HomePage from "./components/pages/HomePage/HomePage"
 import TextBookPage from "./components/pages/TextBookPage/TextBookPage"
@@ -6,6 +8,7 @@ import StatisticsPage from "./components/pages/StatisticsPage/StatisticsPage"
 import SignUp from "./components/Register/Register"
 import SignIn from "./components/SignIn/SignIn"
 import ResponsiveNavbar from "./components/Navbar/ResponsiveNavbar"
+import GameApp from "./components/pages/GamesPage/PuzzleGame/GameApp"
 
 function App() {
   return (
@@ -20,6 +23,7 @@ function App() {
         <Route exact path="/signin/" component={SignIn} />
         <Redirect from="*" to="/" />
       </Switch>
+      <GameApp />
     </div>
   )
 }
