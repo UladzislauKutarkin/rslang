@@ -1,6 +1,5 @@
 import { useDispatch } from "react-redux"
 import { Link } from "react-router-dom"
-import { useDispatch } from "react-redux"
 import { onNavbarAC } from "../../../redux/games/navbar"
 import savannaPromo from "../../../assets/img/games/savanna_promo.jpg"
 import audioPromo from "../../../assets/img/games/audio_promo.jpg"
@@ -77,7 +76,6 @@ const GamesPage = () => {
             <img
               src={audioPromo}
               alt="audioPromo"
-
               className="max-h-96 rounded-lg"
             />
           </div>

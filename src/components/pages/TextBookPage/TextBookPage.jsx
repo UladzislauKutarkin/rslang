@@ -31,12 +31,11 @@ const TextBookPage = () => {
     localStorage.setItem("page", pageCounter.selected)
   }
   const userCurrent = useSelector(({ user }) => user.user)
-  let countPagination = Math.ceil(pageUserCounter / 20)
+  const countPagination = Math.ceil(pageUserCounter / 20)
 
   useEffect(() => {
     localStorage.setItem("page", pageNumber)
     if (isAuthorized || userCurrent.userId) {
-      countPagination = Math.ceil(pageUserCounter / 20)
       dispatch(getUserWordsVocabulary(pageNumber, group))
       dispatch(getPageCounterUser(pageNumber, group))
     }
@@ -62,7 +61,7 @@ const TextBookPage = () => {
     (id, difficulty) => () => {
       dispatch(addWordToWordBook(id, difficulty, pageNumber, group))
     },
-    [dispatch]
+    [dispatch, group, pageNumber]
   )
 
   const disableBtn = () => {
@@ -79,7 +78,7 @@ const TextBookPage = () => {
         setComplicatedWords([...complicatedWords, wordId])
       }
     },
-    [complicatedWords, dispatch]
+    [complicatedWords, dispatch, group, pageNumber]
   )
 
   return (

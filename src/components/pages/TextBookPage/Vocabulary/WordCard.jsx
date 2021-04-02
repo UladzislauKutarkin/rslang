@@ -29,7 +29,7 @@ const WordCard = ({
     (id) => () => {
       dispatch(restoreWordBook(id, page, difficulty, group))
     },
-    [dispatch, group, page]
+    [difficulty, dispatch, group, page]
   )
 
   return (

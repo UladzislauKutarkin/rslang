@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import PropTypes, { func } from "prop-types"
 import cn from "classnames"
 import PureModal from "react-pure-modal"
@@ -10,6 +10,7 @@ import ChangeTranslate from "./ChangeTranslate"
 import { changeGroup, changePage } from "../../../redux/pagination/pagination"
 import ChangeButtons from "./ChangeButtons"
 import Counter from "./Counter"
+import { isAuthorized } from "../../../helpers/globals"
 
 const Settings = ({
   isSetings,
@@ -19,6 +20,7 @@ const Settings = ({
   isCounter,
   userCounter,
 }) => {
+  const userCurrent = useSelector(({ user }) => user.user)
   const dispatch = useDispatch()
   const [modal, setModal] = useState(false)
   // const userCurrent = useSelector(({ user }) => user.user)
@@ -67,13 +69,15 @@ const Settings = ({
             ))}
           </div>
           <Link to="/vocabulary/">
-            <button
-              // eslint-disable-next-line react/no-array-index-key
-              type="button"
-              className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-yellow-900 rounded shadow ripple hover:shadow-lg hover:bg-yellow-700 focus:outline-none"
-            >
-              Cловарь
-            </button>
+            {isAuthorized || userCurrent.userId ? (
+              <button
+                // eslint-disable-next-line react/no-array-index-key
+                type="button"
+                className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-yellow-900 rounded shadow ripple hover:shadow-lg hover:bg-yellow-700 focus:outline-none"
+              >
+                Cловарь
+              </button>
+            ) : null}
           </Link>
           {isSetings ? (
             <div onClick={() => setModal(true)}>

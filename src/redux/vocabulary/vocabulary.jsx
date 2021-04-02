@@ -9,7 +9,7 @@ export const FETCH_VOCABULARY_PAGE_COUNT = "FETCH_VOCABULARY_PAGE_COUNT"
 const initialState = {
   vocabulary: [],
   counter: 0,
-  pageCounter: 30,
+  pageCounter: 600,
   pageSize: 20,
   currentPage: 1,
   isLoading: false,
