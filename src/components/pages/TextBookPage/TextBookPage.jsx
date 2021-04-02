@@ -4,6 +4,7 @@ import cn from "classnames"
 import {
   getUserWordsVocabulary,
   getVocabulary,
+  getPageCounterUser,
 } from "../../../redux/vocabulary/vocabulary"
 import { addWordToWordBook } from "../../../redux/wordBook/wordBook"
 import Pragination from "./Pragination"
@@ -21,20 +22,26 @@ const TextBookPage = () => {
   const pageNumber = useSelector(({ pagination }) => pagination.page)
   const isTranslate = useSelector(({ settings }) => settings.translate)
   const isButtons = useSelector(({ settings }) => settings.buttons)
+  const pageUserCounter = useSelector(
+    ({ vocabulary }) => vocabulary.pageCounter
+  )
   const [complicatedWords, setComplicatedWords] = useState([])
   const handleButtonClick = (pageCounter) => {
     dispatch(changePage(pageCounter.selected))
     localStorage.setItem("page", pageCounter.selected)
   }
   const userCurrent = useSelector(({ user }) => user.user)
+  let countPagination = Math.ceil(pageUserCounter / 20)
 
   useEffect(() => {
     localStorage.setItem("page", pageNumber)
     if (isAuthorized || userCurrent.userId) {
+      countPagination = Math.ceil(pageUserCounter / 20)
       dispatch(getUserWordsVocabulary(pageNumber, group))
+      dispatch(getPageCounterUser(pageNumber, group))
     }
     dispatch(getVocabulary(pageNumber, group))
-  }, [pageNumber, group, dispatch, userCurrent.userId])
+  }, [pageNumber, group, dispatch, userCurrent.userId, countPagination])
 
   const CustomComponent = (item) => (
     // eslint-disable-next-line react/no-danger
@@ -196,7 +203,7 @@ const TextBookPage = () => {
         ))}
       </div>
       <Pragination
-        countPagination={30}
+        countPagination={countPagination}
         handleClick={handleButtonClick}
         pageNumber={pageNumber}
       />
