@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { useEffect, useState, useMemo } from "react"
+import { useEffect, useState, useMemo, useRef } from "react"
 import { Link, withRouter } from "react-router-dom"
 import PropTypes from "prop-types"
 
@@ -11,9 +11,11 @@ import StatisticsModal from "../gamesComponents/StatisticsModal"
 
 import savannaBack from "../../../assets/img/games/back_audio.jpg"
 import heart from "../../../assets/img/games/heart.png"
+import spaceship from "../../../assets/img/games/spaceship.png"
 
 import close from "../../../assets/img/icons/icon_close.svg"
 import fullscreen from "../../../assets/img/icons/icon_fullscreen.svg"
+import speek from "../../../assets/img/icons/icon_speek.svg"
 
 import { getWordsPageAC } from "../../../redux/games/games"
 import random from "../../../helpers/random"
@@ -34,7 +36,7 @@ const AudioCall = ({ location }) => {
 
   const [wordsCount, setWordsCount] = useState(19)
   // eslint-disable-next-line no-unused-vars
-  const [shuffledAnswers, setShuffledAnswers] = useState(["dump"])
+  const [shuffledAnswers, setShuffledAnswers] = useState(["test"])
   // eslint-disable-next-line no-unused-vars
   const [statistics, setStatistics] = useState([])
   // eslint-disable-next-line no-unused-vars
@@ -42,9 +44,15 @@ const AudioCall = ({ location }) => {
   const [life, setLife] = useState(5)
 
   // eslint-disable-next-line no-unused-vars
+  const [doGameCycle, setDoGameCycle] = useState(false)
+
+  // eslint-disable-next-line no-unused-vars
   const correctSound = useMemo(() => new Audio(correct), [])
   // eslint-disable-next-line no-unused-vars
   const wrongSound = useMemo(() => new Audio(wrong), [])
+
+  const gameBlockRef = useRef()
+  const shipBlockRef = useRef()
 
   const dispatch = useDispatch()
 
@@ -54,6 +62,13 @@ const AudioCall = ({ location }) => {
 
   const gameCycle = () => {
     console.log("gameCycle")
+
+    gameBlockRef.current.style.animation = "none"
+    setTimeout(() => {
+      gameBlockRef.current.style.animation = `spaceInRight 0.8s`
+    }, 1)
+    setDoGameCycle(true)
+
     // todo
     // вывести снак аудио
     //  проиграть звук
@@ -62,8 +77,15 @@ const AudioCall = ({ location }) => {
   }
 
   const startGame = () => {
+    if (!isStartGame) {
+      shipBlockRef.current.style.animation = `spaceOutLeft 2s`
+      setTimeout(() => {
+        setIsStartGame(true)
+        gameCycle()
+      }, 1000)
+    }
+
     // todo  начать цикл
-    gameCycle()
   }
 
   const getWordPage = (e) => {
@@ -143,43 +165,57 @@ const AudioCall = ({ location }) => {
         </button>
       </div>
 
-      {/* aidio picture div */}
-      <div
-        className="-m-32  h-50 w-64  absolute text-2xl text-center"
-        style={{ top: "35vw", left: "50vw" }}
-      >
-        Картинка
-      </div>
+      {/* game block */}
 
-      {/* aidio sign div */}
-      <div
-        className="-m-32  h-50 w-64  absolute text-2xl text-center"
-        style={{ top: "45vw", left: "50vw" }}
-      >
-        Знак аудио
-      </div>
-
-      {/* buttons */}
-      <div
-        className=" animate-appear absolute w-full text-2xl   "
-        style={{ top: "55vh", left: "0" }}
-      >
-        {true && (
-          <div className="text-center">
-            {shuffledAnswers.map((el, idx) => (
-              <button
-                type="button"
-                key={`${idx + 1}`}
-                className="inline-block bg-white bg-opacity-50 mx-2 px-3 py-1 text-xs font-medium leading-6 text-center text-black
-    border-2 border-gray-600 uppercase rounded shadow ripple 
-    hover:shadow-lg hover:bg-purple-500 hover:text-white focus:outline-none"
-              >
-                {el}
-              </button>
-            ))}
+      {!isStartGame && (
+        <div ref={shipBlockRef} className=" mx-auto mt-32  w-1/2">
+          <div className="mx-auto flex justify-center items-center">
+            <img className="w-96" src={spaceship} alt="spaceship" />
           </div>
+        </div>
+      )}
+
+      <div ref={gameBlockRef} className=" mx-auto mt-32  w-1/2">
+        {doGameCycle && (
+          <>
+            <div
+              className="h-20 w-30 text-2xl text-center text-gray-200"
+              style={{ top: "45vw", left: "50vw" }}
+            >
+              Картинка аудио
+            </div>
+            <div className="flex justify-center items-center mx-auto rounded-full bg-white bg-opacity-30 h-20 w-20 text-2xl text-center  border-white text-gray-200 border-2 border-opacity-20">
+              <img className="h-10" src={speek} alt="speek" />
+            </div>
+            <div className=" animate-appear  mt-10 w-full text-2xl">
+              <div className="text-center">
+                {shuffledAnswers.map((el, idx) => (
+                  <button
+                    type="button"
+                    key={`${idx + 1}`}
+                    className="inline-block bg-white bg-opacity-50 mx-2 px-3 py-1 text-xs font-medium leading-6 text-center text-black
+border-2 border-gray-600 uppercase rounded shadow ripple 
+hover:shadow-lg hover:bg-purple-500 hover:text-white focus:outline-none"
+                  >
+                    {el}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="text-center">
+              <button
+                className="inline-block bg-white mt-10 mx-2 px-3 py-1 text-xs font-medium leading-6 text-center text-black
+border-2 border-gray-600 uppercase rounded shadow ripple 
+hover:shadow-lg hover:bg-purple-500 hover:text-white focus:outline-none"
+                type="button"
+              >
+                Не знаю{" "}
+              </button>
+            </div>
+          </>
         )}
       </div>
+      {/* game block end */}
 
       <StatisticsModal
         show={!wordsCount || !life}
