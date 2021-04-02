@@ -1,8 +1,11 @@
+import React, { useCallback } from "react"
 import PropTypes from "prop-types"
 import cn from "classnames"
+import { useDispatch } from "react-redux"
 import Pragination from "../Pragination"
 import AudioComponent from "../AudioComponent"
 import Settings from "../Settings"
+import { restoreWordBook } from "../../../../redux/wordBook/wordBook"
 
 const WordCard = ({
   handleButtonClick,
@@ -12,17 +15,32 @@ const WordCard = ({
   handleVocavularyChangeGroup,
   group,
   selectedGroup,
+  difficulty,
+  isStudied,
+  isCounter,
+  userCounter,
 }) => {
   const CustomComponent = (item) => (
     // eslint-disable-next-line react/no-danger
     <span dangerouslySetInnerHTML={{ __html: item }} />
   )
+  const dispatch = useDispatch()
+  const restoreWord = useCallback(
+    (id) => () => {
+      dispatch(restoreWordBook(id, page, difficulty, group))
+    },
+    [dispatch, group, page]
+  )
+
   return (
     <div className="flex-auto flex-wrap justify-center m-5">
       <Settings
         isSetings={false}
+        isStudied={isStudied}
+        isCounter={isCounter}
         handleVocavularyChangeGroup={handleVocavularyChangeGroup}
         selectedGroup={selectedGroup}
+        userCounter={userCounter}
       />
       {userWordsVocabulary[0]?.paginatedResults.length === 0 ? (
         <div className="m-20 text-center">
@@ -39,7 +57,17 @@ const WordCard = ({
           <div className="container mx-auto mt-20 auto-rows-fr auto-cols-max grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
             {userWordsVocabulary[0]?.paginatedResults.map(
               ({ _id: id, ...item }) => (
-                <div key={id} id={id}>
+                <div
+                  key={id}
+                  id={id}
+                  className={cn(
+                    "flex-auto self-stretch items-stretch justify-center",
+                    {
+                      "border-2 border-red-800 rounded-lg":
+                        item?.userWord?.difficulty === "hard",
+                    }
+                  )}
+                >
                   <div>
                     <div className="rounded-lg overflow-hidden">
                       <div className="relative overflow-hidden pb-60">
@@ -96,6 +124,19 @@ const WordCard = ({
                               item.audioMeaning,
                             ]}
                           />
+                          <div className="mt-10 flex justify-center items-center">
+                            <div className="m-6 space-x-5">
+                              {isStudied ? (
+                                <button
+                                  type="button"
+                                  className="inline-block bg-purple-600 px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition rounded shadow ripple hover:shadow-lg hover:bg-purple-800 focus:outline-none"
+                                  onClick={restoreWord(id)}
+                                >
+                                  Восстановить
+                                </button>
+                              ) : null}
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -121,8 +162,19 @@ WordCard.propTypes = {
   countPagination: PropTypes.number.isRequired,
   handleButtonClick: PropTypes.func.isRequired,
   page: PropTypes.number.isRequired,
-  userWordsVocabulary: PropTypes.arrayOf(PropTypes.object).isRequired,
+  userWordsVocabulary: PropTypes.arrayOf(PropTypes.object),
   handleVocavularyChangeGroup: PropTypes.func.isRequired,
   group: PropTypes.number.isRequired,
   selectedGroup: PropTypes.number.isRequired,
+  difficulty: PropTypes.string.isRequired,
+  isStudied: PropTypes.bool,
+  isCounter: PropTypes.bool,
+  userCounter: PropTypes.number,
+}
+
+WordCard.defaultProps = {
+  userWordsVocabulary: [],
+  isStudied: true,
+  isCounter: false,
+  userCounter: 0,
 }

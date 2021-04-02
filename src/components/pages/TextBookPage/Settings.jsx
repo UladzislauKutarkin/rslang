@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react"
 import { useDispatch } from "react-redux"
-import PropTypes from "prop-types"
+import PropTypes, { func } from "prop-types"
 import cn from "classnames"
 import PureModal from "react-pure-modal"
 import "react-pure-modal/dist/react-pure-modal.min.css"
@@ -9,15 +9,19 @@ import settings from "../../../assets/img/settings.svg"
 import ChangeTranslate from "./ChangeTranslate"
 import { changeGroup, changePage } from "../../../redux/pagination/pagination"
 import ChangeButtons from "./ChangeButtons"
+import Counter from "./Counter"
 
 const Settings = ({
   isSetings,
   handleVocavularyChangeGroup,
   selectedGroup,
+  isStudied,
+  isCounter,
+  userCounter,
 }) => {
   const dispatch = useDispatch()
   const [modal, setModal] = useState(false)
-
+  // const userCurrent = useSelector(({ user }) => user.user)
   const handleChangeGroup = useCallback(
     (group) => () => {
       dispatch(changeGroup(group))
@@ -47,8 +51,9 @@ const Settings = ({
           <ChangeButtons />
         </PureModal>
       ) : null}
-      <div>
+      <div className="container">
         <div className="flex justify-between h-10">
+          {isCounter ? <Counter counter={userCounter} /> : null}
           <div className="flex justify-between w-2/5">
             {["Cаванна", "Аудиовызов", "Спринт", "Своя игра"].map((index) => (
               <button
@@ -61,76 +66,76 @@ const Settings = ({
               </button>
             ))}
           </div>
+          <Link to="/vocabulary/">
+            <button
+              // eslint-disable-next-line react/no-array-index-key
+              type="button"
+              className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-yellow-900 rounded shadow ripple hover:shadow-lg hover:bg-yellow-700 focus:outline-none"
+            >
+              Cловарь
+            </button>
+          </Link>
           {isSetings ? (
-            <>
-              <Link to="/vocabulary/">
-                <button
-                  // eslint-disable-next-line react/no-array-index-key
-                  type="button"
-                  className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-yellow-900 rounded shadow ripple hover:shadow-lg hover:bg-yellow-700 focus:outline-none"
-                >
-                  Cловарь
-                </button>
-              </Link>
-              <div onClick={() => setModal(true)}>
-                <img
-                  className="w-8 h-8 cursor-pointer"
-                  src={settings}
-                  alt="settings"
-                />
-              </div>
-            </>
+            <div onClick={() => setModal(true)}>
+              <img
+                className="w-8 h-8 cursor-pointer"
+                src={settings}
+                alt="settings"
+              />
+            </div>
           ) : null}
         </div>
-        <div className="flex justify-center">
-          <div className="w-3/4 flex justify-between mt-8">
-            {[
-              "Группа 1",
-              "Группа 2",
-              "Группа 3",
-              "Группа 4",
-              "Группа 5",
-              "Группа 6",
-            ].map((item, index) => (
-              <button
-                // eslint-disable-next-line react/no-array-index-key
-                key={index}
-                type="button"
-                onClick={
-                  isSetings
-                    ? handleChangeGroup(index)
-                    : handleVocavularyChangeGroup(index)
-                }
-                className={cn(
-                  "inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition rounded shadow ripple hover:shadow-lg  focus:outline-none",
-                  {
-                    "bg-red-200 hover:bg-red-600": index === 1,
-                  },
-                  {
-                    "bg-blue-200 hover:bg-blue-600": index === 0,
-                  },
-                  {
-                    "bg-green-200 hover:bg-green-600": index === 2,
-                  },
-                  {
-                    "bg-green-600 hover:bg-green-800": index === 3,
-                  },
-                  {
-                    "bg-yellow-200 hover:bg-yellow-600": index === 4,
-                  },
-                  {
-                    "bg-gray-400 hover:bg-gray-600": index === 5,
-                  },
-                  {
-                    "bg-blue-900 hover:bg-blue-900": index === selectedGroup,
+        {isStudied ? (
+          <div className="flex justify-center">
+            <div className="w-3/4 flex justify-between mt-8">
+              {[
+                "Группа 1",
+                "Группа 2",
+                "Группа 3",
+                "Группа 4",
+                "Группа 5",
+                "Группа 6",
+              ].map((item, index) => (
+                <button
+                  // eslint-disable-next-line react/no-array-index-key
+                  key={index}
+                  type="button"
+                  onClick={
+                    isSetings
+                      ? handleChangeGroup(index)
+                      : handleVocavularyChangeGroup(index)
                   }
-                )}
-              >
-                {item}
-              </button>
-            ))}
+                  className={cn(
+                    "inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition rounded shadow ripple hover:shadow-lg  focus:outline-none",
+                    {
+                      "bg-red-200 hover:bg-red-600": index === 1,
+                    },
+                    {
+                      "bg-blue-200 hover:bg-blue-600": index === 0,
+                    },
+                    {
+                      "bg-green-200 hover:bg-green-600": index === 2,
+                    },
+                    {
+                      "bg-green-600 hover:bg-green-800": index === 3,
+                    },
+                    {
+                      "bg-yellow-200 hover:bg-yellow-600": index === 4,
+                    },
+                    {
+                      "bg-gray-400 hover:bg-gray-600": index === 5,
+                    },
+                    {
+                      "bg-blue-900 hover:bg-blue-900": index === selectedGroup,
+                    }
+                  )}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        ) : null}
       </div>
     </>
   )
@@ -139,11 +144,17 @@ const Settings = ({
 export default Settings
 
 Settings.propTypes = {
-  isSetings: PropTypes.bool,
-  handleVocavularyChangeGroup: PropTypes.func.isRequired,
+  isSetings: PropTypes.bool.isRequired,
+  handleVocavularyChangeGroup: PropTypes.func,
+  userCounter: PropTypes.number,
   selectedGroup: PropTypes.number.isRequired,
+  isStudied: PropTypes.bool,
+  isCounter: PropTypes.bool,
 }
 
 Settings.defaultProps = {
-  isSetings: false,
+  handleVocavularyChangeGroup: func,
+  isStudied: true,
+  isCounter: false,
+  userCounter: 0,
 }
