@@ -39,6 +39,7 @@ const WordBook = () => {
         userWordsVocabulary={userWordsVocabulary}
         handleVocavularyChangeGroup={handleVocavularyChangeGroup}
         selectedGroup={selectedGroup}
+        difficulty="hard"
       />
     </>
   )

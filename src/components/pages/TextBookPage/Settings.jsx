@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 import PropTypes, { func } from "prop-types"
 import cn from "classnames"
 import PureModal from "react-pure-modal"
@@ -9,7 +9,6 @@ import settings from "../../../assets/img/settings.svg"
 import ChangeTranslate from "./ChangeTranslate"
 import { changeGroup, changePage } from "../../../redux/pagination/pagination"
 import ChangeButtons from "./ChangeButtons"
-import { isAuthorized } from "../../../helpers/globals"
 
 const Settings = ({
   isSetings,
@@ -18,7 +17,7 @@ const Settings = ({
 }) => {
   const dispatch = useDispatch()
   const [modal, setModal] = useState(false)
-  const userCurrent = useSelector(({ user }) => user.user)
+  // const userCurrent = useSelector(({ user }) => user.user)
   const handleChangeGroup = useCallback(
     (group) => () => {
       dispatch(changeGroup(group))
@@ -64,17 +63,15 @@ const Settings = ({
           </div>
           {isSetings ? (
             <>
-              {isAuthorized || userCurrent.userId ? (
-                <Link to="/vocabulary/">
-                  <button
-                    // eslint-disable-next-line react/no-array-index-key
-                    type="button"
-                    className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-yellow-900 rounded shadow ripple hover:shadow-lg hover:bg-yellow-700 focus:outline-none"
-                  >
-                    Cловарь
-                  </button>
-                </Link>
-              ) : null}
+              <Link to="/vocabulary/">
+                <button
+                  // eslint-disable-next-line react/no-array-index-key
+                  type="button"
+                  className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-yellow-900 rounded shadow ripple hover:shadow-lg hover:bg-yellow-700 focus:outline-none"
+                >
+                  Cловарь
+                </button>
+              </Link>
               <div onClick={() => setModal(true)}>
                 <img
                   className="w-8 h-8 cursor-pointer"
@@ -142,12 +139,11 @@ const Settings = ({
 export default Settings
 
 Settings.propTypes = {
-  isSetings: PropTypes.bool,
+  isSetings: PropTypes.bool.isRequired,
   handleVocavularyChangeGroup: PropTypes.func,
   selectedGroup: PropTypes.number.isRequired,
 }
 
 Settings.defaultProps = {
-  isSetings: false,
   handleVocavularyChangeGroup: func,
 }

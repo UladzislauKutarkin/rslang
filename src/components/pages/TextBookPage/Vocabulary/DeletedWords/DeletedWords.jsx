@@ -41,6 +41,7 @@ const DeletedWords = () => {
         selectedGroup={selectedGroup}
         setRestoreWord={setRestoreWord}
         restoredWord={restoreWord}
+        difficulty="deleted"
       />
     </>
   )

@@ -15,6 +15,7 @@ const WordCard = ({
   handleVocavularyChangeGroup,
   group,
   selectedGroup,
+  difficulty,
 }) => {
   const CustomComponent = (item) => (
     // eslint-disable-next-line react/no-danger
@@ -23,7 +24,7 @@ const WordCard = ({
   const dispatch = useDispatch()
   const restoreWord = useCallback(
     (id) => () => {
-      dispatch(restoreWordBook(id, page, "hard", group))
+      dispatch(restoreWordBook(id, page, difficulty, group))
     },
     [dispatch, group, page]
   )
@@ -147,6 +148,7 @@ WordCard.propTypes = {
   handleVocavularyChangeGroup: PropTypes.func.isRequired,
   group: PropTypes.number.isRequired,
   selectedGroup: PropTypes.number.isRequired,
+  difficulty: PropTypes.string.isRequired,
 }
 
 WordCard.defaultProps = {

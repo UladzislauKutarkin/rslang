@@ -53,33 +53,27 @@ const TextBookPage = () => {
 
   const deleteWord = useCallback(
     (id, difficulty) => () => {
-      dispatch(addWordToWordBook(id, difficulty))
-      const wordCard = document.getElementById(`${id}`)
-      wordCard.classList.add("hidden")
+      dispatch(addWordToWordBook(id, difficulty, pageNumber, group))
     },
     [dispatch]
   )
 
+  const disableBtn = () => {
+    if (isAuthorized || userCurrent.name) {
+      return "inline-block"
+    }
+    return "none"
+  }
+
   const addToHardWord = useCallback(
     (wordId, difficulty) => () => {
-      dispatch(addWordToWordBook(wordId, difficulty))
+      dispatch(addWordToWordBook(wordId, difficulty, pageNumber, group))
       if (!complicatedWords.includes(wordId)) {
         setComplicatedWords([...complicatedWords, wordId])
       }
     },
     [complicatedWords, dispatch]
   )
-
-  // const wordsToMap = useMemo(() => {
-  //   if (vocabularyData[0]?.paginatedResults) {
-  //     return vocabularyData[0]?.paginatedResults.map((item) => ({
-  //       // eslint-disable-next-line no-underscore-dangle
-  //       id: item._id,
-  //       ...item,
-  //     }))
-  //   }
-  //   return vocabularyData
-  // }, [vocabularyData])
 
   return (
     <div className="flex-auto flex-wrap justify-center m-5">
@@ -165,33 +159,34 @@ const TextBookPage = () => {
                       ]}
                     />
                     <div className="mt-10 flex justify-center items-center">
-                      {(isButtons && isAuthorized) ||
-                        (userCurrent.userId && (
-                          <div className="m-6 space-x-5">
-                            {["Удалить", "В сложные"].map((el) => (
-                              <button
-                                // eslint-disable-next-line react/no-array-index-key
-                                key={el}
-                                type="button"
-                                className={cn(
-                                  "inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition rounded shadow ripple hover:shadow-lg hover:bg-red-600 focus:outline-none",
-                                  {
-                                    "bg-red-500": el === "Удалить",
-                                    "bg-yellow-500 hover:bg-yellow-600":
-                                      el !== "Удалить",
-                                  }
-                                )}
-                                onClick={
-                                  el === "Удалить"
-                                    ? deleteWord(item.id, "deleted")
-                                    : addToHardWord(item.id, "hard")
+                      {isButtons && (
+                        <div className="m-6 space-x-5">
+                          {["Удалить", "В сложные"].map((el) => (
+                            <button
+                              key={el}
+                              type="button"
+                              style={{
+                                display: disableBtn(),
+                              }}
+                              className={cn(
+                                "inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition rounded shadow ripple hover:shadow-lg hover:bg-red-600 focus:outline-none",
+                                {
+                                  "bg-red-500": el === "Удалить",
+                                  "bg-yellow-500 hover:bg-yellow-600":
+                                    el !== "Удалить",
                                 }
-                              >
-                                {el}
-                              </button>
-                            ))}
-                          </div>
-                        ))}
+                              )}
+                              onClick={
+                                el === "Удалить"
+                                  ? deleteWord(item.id, "deleted")
+                                  : addToHardWord(item.id, "hard")
+                              }
+                            >
+                              {el}
+                            </button>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
