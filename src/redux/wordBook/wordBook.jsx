@@ -9,6 +9,8 @@ export const STUDIED_USER_WORD = "STUDIED_USER_WORD"
 
 const initialState = {
   wordBook: [],
+  deletedCounter: 0,
+  hardWordCounter: 0,
 }
 
 const wordBookReducer = (state = initialState, action) => {

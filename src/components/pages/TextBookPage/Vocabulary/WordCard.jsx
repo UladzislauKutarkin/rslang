@@ -16,6 +16,9 @@ const WordCard = ({
   group,
   selectedGroup,
   difficulty,
+  isStudied,
+  isCounter,
+  userCounter,
 }) => {
   const CustomComponent = (item) => (
     // eslint-disable-next-line react/no-danger
@@ -33,8 +36,11 @@ const WordCard = ({
     <div className="flex-auto flex-wrap justify-center m-5">
       <Settings
         isSetings={false}
+        isStudied={isStudied}
+        isCounter={isCounter}
         handleVocavularyChangeGroup={handleVocavularyChangeGroup}
         selectedGroup={selectedGroup}
+        userCounter={userCounter}
       />
       {userWordsVocabulary[0]?.paginatedResults.length === 0 ? (
         <div className="m-20 text-center">
@@ -51,7 +57,17 @@ const WordCard = ({
           <div className="container mx-auto mt-20 auto-rows-fr auto-cols-max grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
             {userWordsVocabulary[0]?.paginatedResults.map(
               ({ _id: id, ...item }) => (
-                <div key={id} id={id}>
+                <div
+                  key={id}
+                  id={id}
+                  className={cn(
+                    "flex-auto self-stretch items-stretch justify-center",
+                    {
+                      "border-2 border-red-800 rounded-lg":
+                        item?.userWord?.difficulty === "hard",
+                    }
+                  )}
+                >
                   <div>
                     <div className="rounded-lg overflow-hidden">
                       <div className="relative overflow-hidden pb-60">
@@ -110,13 +126,15 @@ const WordCard = ({
                           />
                           <div className="mt-10 flex justify-center items-center">
                             <div className="m-6 space-x-5">
-                              <button
-                                type="button"
-                                className="inline-block bg-purple-600 px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition rounded shadow ripple hover:shadow-lg hover:bg-purple-800 focus:outline-none"
-                                onClick={restoreWord(id)}
-                              >
-                                Восстановить
-                              </button>
+                              {isStudied ? (
+                                <button
+                                  type="button"
+                                  className="inline-block bg-purple-600 px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition rounded shadow ripple hover:shadow-lg hover:bg-purple-800 focus:outline-none"
+                                  onClick={restoreWord(id)}
+                                >
+                                  Восстановить
+                                </button>
+                              ) : null}
                             </div>
                           </div>
                         </div>
@@ -149,8 +167,14 @@ WordCard.propTypes = {
   group: PropTypes.number.isRequired,
   selectedGroup: PropTypes.number.isRequired,
   difficulty: PropTypes.string.isRequired,
+  isStudied: PropTypes.bool,
+  isCounter: PropTypes.bool,
+  userCounter: PropTypes.number,
 }
 
 WordCard.defaultProps = {
   userWordsVocabulary: [],
+  isStudied: true,
+  isCounter: false,
+  userCounter: 0,
 }

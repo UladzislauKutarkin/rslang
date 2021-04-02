@@ -3,9 +3,11 @@ import axios from "axios"
 export const FETCH_VOCABULARY_REQUEST = "FETCH_VOCABULARY_REQUEST"
 export const FETCH_VOCABULARY_SUCSESS = "FETCH_VOCABULARY_SUCSESS"
 export const FETCH_VOCABULARY_FAILURE = "FETCH_VOCABULARY_FAILURE"
+export const FETCH_VOCABULARY_COUNT = "FETCH_VOCABULARY_COUNT"
 
 const initialState = {
   vocabulary: [],
+  counter: 0,
   pageSize: 20,
   currentPage: 1,
   isLoading: false,
@@ -23,6 +25,11 @@ const VocabularyReducer = (state = initialState, action) => {
         vocabulary: action.payload,
         error: "",
       }
+    case FETCH_VOCABULARY_COUNT:
+      return {
+        ...state,
+        counter: action.payload,
+      }
     case FETCH_VOCABULARY_FAILURE:
       return {
         ...state,
@@ -36,6 +43,10 @@ const VocabularyReducer = (state = initialState, action) => {
 }
 
 export const fetchVocabularyRequest = () => ({ type: FETCH_VOCABULARY_REQUEST })
+export const fetchCountSucsess = (data) => ({
+  type: FETCH_VOCABULARY_COUNT,
+  payload: data,
+})
 export const fetchVocabularySucsess = (data) => ({
   type: FETCH_VOCABULARY_SUCSESS,
   payload: data,
@@ -74,4 +85,22 @@ export const getUserWordsVocabulary = (page, group) => (dispatch) => {
     })
     .catch((error) => dispatch(fetchVocabularyFailure(error)))
 }
+export const getCounterUser = (queryDifficulty) => (dispatch) => {
+  const { token } = JSON.parse(localStorage.getItem("user"))
+  const { userID } = JSON.parse(localStorage.getItem("user"))
+  axios
+    .get(
+      `users/${userID}/aggregatedWords?wordsPerPage=20&filter={"userWord.difficulty":"${queryDifficulty}"}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    .then(({ data }) => {
+      const result = data[0].totalCount[0]?.count
+      return dispatch(fetchCountSucsess(result))
+    })
+}
+
 export default VocabularyReducer
