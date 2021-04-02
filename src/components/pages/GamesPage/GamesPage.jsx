@@ -1,8 +1,7 @@
+import { useDispatch } from "react-redux"
 import { Link } from "react-router-dom"
-
 import { useDispatch } from "react-redux"
 import { onNavbarAC } from "../../../redux/games/navbar"
-
 import savannaPromo from "../../../assets/img/games/savanna_promo.jpg"
 import audioPromo from "../../../assets/img/games/audio_promo.jpg"
 
@@ -50,8 +49,6 @@ const GamesPage = () => {
           </div>
         </div>
         {/* card */}
-
-        {/* card */}
         <div className="bg-gradient-to-r from-purple-900 via-pink-900 to-red-900 max-w-lg flex max-h-96 m-4 md:m-6 rounded-lg hover:bg-indigo-100">
           <div className="  relative group sm:w-full md:w-1/2   rounded-lg">
             <h1
@@ -80,11 +77,11 @@ const GamesPage = () => {
             <img
               src={audioPromo}
               alt="audioPromo"
+
               className="max-h-96 rounded-lg"
             />
           </div>
         </div>
-        {/* card */}
       </div>
     </div>
   )

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import WordCard from "../WordCard"
 import { getUsersWords } from "../../../../../redux/wordBook/wordBook"
+import { getCounterUser } from "../../../../../redux/vocabulary/vocabulary"
 
 const DeletedWords = () => {
   const [page, setPage] = useState(0)
@@ -12,9 +13,12 @@ const DeletedWords = () => {
   const countPagination = Math.ceil(
     userWordsVocabulary[0]?.totalCount[0]?.count / 20
   )
+  const [restoreWord, setRestoreWord] = useState(true)
+  const userCounter = useSelector(({ vocabulary }) => vocabulary.counter)
   useEffect(() => {
     dispatch(getUsersWords(page, "deleted", group))
-  }, [dispatch, page, group])
+    dispatch(getCounterUser("deleted"))
+  }, [dispatch, page, group, restoreWord])
 
   const handleButtonClick = (pageCounter) => {
     //  dispatch(changePage(pageCounter.selected))
@@ -38,6 +42,11 @@ const DeletedWords = () => {
         userWordsVocabulary={userWordsVocabulary}
         handleVocavularyChangeGroup={handleVocavularyChangeGroup}
         selectedGroup={selectedGroup}
+        setRestoreWord={setRestoreWord}
+        restoredWord={restoreWord}
+        difficulty="deleted"
+        isCounter
+        userCounter={userCounter}
       />
     </>
   )

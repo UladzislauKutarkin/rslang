@@ -1,12 +1,17 @@
 import React, { useCallback, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import cn from "classnames"
-import { getVocabulary } from "../../../redux/vocabulary/vocabulary"
+import {
+  getUserWordsVocabulary,
+  getVocabulary,
+  getPageCounterUser,
+} from "../../../redux/vocabulary/vocabulary"
 import { addWordToWordBook } from "../../../redux/wordBook/wordBook"
 import Pragination from "./Pragination"
 import AudioComponent from "./AudioComponent"
 import Settings from "./Settings"
 import { changePage } from "../../../redux/pagination/pagination"
+import { isAuthorized } from "../../../helpers/globals"
 
 const TextBookPage = () => {
   const dispatch = useDispatch()
@@ -17,15 +22,27 @@ const TextBookPage = () => {
   const pageNumber = useSelector(({ pagination }) => pagination.page)
   const isTranslate = useSelector(({ settings }) => settings.translate)
   const isButtons = useSelector(({ settings }) => settings.buttons)
+  const pageUserCounter = useSelector(
+    ({ vocabulary }) => vocabulary.pageCounter
+  )
   const [complicatedWords, setComplicatedWords] = useState([])
   const handleButtonClick = (pageCounter) => {
     dispatch(changePage(pageCounter.selected))
     localStorage.setItem("page", pageCounter.selected)
   }
+  const userCurrent = useSelector(({ user }) => user.user)
+  let countPagination = Math.ceil(pageUserCounter / 20)
+
   useEffect(() => {
     localStorage.setItem("page", pageNumber)
+    if (isAuthorized || userCurrent.userId) {
+      countPagination = Math.ceil(pageUserCounter / 20)
+      dispatch(getUserWordsVocabulary(pageNumber, group))
+      dispatch(getPageCounterUser(pageNumber, group))
+    }
     dispatch(getVocabulary(pageNumber, group))
-  }, [pageNumber, group, dispatch])
+  }, [pageNumber, group, dispatch, userCurrent.userId, countPagination])
+
   const CustomComponent = (item) => (
     // eslint-disable-next-line react/no-danger
     <span dangerouslySetInnerHTML={{ __html: item }} />
@@ -43,16 +60,21 @@ const TextBookPage = () => {
 
   const deleteWord = useCallback(
     (id, difficulty) => () => {
-      dispatch(addWordToWordBook(id, difficulty))
-      const wordCard = document.getElementById(`${id}`)
-      wordCard.classList.add("hidden")
+      dispatch(addWordToWordBook(id, difficulty, pageNumber, group))
     },
     [dispatch]
   )
 
+  const disableBtn = () => {
+    if (isAuthorized || userCurrent.name) {
+      return "inline-block"
+    }
+    return "none"
+  }
+
   const addToHardWord = useCallback(
     (wordId, difficulty) => () => {
-      dispatch(addWordToWordBook(wordId, difficulty))
+      dispatch(addWordToWordBook(wordId, difficulty, pageNumber, group))
       if (!complicatedWords.includes(wordId)) {
         setComplicatedWords([...complicatedWords, wordId])
       }
@@ -69,16 +91,15 @@ const TextBookPage = () => {
         group={group}
       />
       <div className="container mx-auto mt-20 auto-rows-fr auto-cols-max grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
-        {vocabularyData.map((item) => (
+        {vocabularyData?.map((item) => (
           <div
             key={item.id}
-            id={item.id}
             className={cn(
               "flex-auto self-stretch items-stretch justify-center",
               {
-                "border-2 border-red-800 rounded-lg": complicatedWords.includes(
-                  item.id
-                ),
+                "border-2 border-red-800 rounded-lg":
+                  complicatedWords.includes(item.id) ||
+                  item?.userWord?.difficulty === "hard",
               }
             )}
           >
@@ -149,9 +170,11 @@ const TextBookPage = () => {
                         <div className="m-6 space-x-5">
                           {["Удалить", "В сложные"].map((el) => (
                             <button
-                              // eslint-disable-next-line react/no-array-index-key
                               key={el}
                               type="button"
+                              style={{
+                                display: disableBtn(),
+                              }}
                               className={cn(
                                 "inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition rounded shadow ripple hover:shadow-lg hover:bg-red-600 focus:outline-none",
                                 {
@@ -180,7 +203,7 @@ const TextBookPage = () => {
         ))}
       </div>
       <Pragination
-        countPagination={30}
+        countPagination={countPagination}
         handleClick={handleButtonClick}
         pageNumber={pageNumber}
       />
