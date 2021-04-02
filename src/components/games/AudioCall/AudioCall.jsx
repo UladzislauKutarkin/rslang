@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { useEffect, useState, useMemo, useRef } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { Link, withRouter } from "react-router-dom"
 import PropTypes from "prop-types"
 
@@ -21,114 +21,49 @@ import random from "../../../helpers/random"
 import correct from "../../../assets/sound/correct.mp3"
 import wrong from "../../../assets/sound/wrong.mp3"
 
+// eslint-disable-next-line no-unused-vars
 import { shuffle } from "../../../helpers/shuffle"
 
 // eslint-disable-next-line no-unused-vars
 const AudioCall = ({ location }) => {
   console.log("location", location)
+  // eslint-disable-next-line no-unused-vars
   const [isStartGame, setIsStartGame] = useState(false)
 
   const [wordGroup, setWordGroup] = useState("0")
 
   const [wordsCount, setWordsCount] = useState(19)
+  // eslint-disable-next-line no-unused-vars
   const [shuffledAnswers, setShuffledAnswers] = useState(["dump"])
+  // eslint-disable-next-line no-unused-vars
   const [statistics, setStatistics] = useState([])
-  const [alive, setAlive] = useState(false)
+  // eslint-disable-next-line no-unused-vars
   const [title, setTitle] = useState("Audio Call")
   const [life, setLife] = useState(5)
 
-  const wordRef = useRef()
-  const dropRef = useRef()
-  const buttonsRef = useRef()
-
-  const isWrongSelectRef = useRef()
-  const isSelectRef = useRef()
-  const backRef = useRef()
-
-  const InCycle = useMemo(() => ({ on: false }), [])
-  const speed = 5
-
-  const shuffledAnswersGlob = useMemo(() => ({ shufl: [] }), [])
-
+  // eslint-disable-next-line no-unused-vars
   const correctSound = useMemo(() => new Audio(correct), [])
+  // eslint-disable-next-line no-unused-vars
   const wrongSound = useMemo(() => new Audio(wrong), [])
 
   const dispatch = useDispatch()
 
-  const currentWordsPage = {
-    page: useSelector(({ wordsPage }) => wordsPage.wordsPage) || [],
-  }
+  // eslint-disable-next-line no-unused-vars
+  const currentWordsPage =
+    useSelector(({ wordsPage }) => wordsPage.wordsPage) || []
 
-  const reduceLives = () => {
-    if (life > 0) {
-      setLife(life - 1)
-    }
-  }
-
-  const addWordSToStatistic = (flag) => {
-    setStatistics([
-      ...statistics,
-      {
-        word: `${shuffledAnswersGlob.word}`,
-        translate: `${shuffledAnswersGlob.translate}`,
-        ok: flag,
-      },
-    ])
-  }
-
-  const runCycle = () => {
-    if (wordsCount > 0) {
-      InCycle.on = true
-
-      isSelectRef.current = false
-      isWrongSelectRef.current = false
-
-      setAlive(true)
-      wordRef.current.style.animation = "none"
-      buttonsRef.current.style.animation = "none"
-
-      setTimeout(() => {
-        wordRef.current.style.animation = `fallWord ${speed}s linear`
-        buttonsRef.current.style.animation = `appear 2s`
-      }, 20)
-
-      wordRef.current.innerHTML = currentWordsPage.page[wordsCount].word
-      const answers = [currentWordsPage.page[wordsCount].wordTranslate] || []
-      shuffledAnswersGlob.translate =
-        currentWordsPage.page[wordsCount].wordTranslate
-      shuffledAnswersGlob.word = currentWordsPage.page[wordsCount].word
-
-      for (let index = 0; index < 3; index += 1) {
-        answers.push(currentWordsPage.page[random(0, 19)].wordTranslate)
-      }
-      shuffledAnswersGlob.shufl = shuffle(answers)
-
-      setShuffledAnswers(shuffledAnswersGlob.shufl)
-      setTimeout(() => {
-        setAlive(false)
-        InCycle.on = false
-
-        if (wordRef.current) wordRef.current.innerHTML = ""
-        if (!isSelectRef.current || isWrongSelectRef.current) {
-          reduceLives()
-          setTitle(
-            `${currentWordsPage.page[wordsCount].word} - ${currentWordsPage.page[wordsCount].wordTranslate}`
-          )
-          addWordSToStatistic(false)
-        } else setTitle("Savanna")
-
-        if (wordsCount > 0) {
-          setWordsCount(wordsCount - 1)
-        }
-      }, speed * 1000)
-    }
+  const gameCycle = () => {
+    console.log("gameCycle")
+    // todo
+    // вывести снак аудио
+    //  проиграть звук
+    // вывести 5 кнопок
+    // вывести кнопку не знаю
   }
 
   const startGame = () => {
-    setIsStartGame(true)
-    if (wordsCount >= 0 && InCycle.on === false && life > 0) {
-      runCycle()
-    }
+    // todo  начать цикл
+    gameCycle()
   }
 
   const getWordPage = (e) => {
@@ -137,74 +72,9 @@ const AudioCall = ({ location }) => {
     dispatch(getWordsPageAC(group, random(0, 19)))
   }
 
-  const correctSelect = () => {
-    wordRef.current.innerHTML = ""
-    correctSound.play()
-
-    addWordSToStatistic(true)
-  }
-
-  const wrongSelect = () => {
-    wrongSound.play()
-
-    addWordSToStatistic(false)
-
-    isWrongSelectRef.current = true
-  }
-
   useEffect(() => {
     dispatch(getWordsPageAC(wordGroup, random(0, 19)))
   }, [])
-
-  useEffect(() => {
-    if (wordsCount >= 0 && isStartGame && InCycle.on === false && life > 0) {
-      runCycle()
-    }
-  }, [wordsCount])
-
-  const keyCompareHandler = (e) => {
-    if (
-      e.key === "1" ||
-      e.key === "2" ||
-      e.key === "3" ||
-      e.key === "4" ||
-      e.key === "4"
-    ) {
-      if (!isSelectRef.current) {
-        isSelectRef.current = true
-        if (
-          shuffledAnswersGlob.shufl[+e.key - 1].toLowerCase() ===
-          shuffledAnswersGlob.translate.toLowerCase()
-        ) {
-          correctSelect()
-        } else {
-          wrongSelect()
-        }
-      }
-    }
-  }
-
-  useEffect(() => {
-    document.addEventListener("keypress", keyCompareHandler)
-    return () => {
-      document.removeEventListener("keypress", keyCompareHandler)
-    }
-  }, [])
-
-  const compareHandler = (e) => {
-    // todo new functional
-    if (!isSelectRef.current) {
-      isSelectRef.current = true
-      if (
-        e.target.innerText.toLowerCase() ===
-        shuffledAnswersGlob.translate.toLowerCase()
-      ) {
-        correctSelect()
-      } else {
-        wrongSelect()
-      }
-    }
-  }
 
   const doFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -218,7 +88,6 @@ const AudioCall = ({ location }) => {
 
   return (
     <div
-      ref={backRef}
       className="h-screen  w-full bg-cover bg-center"
       style={{ backgroundImage: `url(${savannaBack})` }}
     >
@@ -274,30 +143,28 @@ const AudioCall = ({ location }) => {
         </button>
       </div>
 
-      {/* word div */}
+      {/* aidio picture div */}
       <div
-        ref={wordRef}
         className="-m-32  h-50 w-64  absolute text-2xl text-center"
-        style={{ top: "100px", left: "50vw" }}
+        style={{ top: "35vw", left: "50vw" }}
       >
-        {" "}
+        Картинка
       </div>
 
-      {/* prop div */}
+      {/* aidio sign div */}
       <div
-        ref={dropRef}
-        className="-m-6 h-50 w-12  absolute"
-        style={{ top: "200px", left: "50vw" }}
+        className="-m-32  h-50 w-64  absolute text-2xl text-center"
+        style={{ top: "45vw", left: "50vw" }}
       >
-        {" "}
+        Знак аудио
       </div>
 
       {/* buttons */}
       <div
-        ref={buttonsRef}
-        className=" animate-appear absolute w-full text-2xl   top-2/3"
+        className=" animate-appear absolute w-full text-2xl   "
+        style={{ top: "55vh", left: "0" }}
       >
-        {alive && (
+        {true && (
           <div className="text-center">
             {shuffledAnswers.map((el, idx) => (
               <button
@@ -306,7 +173,6 @@ const AudioCall = ({ location }) => {
                 className="inline-block bg-white bg-opacity-50 mx-2 px-3 py-1 text-xs font-medium leading-6 text-center text-black
     border-2 border-gray-600 uppercase rounded shadow ripple 
     hover:shadow-lg hover:bg-purple-500 hover:text-white focus:outline-none"
-                onClick={compareHandler}
               >
                 {el}
               </button>
