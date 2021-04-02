@@ -25,7 +25,7 @@ const SignUpReducer = (state = initialState, action) => {
         error: action.payload,
       }
     case USER_SING_OUT:
-      localStorage.setItem("user", {})
+      localStorage.removeItem("user")
       return {
         ...state,
         user: {},

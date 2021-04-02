@@ -22,13 +22,14 @@ export default function ResponsiveNavbar() {
 
   const handleLogoutUser = () => {
     dispatch(logoutUser())
+    setShowUserDropDown(!showUserDropDown)
   }
 
   const userDropDown = () => {
     return (
       <div className="  divide-y-2 divide-gey-600 divide-solid">
         <div className=" w-full px-4 py-2 text-gray-700 hover:bg-gray-100">
-          {JSON.parse(localStorage.getItem("user")).name}
+          {JSON.parse(localStorage.getItem("user"))?.name}
         </div>
         <button
           type="button"
