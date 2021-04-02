@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from "react-redux"
 
 import { onNavbarAC, offNavbarAC } from "../../../redux/games/navbar"
 
+// eslint-disable-next-line no-unused-vars
+
 import StatisticsModal from "../gamesComponents/StatisticsModal"
 
 import savannaBack from "../../../assets/img/games/back_audio.jpg"
@@ -28,7 +30,7 @@ import { shuffle } from "../../../helpers/shuffle"
 
 // eslint-disable-next-line no-unused-vars
 const AudioCall = ({ location }) => {
-  console.log("location", location)
+  // console.log("location", location)
   // eslint-disable-next-line no-unused-vars
   const [isStartGame, setIsStartGame] = useState(false)
 
@@ -42,9 +44,17 @@ const AudioCall = ({ location }) => {
   // eslint-disable-next-line no-unused-vars
   const [title, setTitle] = useState("Audio Call")
   const [life, setLife] = useState(5)
+  // eslint-disable-next-line no-unused-vars
+  const [currentWord, setCurrentWord] = useState({
+    word: "test",
+    translate: "Это тест",
+    shuffled: ["shuffled test"],
+  })
 
   // eslint-disable-next-line no-unused-vars
   const [doGameCycle, setDoGameCycle] = useState(false)
+
+  const backEnd = "https://rs-lang-back.herokuapp.com/"
 
   // eslint-disable-next-line no-unused-vars
   const correctSound = useMemo(() => new Audio(correct), [])
@@ -60,18 +70,43 @@ const AudioCall = ({ location }) => {
   const currentWordsPage =
     useSelector(({ wordsPage }) => wordsPage.wordsPage) || []
 
-  const gameCycle = () => {
-    console.log("gameCycle")
+  console.log(
+    "wordsPage",
+    useSelector(({ wordsPage }) => wordsPage.wordsPage)
+  )
 
+  const gameCycle = () => {
     gameBlockRef.current.style.animation = "none"
     setTimeout(() => {
       gameBlockRef.current.style.animation = `spaceInRight 0.8s`
-    }, 1)
-    setDoGameCycle(true)
+      setDoGameCycle(true)
+    }, 0)
 
     // todo
-    // вывести снак аудио
+    // вывести знак аудио
     //  проиграть звук
+    // eslint-disable-next-line no-unused-vars
+
+    const answers = [currentWordsPage[wordsCount].wordTranslate] || []
+    console.log("answers", answers)
+    for (let index = 0; index < 4; index += 1) {
+      answers.push(currentWordsPage[random(0, 19)].wordTranslate)
+    }
+
+    setCurrentWord({
+      word: currentWordsPage[wordsCount].word,
+      translate: currentWordsPage[wordsCount].wordTranslate,
+      shuffled: shuffle(answers),
+    })
+
+    console.log("audio", currentWordsPage[wordsCount].audio)
+
+    const audio = new Audio(`${backEnd}${currentWordsPage[wordsCount].audio}`)
+
+    setTimeout(() => {
+      audio.play()
+    }, 1000)
+
     // вывести 5 кнопок
     // вывести кнопку не знаю
   }
@@ -80,8 +115,8 @@ const AudioCall = ({ location }) => {
     if (!isStartGame) {
       shipBlockRef.current.style.animation = `spaceOutLeft 2s`
       setTimeout(() => {
-        setIsStartGame(true)
         gameCycle()
+        setIsStartGame(true)
       }, 1000)
     }
 
@@ -121,7 +156,7 @@ const AudioCall = ({ location }) => {
         <div className="">
           {/* eslint-disable-next-line jsx-a11y/no-onchange */}
           <select
-            className="focus:border-gray-200 m-2  border-2 border-gray-500 bg-transparent h-full py-2 px-2 pr-7  text-gray-200 sm:text-sm rounded-md"
+            className="bg-blue-900 focus:border-gray-200 m-2  border-2 border-gray-500  h-full py-2 px-2 pr-7  text-gray-200 sm:text-sm rounded-md"
             value={wordGroup}
             onChange={getWordPage}
           >
@@ -175,7 +210,7 @@ const AudioCall = ({ location }) => {
         </div>
       )}
 
-      <div ref={gameBlockRef} className=" mx-auto mt-32  w-1/2">
+      <div ref={gameBlockRef} className=" mx-auto mt-32  w-2/3">
         {doGameCycle && (
           <>
             <div
@@ -189,7 +224,7 @@ const AudioCall = ({ location }) => {
             </div>
             <div className=" animate-appear  mt-10 w-full text-2xl">
               <div className="text-center">
-                {shuffledAnswers.map((el, idx) => (
+                {currentWord.shuffled.map((el, idx) => (
                   <button
                     type="button"
                     key={`${idx + 1}`}

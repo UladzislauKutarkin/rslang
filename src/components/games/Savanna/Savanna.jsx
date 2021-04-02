@@ -27,7 +27,7 @@ import { shuffle } from "../../../helpers/shuffle"
 
 // eslint-disable-next-line no-unused-vars
 const Savanna = ({ location }) => {
-  console.log("location", location)
+  // console.log("location", location)
   const [isStartGame, setIsStartGame] = useState(false)
 
   const [wordGroup, setWordGroup] = useState("0")
