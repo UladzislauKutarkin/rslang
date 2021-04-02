@@ -41,7 +41,7 @@ const StatisticsModal = ({ show, statistics, setWordsCount, setLife }) => {
         {statistics
           .filter((el) => el.ok)
           .map((filteredEl) => (
-            <div>
+            <div key={filteredEl.word}>
               <strong>{`${filteredEl.word}`} </strong> -
               {`${filteredEl.translate}`}
             </div>
@@ -57,25 +57,26 @@ const StatisticsModal = ({ show, statistics, setWordsCount, setLife }) => {
         {statistics
           .filter((el) => !el.ok)
           .map((filteredEl) => (
-            <div>
+            <div key={filteredEl.word}>
               <strong>{`${filteredEl.word}`} </strong> -
               {`${filteredEl.translate}`}
             </div>
           ))}
       </div>
       <div className=" mt-8">
-        <button
-          type="button"
-          className="focus:outline-none mx-5 text-white text-sm py-1 px-5 rounded-md bg-purple-800 hover:bg-purple-900 hover:shadow-lg"
-          to="/savanna/continue"
-          // eslint-disable-next-line no-console
-          onClick={() => {
-            setWordsCount(19)
-            setLife(5)
-          }}
-        >
-          Продожить
-        </button>
+        <Link to="/savanna/continue">
+          <button
+            type="button"
+            className="focus:outline-none mx-5 text-white text-sm py-1 px-5 rounded-md bg-purple-800 hover:bg-purple-900 hover:shadow-lg"
+            // eslint-disable-next-line no-console
+            onClick={() => {
+              setWordsCount(19)
+              setLife(5)
+            }}
+          >
+            Продожить
+          </button>
+        </Link>
         <Link
           className="focus:outline-none mx-5  p-0 text-white text-sm py-1 px-5 rounded-md bg-yellow-500 hover:bg-yellow-600 hover:shadow-lg"
           to="/games/"
