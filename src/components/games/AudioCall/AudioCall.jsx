@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
 import { useEffect, useState, useMemo, useRef } from "react"
 import { Link, withRouter } from "react-router-dom"
@@ -19,7 +20,7 @@ import not from "../../../assets/img/icons/icon_not.png"
 
 import close from "../../../assets/img/icons/icon_close.svg"
 import fullscreen from "../../../assets/img/icons/icon_fullscreen.svg"
-import speek from "../../../assets/img/icons/icon_speek.svg"
+import speak from "../../../assets/img/icons/icon_speek.svg"
 
 import { getWordsPageAC } from "../../../redux/games/games"
 import random from "../../../helpers/random"
@@ -46,7 +47,6 @@ const AudioCall = ({ location }) => {
   // eslint-disable-next-line no-unused-vars
   const [title, setTitle] = useState("Audio Call")
   const [life, setLife] = useState(5)
-  // eslint-disable-next-line no-unused-vars
   const [currentWord, setCurrentWord] = useState({
     word: "test",
     translate: "Это тест",
@@ -75,47 +75,53 @@ const AudioCall = ({ location }) => {
   const currentWordsPage =
     useSelector(({ wordsPage }) => wordsPage.wordsPage) || []
 
-  console.log(
-    "wordsPage",
-    useSelector(({ wordsPage }) => wordsPage.wordsPage)
-  )
+  // console.log(
+  //   "wordsPage",
+  //   useSelector(({ wordsPage }) => wordsPage.wordsPage)
+  // )
 
   const gameCycle = () => {
-    gameBlockRef.current.style.animation = "none"
-    setTimeout(() => {
-      gameBlockRef.current.style.animation = `spaceInRight 0.8s`
-      setDoGameCycle(true)
-    }, 0)
+    if (wordsCount > 0) {
+      gameBlockRef.current.style.animation = "none"
+      setTimeout(() => {
+        gameBlockRef.current.style.animation = `spaceInRight 0.8s`
+        setDoGameCycle(true)
+      }, 20)
 
-    // todo
-    // вывести знак аудио
-    //  проиграть звук
-    // eslint-disable-next-line no-unused-vars
+      const answers = [currentWordsPage[wordsCount].wordTranslate] || []
 
-    const answers = [currentWordsPage[wordsCount].wordTranslate] || []
+      for (let index = 0; index < 4; index += 1) {
+        answers.push(currentWordsPage[random(0, 19)].wordTranslate)
+      }
 
-    for (let index = 0; index < 4; index += 1) {
-      answers.push(currentWordsPage[random(0, 19)].wordTranslate)
+      setCurrentWord({
+        ...currentWord,
+        word: currentWordsPage[wordsCount].word,
+        translate: currentWordsPage[wordsCount].wordTranslate,
+        shuffled: shuffle(answers),
+        isRight: false,
+        isWrong: false,
+        selected: false,
+      })
+
+      const audio = new Audio(`${backEnd}${currentWordsPage[wordsCount].audio}`)
+
+      setTimeout(() => {
+        const playPromise = audio.play()
+        if (playPromise !== undefined) {
+          playPromise
+            .then((_) => {
+              audio.currentTime = 0
+              audio.play()
+            })
+            .catch((error) => {
+              console.log("sound load error", error)
+            })
+        }
+      }, 1000)
     }
 
-    setCurrentWord({
-      ...currentWord,
-      word: currentWordsPage[wordsCount].word,
-      translate: currentWordsPage[wordsCount].wordTranslate,
-      shuffled: shuffle(answers),
-    })
-    console.log("answer", currentWordsPage[wordsCount].wordTranslate)
-
-    console.log("audio", currentWordsPage[wordsCount].audio)
-
-    const audio = new Audio(`${backEnd}${currentWordsPage[wordsCount].audio}`)
-
-    setTimeout(() => {
-      audio.play()
-    }, 1000)
-
-    // вывести 5 кнопок
-    // вывести кнопку не знаю
+    setWordsCount(wordsCount - 1)
   }
 
   const startGame = () => {
@@ -136,29 +142,40 @@ const AudioCall = ({ location }) => {
     dispatch(getWordsPageAC(group, random(0, 19)))
   }
 
+  const addWordSToStatistic = (flag) => {
+    setStatistics([
+      ...statistics,
+      {
+        word: `${currentWord.word}`,
+        translate: `${currentWord.translate}`,
+        ok: flag,
+      },
+    ])
+  }
+
   const correctSelect = () => {
-    console.log("correctSelect")
     if (!currentWord.selected) {
       setCurrentWord({
         ...currentWord,
         isRight: true,
         selected: true,
       })
+      addWordSToStatistic(true)
     }
   }
   const wrongSelect = () => {
-    console.log("wrongSelect")
     if (!currentWord.selected) {
       setCurrentWord({
         ...currentWord,
         isWrong: true,
         selected: true,
       })
+      setLife(life - 1)
+      addWordSToStatistic(false)
     }
   }
 
   const compareHandler = (e) => {
-    console.log("currentWord", currentWord)
     if (!currentWord.selected) {
       if (
         e.target.innerText.toLowerCase() === currentWord.translate.toLowerCase()
@@ -258,15 +275,38 @@ const AudioCall = ({ location }) => {
       >
         {doGameCycle && (
           <>
-            <div
-              className="h-20 w-30 text-2xl text-center text-gray-200"
-              style={{ top: "45vw", left: "50vw" }}
-            >
-              Картинка аудио
-            </div>
-            <div className="flex justify-center items-center mx-auto rounded-full bg-white bg-opacity-30 h-20 w-20 text-2xl text-center  border-white text-gray-200 border-2 border-opacity-20">
-              <img className="h-10" src={speek} alt="speek" />
-            </div>
+            {currentWord.selected && (
+              <div
+                className="text-2xl h-52 text-center text-gray-200"
+                style={{ top: "45vw", left: "50vw" }}
+              >
+                <div
+                  className="mx-auto w-60 h-40 rounded-full"
+                  style={{
+                    backgroundImage: `url(${backEnd}${
+                      currentWordsPage[wordsCount + 1].image
+                    })`,
+                    backgroundSize: "100%, 100%",
+                  }}
+                >
+                  {" "}
+                </div>
+                <div className="mt-3 inline-flex items-center">
+                  <img className="inline-block h-6" src={speak} alt="speak" />
+                  <div className="ml-3 inline-block text-3xl">
+                    {currentWord.word}
+                  </div>
+                </div>
+              </div>
+            )}
+            {!currentWord.selected && (
+              <div className="flex justify-center items-center h-52">
+                <div className="flex justify-center items-center mx-auto rounded-full bg-white bg-opacity-30 h-20 w-20 text-2xl text-center  border-white text-gray-200 border-2 border-opacity-20">
+                  <img className="h-10" src={speak} alt="speak" />
+                </div>
+              </div>
+            )}
+
             <div className=" mt-10 w-full text-center">
               <div className="inline-flex">
                 {currentWord.shuffled.map((el, idx) => (
@@ -292,9 +332,13 @@ const AudioCall = ({ location }) => {
                         )}
                       <button
                         type="button"
-                        className="inline-block bg-white bg-opacity-50 mx-2 px-3 py-1 text-xs font-medium leading-6 text-center text-black
-border-2 border-gray-600 uppercase rounded shadow ripple 
-hover:shadow-lg hover:bg-purple-500 hover:text-white focus:outline-none"
+                        className={`inline-block bg-white bg-opacity-50 mx-2 px-3 py-1 text-xs font-medium leading-6 text-center text-black
+border-2 border-gray-600 uppercase rounded shadow ripple ${
+                          currentWord.selected
+                            ? ""
+                            : "hover:shadow-lg hover:bg-purple-500 hover:text-white"
+                        }
+ focus:outline-none`}
                         onClick={compareHandler}
                       >
                         {el}
@@ -310,8 +354,9 @@ hover:shadow-lg hover:bg-purple-500 hover:text-white focus:outline-none"
 border-2 border-gray-600 uppercase rounded shadow ripple 
 hover:shadow-lg hover:bg-purple-500 hover:text-white focus:outline-none"
                 type="button"
+                onClick={gameCycle}
               >
-                Не знаю{" "}
+                Дальше
               </button>
             </div>
           </>
