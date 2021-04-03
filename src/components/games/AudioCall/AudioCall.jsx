@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
 import { useEffect, useState, useMemo, useRef } from "react"
 import { Link, withRouter } from "react-router-dom"
@@ -7,15 +8,19 @@ import { useDispatch, useSelector } from "react-redux"
 
 import { onNavbarAC, offNavbarAC } from "../../../redux/games/navbar"
 
+// eslint-disable-next-line no-unused-vars
+
 import StatisticsModal from "../gamesComponents/StatisticsModal"
 
 import savannaBack from "../../../assets/img/games/back_audio.jpg"
 import heart from "../../../assets/img/games/heart.png"
 import spaceship from "../../../assets/img/games/spaceship.png"
+import ok from "../../../assets/img/icons/icon_ok.png"
+import not from "../../../assets/img/icons/icon_not.png"
 
 import close from "../../../assets/img/icons/icon_close.svg"
 import fullscreen from "../../../assets/img/icons/icon_fullscreen.svg"
-import speek from "../../../assets/img/icons/icon_speek.svg"
+import speak from "../../../assets/img/icons/icon_speek.svg"
 
 import { getWordsPageAC } from "../../../redux/games/games"
 import random from "../../../helpers/random"
@@ -28,7 +33,7 @@ import { shuffle } from "../../../helpers/shuffle"
 
 // eslint-disable-next-line no-unused-vars
 const AudioCall = ({ location }) => {
-  console.log("location", location)
+  // console.log("location", location)
   // eslint-disable-next-line no-unused-vars
   const [isStartGame, setIsStartGame] = useState(false)
 
@@ -42,9 +47,19 @@ const AudioCall = ({ location }) => {
   // eslint-disable-next-line no-unused-vars
   const [title, setTitle] = useState("Audio Call")
   const [life, setLife] = useState(5)
+  const [currentWord, setCurrentWord] = useState({
+    word: "test",
+    translate: "Это тест",
+    shuffled: ["shuffled test"],
+    isRight: false,
+    isWrong: false,
+    selected: false,
+  })
 
   // eslint-disable-next-line no-unused-vars
   const [doGameCycle, setDoGameCycle] = useState(false)
+
+  const backEnd = "https://rs-lang-back.herokuapp.com/"
 
   // eslint-disable-next-line no-unused-vars
   const correctSound = useMemo(() => new Audio(correct), [])
@@ -60,38 +75,114 @@ const AudioCall = ({ location }) => {
   const currentWordsPage =
     useSelector(({ wordsPage }) => wordsPage.wordsPage) || []
 
+  // console.log(
+  //   "wordsPage",
+  //   useSelector(({ wordsPage }) => wordsPage.wordsPage)
+  // )
+
   const gameCycle = () => {
-    console.log("gameCycle")
+    if (wordsCount > 0) {
+      gameBlockRef.current.style.animation = "none"
+      setTimeout(() => {
+        gameBlockRef.current.style.animation = `spaceInRight 0.8s`
+        setDoGameCycle(true)
+      }, 20)
 
-    gameBlockRef.current.style.animation = "none"
-    setTimeout(() => {
-      gameBlockRef.current.style.animation = `spaceInRight 0.8s`
-    }, 1)
-    setDoGameCycle(true)
+      const answers = [currentWordsPage[wordsCount].wordTranslate] || []
 
-    // todo
-    // вывести снак аудио
-    //  проиграть звук
-    // вывести 5 кнопок
-    // вывести кнопку не знаю
+      for (let index = 0; index < 4; index += 1) {
+        answers.push(currentWordsPage[random(0, 19)].wordTranslate)
+      }
+
+      setCurrentWord({
+        ...currentWord,
+        word: currentWordsPage[wordsCount].word,
+        translate: currentWordsPage[wordsCount].wordTranslate,
+        shuffled: shuffle(answers),
+        isRight: false,
+        isWrong: false,
+        selected: false,
+      })
+
+      const audio = new Audio(`${backEnd}${currentWordsPage[wordsCount].audio}`)
+
+      setTimeout(() => {
+        const playPromise = audio.play()
+        if (playPromise !== undefined) {
+          playPromise
+            .then((_) => {
+              audio.currentTime = 0
+              audio.play()
+            })
+            .catch((error) => {
+              console.log("sound load error", error)
+            })
+        }
+      }, 1000)
+    }
+
+    setWordsCount(wordsCount - 1)
   }
 
   const startGame = () => {
     if (!isStartGame) {
       shipBlockRef.current.style.animation = `spaceOutLeft 2s`
       setTimeout(() => {
-        setIsStartGame(true)
         gameCycle()
+        setIsStartGame(true)
       }, 1000)
     }
-
-    // todo  начать цикл
   }
 
   const getWordPage = (e) => {
     const group = e.target.value || 0
     setWordGroup(group)
     dispatch(getWordsPageAC(group, random(0, 19)))
+  }
+
+  const addWordSToStatistic = (flag) => {
+    setStatistics([
+      ...statistics,
+      {
+        word: `${currentWord.word}`,
+        translate: `${currentWord.translate}`,
+        ok: flag,
+      },
+    ])
+  }
+
+  const correctSelect = () => {
+    if (!currentWord.selected) {
+      setCurrentWord({
+        ...currentWord,
+        isRight: true,
+        selected: true,
+      })
+      addWordSToStatistic(true)
+    }
+  }
+  const wrongSelect = () => {
+    if (!currentWord.selected) {
+      setCurrentWord({
+        ...currentWord,
+        isWrong: true,
+        selected: true,
+      })
+      setLife(life - 1)
+      addWordSToStatistic(false)
+    }
+  }
+
+  const compareHandler = (e) => {
+    if (!currentWord.selected) {
+      if (
+        e.target.innerText.toLowerCase() === currentWord.translate.toLowerCase()
+      ) {
+        correctSelect()
+      } else {
+        wrongSelect()
+      }
+    }
   }
 
   useEffect(() => {
@@ -121,7 +212,7 @@ const AudioCall = ({ location }) => {
         <div className="">
           {/* eslint-disable-next-line jsx-a11y/no-onchange */}
           <select
-            className="focus:border-gray-200 m-2  border-2 border-gray-500 bg-transparent h-full py-2 px-2 pr-7  text-gray-200 sm:text-sm rounded-md"
+            className="bg-blue-900 focus:border-gray-200 m-2  border-2 border-gray-500  h-full py-2 px-2 pr-7  text-gray-200 sm:text-sm rounded-md"
             value={wordGroup}
             onChange={getWordPage}
           >
@@ -168,37 +259,92 @@ const AudioCall = ({ location }) => {
       {/* game block */}
 
       {!isStartGame && (
-        <div ref={shipBlockRef} className=" mx-auto mt-32  w-1/2">
+        <div ref={shipBlockRef} className=" absolute inset-x-1/4 top-1/3 w-1/2">
           <div className="mx-auto flex justify-center items-center">
             <img className="w-96" src={spaceship} alt="spaceship" />
           </div>
         </div>
       )}
 
-      <div ref={gameBlockRef} className=" mx-auto mt-32  w-1/2">
+      <div
+        ref={gameBlockRef}
+        className="absolute   top-1/3  w-2/3"
+        style={{ left: "15vw" }}
+      >
         {doGameCycle && (
           <>
-            <div
-              className="h-20 w-30 text-2xl text-center text-gray-200"
-              style={{ top: "45vw", left: "50vw" }}
-            >
-              Картинка аудио
-            </div>
-            <div className="flex justify-center items-center mx-auto rounded-full bg-white bg-opacity-30 h-20 w-20 text-2xl text-center  border-white text-gray-200 border-2 border-opacity-20">
-              <img className="h-10" src={speek} alt="speek" />
-            </div>
-            <div className=" animate-appear  mt-10 w-full text-2xl">
-              <div className="text-center">
-                {shuffledAnswers.map((el, idx) => (
-                  <button
-                    type="button"
-                    key={`${idx + 1}`}
-                    className="inline-block bg-white bg-opacity-50 mx-2 px-3 py-1 text-xs font-medium leading-6 text-center text-black
-border-2 border-gray-600 uppercase rounded shadow ripple 
-hover:shadow-lg hover:bg-purple-500 hover:text-white focus:outline-none"
-                  >
-                    {el}
-                  </button>
+            {currentWord.selected && (
+              <div
+                className="text-2xl h-52 text-center text-gray-200"
+                style={{ top: "45vw", left: "50vw" }}
+              >
+                <div
+                  className="mx-auto w-60 h-40 rounded-full"
+                  style={{
+                    backgroundImage: `url(${backEnd}${
+                      wordsCount < 19
+                        ? currentWordsPage[wordsCount + 1].image
+                        : ""
+                    })`,
+                    backgroundSize: "100%, 100%",
+                  }}
+                >
+                  {" "}
+                </div>
+                <div className="mt-3 inline-flex items-center">
+                  <img className="inline-block h-6" src={speak} alt="speak" />
+                  <div className="ml-3 inline-block text-3xl">
+                    {currentWord.word}
+                  </div>
+                </div>
+              </div>
+            )}
+            {!currentWord.selected && (
+              <div className="flex justify-center items-center h-52">
+                <div className="flex justify-center items-center mx-auto rounded-full bg-white bg-opacity-30 h-20 w-20 text-2xl text-center  border-white text-gray-200 border-2 border-opacity-20">
+                  <img className="h-10" src={speak} alt="speak" />
+                </div>
+              </div>
+            )}
+
+            <div className=" mt-10 w-full text-center">
+              <div className="inline-flex">
+                {currentWord.shuffled.map((el, idx) => (
+                  <div key={`${idx + 1}`} className="mx-2">
+                    <div className=" inline-flex   justify-center items-center ">
+                      {currentWord.isRight &&
+                        currentWord.translate.toLowerCase() ===
+                          el.toLowerCase() && (
+                          <img
+                            className="inline-block   align-bottom mx-0.5 w-6 h-6"
+                            src={ok}
+                            alt="ok"
+                          />
+                        )}
+                      {currentWord.isWrong &&
+                        currentWord.translate.toLowerCase() ===
+                          el.toLowerCase() && (
+                          <img
+                            className="inline-block   align-bottom mx-0.5 w-6 h-6"
+                            src={not}
+                            alt="not"
+                          />
+                        )}
+                      <button
+                        type="button"
+                        className={`inline-block bg-white bg-opacity-50 mx-2 px-3 py-1 text-xs font-medium leading-6 text-center text-black
+border-2 border-gray-600 uppercase rounded shadow ripple ${
+                          currentWord.selected
+                            ? ""
+                            : "hover:shadow-lg hover:bg-purple-500 hover:text-white"
+                        }
+ focus:outline-none`}
+                        onClick={compareHandler}
+                      >
+                        {el}
+                      </button>
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
@@ -208,8 +354,9 @@ hover:shadow-lg hover:bg-purple-500 hover:text-white focus:outline-none"
 border-2 border-gray-600 uppercase rounded shadow ripple 
 hover:shadow-lg hover:bg-purple-500 hover:text-white focus:outline-none"
                 type="button"
+                onClick={gameCycle}
               >
-                Не знаю{" "}
+                Дальше
               </button>
             </div>
           </>

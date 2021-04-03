@@ -27,7 +27,7 @@ import { shuffle } from "../../../helpers/shuffle"
 
 // eslint-disable-next-line no-unused-vars
 const Savanna = ({ location }) => {
-  console.log("location", location)
+  // console.log("location", location)
   const [isStartGame, setIsStartGame] = useState(false)
 
   const [wordGroup, setWordGroup] = useState("0")
@@ -61,7 +61,7 @@ const Savanna = ({ location }) => {
   const currentWordsPage = {
     page: useSelector(({ wordsPage }) => wordsPage.wordsPage) || [],
   }
-  console.log(currentWordsPage)
+
   const reduceLives = () => {
     if (life > 0) {
       setLife(life - 1)
