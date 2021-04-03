@@ -5,16 +5,14 @@ import { Link, withRouter } from "react-router-dom"
 import PropTypes from "prop-types"
 
 import { useDispatch, useSelector } from "react-redux"
-
 import { onNavbarAC, offNavbarAC } from "../../../redux/games/navbar"
 
 // eslint-disable-next-line no-unused-vars
-
 import StatisticsModal from "../gamesComponents/StatisticsModal"
 
-import savannaBack from "../../../assets/img/games/back_audio.jpg"
+import sprintBack from "../../../assets/img/games/back_sprint.jpg"
+
 import heart from "../../../assets/img/games/heart.png"
-import spaceship from "../../../assets/img/games/spaceship.png"
 import ok from "../../../assets/img/icons/icon_ok.png"
 import not from "../../../assets/img/icons/icon_not.png"
 
@@ -32,9 +30,7 @@ import wrong from "../../../assets/sound/wrong.mp3"
 import { shuffle } from "../../../helpers/shuffle"
 
 // eslint-disable-next-line no-unused-vars
-const AudioCall = ({ location }) => {
-  // console.log("location", location)
-  // eslint-disable-next-line no-unused-vars
+const Sprint = ({ location }) => {
   const [isStartGame, setIsStartGame] = useState(false)
 
   const [wordGroup, setWordGroup] = useState("0")
@@ -45,7 +41,7 @@ const AudioCall = ({ location }) => {
   // eslint-disable-next-line no-unused-vars
   const [statistics, setStatistics] = useState([])
   // eslint-disable-next-line no-unused-vars
-  const [title, setTitle] = useState("Audio Call")
+  const [title, setTitle] = useState("Sprint")
   const [life, setLife] = useState(5)
   const [currentWord, setCurrentWord] = useState({
     word: "test",
@@ -61,8 +57,9 @@ const AudioCall = ({ location }) => {
 
   const backEnd = "https://rs-lang-back.herokuapp.com/"
 
+  // eslint-disable-next-line no-unused-vars
   const correctSound = useMemo(() => new Audio(correct), [])
-
+  // eslint-disable-next-line no-unused-vars
   const wrongSound = useMemo(() => new Audio(wrong), [])
 
   const gameBlockRef = useRef()
@@ -70,7 +67,14 @@ const AudioCall = ({ location }) => {
 
   const dispatch = useDispatch()
 
-  const currentWordsPage = useSelector(({ wordsPage }) => wordsPage.wordsPage)
+  // eslint-disable-next-line no-unused-vars
+  const currentWordsPage =
+    useSelector(({ wordsPage }) => wordsPage.wordsPage) || []
+
+  // console.log(
+  //   "wordsPage",
+  //   useSelector(({ wordsPage }) => wordsPage.wordsPage)
+  // )
 
   const gameCycle = () => {
     if (wordsCount > 0) {
@@ -82,11 +86,8 @@ const AudioCall = ({ location }) => {
 
       const answers = [currentWordsPage[wordsCount].wordTranslate] || []
 
-      while (answers.length < 5) {
-        const candidate = currentWordsPage[random(0, 19)].wordTranslate
-        if (!answers.includes(candidate)) {
-          answers.push(candidate)
-        }
+      for (let index = 0; index < 4; index += 1) {
+        answers.push(currentWordsPage[random(0, 19)].wordTranslate)
       }
 
       setCurrentWord({
@@ -180,40 +181,9 @@ const AudioCall = ({ location }) => {
     }
   }
 
-  const keyCompareHandler = (e) => {
-    if (
-      e.key === "1" ||
-      e.key === "2" ||
-      e.key === "3" ||
-      e.key === "4" ||
-      e.key === "5"
-    ) {
-      if (!currentWord.selected) {
-        setCurrentWord({ ...currentWord, selected: true })
-
-        console.log("e.key", e.key)
-        if (
-          currentWord.shuffled[+e.key - 1].toLowerCase() ===
-          currentWord.translate.toLowerCase()
-        ) {
-          correctSelect()
-        } else {
-          wrongSelect()
-        }
-      }
-    }
-  }
-
   useEffect(() => {
     dispatch(getWordsPageAC(wordGroup, random(0, 19)))
   }, [])
-
-  useEffect(() => {
-    document.addEventListener("keypress", keyCompareHandler)
-    return () => {
-      document.removeEventListener("keypress", keyCompareHandler)
-    }
-  }, [currentWord])
 
   const doFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -228,7 +198,7 @@ const AudioCall = ({ location }) => {
   return (
     <div
       className="h-screen  w-full bg-cover bg-center"
-      style={{ backgroundImage: `url(${savannaBack})` }}
+      style={{ backgroundImage: `url(${sprintBack})` }}
     >
       <h1 className="text-3xl text-center text-gray-400 pt-8  hidden  lg:block">
         {title}
@@ -238,7 +208,7 @@ const AudioCall = ({ location }) => {
         <div className="">
           {/* eslint-disable-next-line jsx-a11y/no-onchange */}
           <select
-            className="bg-blue-900 focus:border-gray-200 m-2  border-2 border-gray-500  h-full py-2 px-2 pr-7  text-gray-200 sm:text-sm rounded-md"
+            className="bg-yellow-700 focus:border-gray-200 m-2  border-2 border-gray-500  h-full py-2 px-2 pr-7  text-gray-200 sm:text-sm rounded-md"
             value={wordGroup}
             onChange={getWordPage}
           >
@@ -283,109 +253,13 @@ const AudioCall = ({ location }) => {
       </div>
 
       {/* game block */}
-      {!isStartGame && (
-        <div ref={shipBlockRef} className=" absolute inset-x-1/4 top-1/3 w-1/2">
-          <div className="mx-auto flex justify-center items-center">
-            <img className="w-96" src={spaceship} alt="spaceship" />
-          </div>
-        </div>
-      )}
 
       <div
         ref={gameBlockRef}
-        className="absolute   top-1/3  w-2/3"
-        style={{ left: "15vw" }}
+        className="brd  absolute top-1/3 h-52  w-2/5"
+        style={{ right: "5vw" }}
       >
-        {doGameCycle && (
-          <>
-            {currentWord.selected && (
-              <div
-                className="text-2xl h-52 text-center text-gray-200"
-                style={{ top: "45vw", left: "50vw" }}
-              >
-                <div
-                  className="mx-auto w-60 h-40 rounded-full"
-                  style={{
-                    backgroundImage: `url(${backEnd}${
-                      wordsCount < 19
-                        ? currentWordsPage[wordsCount + 1].image
-                        : ""
-                    })`,
-                    backgroundSize: "100%, 100%",
-                  }}
-                >
-                  {" "}
-                </div>
-                <div className="mt-3 inline-flex items-center">
-                  <img className="inline-block h-6" src={speak} alt="speak" />
-                  <div className="ml-3 inline-block text-3xl">
-                    {currentWord.word}
-                  </div>
-                </div>
-              </div>
-            )}
-            {!currentWord.selected && (
-              <div className="flex justify-center items-center h-52">
-                <div className="flex justify-center items-center mx-auto rounded-full bg-white bg-opacity-30 h-20 w-20 text-2xl text-center  border-white text-gray-200 border-2 border-opacity-20">
-                  <img className="h-10" src={speak} alt="speak" />
-                </div>
-              </div>
-            )}
-
-            <div className=" mt-10 w-full text-center">
-              <div className="inline-flex">
-                {currentWord.shuffled.map((el, idx) => (
-                  <div key={`${idx + 1}`} className="mx-2">
-                    <div className=" inline-flex   justify-center items-center ">
-                      {currentWord.isRight &&
-                        currentWord.translate.toLowerCase() ===
-                          el.toLowerCase() && (
-                          <img
-                            className="inline-block   align-bottom mx-0.5 w-6 h-6"
-                            src={ok}
-                            alt="ok"
-                          />
-                        )}
-                      {currentWord.isWrong &&
-                        currentWord.translate.toLowerCase() ===
-                          el.toLowerCase() && (
-                          <img
-                            className="inline-block   align-bottom mx-0.5 w-6 h-6"
-                            src={not}
-                            alt="not"
-                          />
-                        )}
-                      <button
-                        type="button"
-                        className={`inline-block bg-white bg-opacity-50 mx-2 px-3 py-1 text-xs font-medium leading-6 text-center text-black
-border-2 border-gray-600 uppercase rounded shadow ripple ${
-                          currentWord.selected
-                            ? ""
-                            : "hover:shadow-lg hover:bg-purple-500 hover:text-white"
-                        }
- focus:outline-none`}
-                        onClick={compareHandler}
-                      >
-                        {el}
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="text-center">
-              <button
-                className="inline-block bg-white mt-10 mx-2 px-3 py-1 text-xs font-medium leading-6 text-center text-black
-border-2 border-gray-600 uppercase rounded shadow ripple 
-hover:shadow-lg hover:bg-purple-500 hover:text-white focus:outline-none"
-                type="button"
-                onClick={gameCycle}
-              >
-                Дальше
-              </button>
-            </div>
-          </>
-        )}
+        {" "}
       </div>
       {/* game block end */}
 
@@ -398,8 +272,8 @@ hover:shadow-lg hover:bg-purple-500 hover:text-white focus:outline-none"
     </div>
   )
 }
-export default withRouter(AudioCall)
-AudioCall.propTypes = {
+export default withRouter(Sprint)
+Sprint.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   location: PropTypes.any.isRequired,
 }

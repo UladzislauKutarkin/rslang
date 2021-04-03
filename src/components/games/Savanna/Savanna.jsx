@@ -61,7 +61,7 @@ const Savanna = ({ location }) => {
   const currentWordsPage = {
     page: useSelector(({ wordsPage }) => wordsPage.wordsPage) || [],
   }
-
+  console.log(currentWordsPage)
   const reduceLives = () => {
     if (life > 0) {
       setLife(life - 1)
