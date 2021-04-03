@@ -53,137 +53,17 @@ const Sprint = ({ location }) => {
   })
 
   // eslint-disable-next-line no-unused-vars
-  const [doGameCycle, setDoGameCycle] = useState(false)
-
-  const backEnd = "https://rs-lang-back.herokuapp.com/"
-
-  // eslint-disable-next-line no-unused-vars
   const correctSound = useMemo(() => new Audio(correct), [])
   // eslint-disable-next-line no-unused-vars
   const wrongSound = useMemo(() => new Audio(wrong), [])
 
   const gameBlockRef = useRef()
-  const shipBlockRef = useRef()
 
   const dispatch = useDispatch()
 
   // eslint-disable-next-line no-unused-vars
   const currentWordsPage =
     useSelector(({ wordsPage }) => wordsPage.wordsPage) || []
-
-  // console.log(
-  //   "wordsPage",
-  //   useSelector(({ wordsPage }) => wordsPage.wordsPage)
-  // )
-
-  const gameCycle = () => {
-    if (wordsCount > 0) {
-      gameBlockRef.current.style.animation = "none"
-      setTimeout(() => {
-        gameBlockRef.current.style.animation = `spaceInRight 0.8s`
-        setDoGameCycle(true)
-      }, 20)
-
-      const answers = [currentWordsPage[wordsCount].wordTranslate] || []
-
-      for (let index = 0; index < 4; index += 1) {
-        answers.push(currentWordsPage[random(0, 19)].wordTranslate)
-      }
-
-      setCurrentWord({
-        ...currentWord,
-        word: currentWordsPage[wordsCount].word,
-        translate: currentWordsPage[wordsCount].wordTranslate,
-        shuffled: shuffle(answers),
-        isRight: false,
-        isWrong: false,
-        selected: false,
-      })
-
-      const audio = new Audio(`${backEnd}${currentWordsPage[wordsCount].audio}`)
-
-      setTimeout(() => {
-        const playPromise = audio.play()
-        if (playPromise !== undefined) {
-          playPromise
-            .then((_) => {
-              audio.currentTime = 0
-              audio.play()
-            })
-            .catch((error) => {
-              console.log("sound load error", error)
-            })
-        }
-      }, 1000)
-    }
-
-    setWordsCount(wordsCount - 1)
-  }
-
-  const startGame = () => {
-    if (!isStartGame) {
-      shipBlockRef.current.style.animation = `spaceOutLeft 2s`
-      setTimeout(() => {
-        gameCycle()
-        setIsStartGame(true)
-      }, 1000)
-    }
-  }
-
-  const getWordPage = (e) => {
-    const group = e.target.value || 0
-    setWordGroup(group)
-    dispatch(getWordsPageAC(group, random(0, 19)))
-  }
-
-  const addWordSToStatistic = (flag) => {
-    setStatistics([
-      ...statistics,
-      {
-        word: `${currentWord.word}`,
-        translate: `${currentWord.translate}`,
-        ok: flag,
-      },
-    ])
-  }
-
-  const correctSelect = () => {
-    if (!currentWord.selected) {
-      setCurrentWord({
-        ...currentWord,
-        isRight: true,
-        selected: true,
-      })
-      addWordSToStatistic(true)
-    }
-  }
-  const wrongSelect = () => {
-    if (!currentWord.selected) {
-      setCurrentWord({
-        ...currentWord,
-        isWrong: true,
-        selected: true,
-      })
-      setLife(life - 1)
-      addWordSToStatistic(false)
-    }
-  }
-
-  const compareHandler = (e) => {
-    if (!currentWord.selected) {
-      if (
-        e.target.innerText.toLowerCase() === currentWord.translate.toLowerCase()
-      ) {
-        correctSelect()
-      } else {
-        wrongSelect()
-      }
-    }
-  }
-
-  useEffect(() => {
-    dispatch(getWordsPageAC(wordGroup, random(0, 19)))
-  }, [])
 
   const doFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -193,6 +73,16 @@ const Sprint = ({ location }) => {
       document.exitFullscreen()
       dispatch(onNavbarAC())
     }
+  }
+
+  const getWordPage = (e) => {
+    const group = e.target.value || 0
+    setWordGroup(group)
+    dispatch(getWordsPageAC(group, random(0, 19)))
+  }
+
+  const startGame = () => {
+    console.log("start game")
   }
 
   return (
