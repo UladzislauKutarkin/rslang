@@ -132,8 +132,6 @@ const AudioCall = ({ location }) => {
         setIsStartGame(true)
       }, 1000)
     }
-
-    // todo  начать цикл
   }
 
   const getWordPage = (e) => {
@@ -284,7 +282,9 @@ const AudioCall = ({ location }) => {
                   className="mx-auto w-60 h-40 rounded-full"
                   style={{
                     backgroundImage: `url(${backEnd}${
-                      currentWordsPage[wordsCount + 1].image
+                      wordsCount < 19
+                        ? currentWordsPage[wordsCount + 1].image
+                        : ""
                     })`,
                     backgroundSize: "100%, 100%",
                   }}

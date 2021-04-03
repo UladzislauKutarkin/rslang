@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Link } from "react-router-dom"
+import { Link, withRouter } from "react-router-dom"
 import PureModal from "react-pure-modal"
 import "react-pure-modal/dist/react-pure-modal.min.css"
 import PropTypes from "prop-types"
@@ -64,19 +64,19 @@ const StatisticsModal = ({ show, statistics, setWordsCount, setLife }) => {
           ))}
       </div>
       <div className=" mt-8">
-        <Link to="/savanna/continue">
-          <button
-            type="button"
-            className="focus:outline-none mx-5 text-white text-sm py-1 px-5 rounded-md bg-purple-800 hover:bg-purple-900 hover:shadow-lg"
-            // eslint-disable-next-line no-console
-            onClick={() => {
-              setWordsCount(19)
-              setLife(5)
-            }}
-          >
-            Продожить
-          </button>
-        </Link>
+        <button
+          type="button"
+          className="focus:outline-none mx-5 text-white text-sm py-1 px-5 rounded-md bg-purple-800 hover:bg-purple-900 hover:shadow-lg"
+          // eslint-disable-next-line no-console
+          onClick={() => {
+            setWordsCount(19)
+            setLife(5)
+            setModal(false)
+          }}
+        >
+          Продожить
+        </button>
+
         <Link
           className="focus:outline-none mx-5  p-0 text-white text-sm py-1 px-5 rounded-md bg-yellow-500 hover:bg-yellow-600 hover:shadow-lg"
           to="/games/"
@@ -87,7 +87,7 @@ const StatisticsModal = ({ show, statistics, setWordsCount, setLife }) => {
     </PureModal>
   )
 }
-export default StatisticsModal
+export default withRouter(StatisticsModal)
 StatisticsModal.propTypes = {
   show: PropTypes.bool.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
