@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
 import { useEffect, useState, useMemo, useRef } from "react"
 import { Link, withRouter } from "react-router-dom"
@@ -7,17 +6,19 @@ import PropTypes from "prop-types"
 import { useDispatch, useSelector } from "react-redux"
 import { onNavbarAC, offNavbarAC } from "../../../redux/games/navbar"
 
-// eslint-disable-next-line no-unused-vars
 import StatisticsModal from "../gamesComponents/StatisticsModal"
 
 import sprintBack from "../../../assets/img/games/back_sprint.jpg"
 
 import heart from "../../../assets/img/games/heart.png"
+// eslint-disable-next-line no-unused-vars
 import ok from "../../../assets/img/icons/icon_ok.png"
+// eslint-disable-next-line no-unused-vars
 import not from "../../../assets/img/icons/icon_not.png"
 
 import close from "../../../assets/img/icons/icon_close.svg"
 import fullscreen from "../../../assets/img/icons/icon_fullscreen.svg"
+// eslint-disable-next-line no-unused-vars
 import speak from "../../../assets/img/icons/icon_speek.svg"
 
 import { getWordsPageAC } from "../../../redux/games/games"
@@ -27,15 +28,29 @@ import correct from "../../../assets/sound/correct.mp3"
 import wrong from "../../../assets/sound/wrong.mp3"
 
 // eslint-disable-next-line no-unused-vars
-import { shuffle } from "../../../helpers/shuffle"
-
-// eslint-disable-next-line no-unused-vars
 const Sprint = ({ location }) => {
+  // eslint-disable-next-line no-unused-vars
   const [isStartGame, setIsStartGame] = useState(false)
 
   const [wordGroup, setWordGroup] = useState("0")
 
   const [wordsCount, setWordsCount] = useState(19)
+
+  // eslint-disable-next-line no-unused-vars
+  const [canvasSize, setCanvasSize] = useState({
+    width: 100,
+    height: 100,
+  })
+
+  // eslint-disable-next-line no-unused-vars
+  const [timer, setTimer] = useState(60)
+  const [isActive, setIsActive] = useState(false)
+
+  // eslint-disable-next-line no-unused-vars
+  const [angle, setAngle] = useState(-Math.PI / 2)
+  // eslint-disable-next-line no-unused-vars
+  const [timerArcStep, setTimerArcStep] = useState(Math.PI / 60)
+
   // eslint-disable-next-line no-unused-vars
   const [shuffledAnswers, setShuffledAnswers] = useState(["test"])
   // eslint-disable-next-line no-unused-vars
@@ -43,10 +58,11 @@ const Sprint = ({ location }) => {
   // eslint-disable-next-line no-unused-vars
   const [title, setTitle] = useState("Sprint")
   const [life, setLife] = useState(5)
+  // eslint-disable-next-line no-unused-vars
   const [currentWord, setCurrentWord] = useState({
-    word: "test",
-    translate: "Это тест",
-    shuffled: ["shuffled test"],
+    word: "",
+    translate: "",
+    possibleTranslate: "",
     isRight: false,
     isWrong: false,
     selected: false,
@@ -57,13 +73,16 @@ const Sprint = ({ location }) => {
   // eslint-disable-next-line no-unused-vars
   const wrongSound = useMemo(() => new Audio(wrong), [])
 
-  const gameBlockRef = useRef()
-
-  const dispatch = useDispatch()
+  const timerRef = useRef()
+  let canvas = {}
 
   // eslint-disable-next-line no-unused-vars
+  let ctx = {}
+
+  const dispatch = useDispatch()
+  // eslint-disable-next-line no-unused-vars
   const currentWordsPage =
-    useSelector(({ wordsPage }) => wordsPage.wordsPage) || []
+    useSelector(({ wordsPage }) => wordsPage.wordsPage, []) || []
 
   const doFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -81,10 +100,73 @@ const Sprint = ({ location }) => {
     dispatch(getWordsPageAC(group, random(0, 19)))
   }
 
-  const startGame = () => {
-    console.log("start game")
+  const gameCycle = () => {
+    if (wordsCount > 0) {
+      const possibleTrans = Math.floor(random(0, 1))
+        ? currentWordsPage[wordsCount].wordTranslate
+        : currentWordsPage[random(0, 1)].wordTranslate
+
+      setCurrentWord({
+        ...currentWord,
+        word: currentWordsPage[wordsCount].word,
+        translate: currentWordsPage[wordsCount].wordTranslate,
+        possibleTranslate: possibleTrans,
+        isRight: false,
+        isWrong: false,
+        selected: false,
+      })
+    }
   }
 
+  // const drawCircle = () => {
+  //   ctx.beginPath()
+  //   ctx.arc(50, 50, 45, angle, (3 / 2) * Math.PI, false)
+  //   ctx.stroke()
+  // }
+
+  const startGame = () => {
+    setIsActive(true)
+    gameCycle()
+    // console.log("start game")
+    // console.log("canvas.width ", canvas.width)
+    // console.log("canvas.height ", canvas.height)
+    // ctx.lineWidth = 7
+    // ctx.strokeStyle = "#0788b8"
+    // requestAnimationFrame(drawCircle)
+  }
+
+  useEffect(() => {
+    canvas = timerRef.current
+    // eslint-disable-next-line no-unused-vars
+    ctx = canvas.getContext("2d")
+    canvas.height = canvasSize.height
+    canvas.width = canvasSize.height
+  }, [])
+
+  useEffect(() => {
+    let timer60 = null
+    if (isActive) {
+      timer60 = setInterval(() => {
+        if (timer > 0) {
+          setTimer((prevTimer) => prevTimer - 1)
+        }
+
+        if (timer <= 0) {
+          clearInterval(timer60)
+          setIsActive(false)
+          console.log("time up")
+        }
+      }, 1000)
+    }
+
+    return () => clearInterval(timer60)
+  })
+
+  useEffect(() => {
+    dispatch(getWordsPageAC(wordGroup, random(0, 19)))
+  }, [])
+
+  // setAngle((prevAngle) => prevAngle - timerArcStep)
   return (
     <div
       className="h-screen  w-full bg-cover bg-center"
@@ -143,13 +225,47 @@ const Sprint = ({ location }) => {
       </div>
 
       {/* game block */}
+      <div className="brd-g absolute  text-4xl right-32 top-60 ">{timer}</div>
 
-      <div
-        ref={gameBlockRef}
-        className="brd  absolute top-1/3 h-52  w-2/5"
-        style={{ right: "5vw" }}
+      <canvas
+        ref={timerRef}
+        className="brd absolute  right-20"
+        style={{
+          width: `${canvasSize.width}px`,
+          height: `${canvasSize.height}px"`,
+        }}
       >
         {" "}
+      </canvas>
+
+      <div
+        className="bg-white border-2 border-blue-500 bg-opacity-20 absolute top-1/3 h-52 rounded-lg w-2/5"
+        style={{ right: "5vw" }}
+      >
+        <div className="text-center text-blue-700 font-bold text-4xl">
+          {currentWord.word}
+        </div>
+        <div className="text-center text-blue-900 font-medium text-3xl">
+          {currentWord.possibleTranslate}
+        </div>
+      </div>
+      <div className="absolute bottom-1/4 right-28">
+        <button
+          type="button"
+          className="inline-block px-10 py-3 m-3 text-2xl font-medium leading-6 text-center text-white
+        border-2 border-green-800 uppercase transition bg-green-600 rounded shadow ripple 
+        hover:shadow-lg hover:bg-green-900 focus:outline-none"
+        >
+          Верно
+        </button>
+        <button
+          type="button"
+          className="inline-block px-10 py-3 m-3 text-2xl font-medium leading-6 text-center text-white
+        border-2 border-green-800 uppercase transition bg-yellow-700 rounded shadow ripple 
+        hover:shadow-lg hover:bg-green-900 focus:outline-none"
+        >
+          Не верно
+        </button>
       </div>
       {/* game block end */}
 
