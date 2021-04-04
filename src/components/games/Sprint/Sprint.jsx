@@ -126,11 +126,56 @@ const Sprint = ({ location }) => {
     console.log("wordsCount", wordsCount, "currentWord", currentWord)
   }
 
-  // const drawCircle = () => {
-  //   ctx.beginPath()
-  //   ctx.arc(50, 50, 45, angle, (3 / 2) * Math.PI, false)
-  //   ctx.stroke()
-  // }
+  // eslint-disable-next-line no-unused-vars
+  const drawCircle = (time = 60) => {
+    canvas = timerRef.current
+    ctx = canvas.getContext("2d")
+    const ang = { ang: -0.5 * Math.PI, timer: time * 60 }
+    const step = (2 * Math.PI) / (time * 60)
+
+    // todo
+    const innerDraw = () => {
+      ctx.clearRect(0, 0, canvasSize.width, canvasSize.height) // clear canvas
+      ctx.lineWidth = 10
+      ctx.strokeStyle = "#0788b8"
+      ctx.beginPath()
+      ctx.arc(50, 50, 45, ang.ang, (3 / 2) * Math.PI, false)
+      ctx.stroke()
+
+      // ctx.font = block.size + "px Arial";
+      ctx.textAlign = "center"
+      ctx.textBaseline = "middle"
+      ctx.fillStyle = "#045a79"
+      ctx.font = "40px  Arial"
+      // ctx.shadowColor = "#bfbfbf"
+      // ctx.shadowOffsetX = 3
+      // ctx.shadowOffsetY = 3
+      // ctx.shadowBlur = 3
+      ctx.fillText(String(Math.round(ang.timer / 60)), 50, 50)
+
+      ang.ang += step
+      if (ang.timer > 0) {
+        ang.timer -= 1
+      } else {
+        setLife(0)
+        setIsRunGame(false)
+        setWordsCount(-1)
+        setCurrentWord({
+          word: "",
+          translate: "",
+          possibleTranslate: "",
+          isRight: false,
+          isWrong: false,
+          selected: false,
+        })
+
+        return
+      }
+
+      requestAnimationFrame(innerDraw)
+    }
+    requestAnimationFrame(innerDraw)
+  }
 
   const startGame = () => {
     if (!isRunGame) {
@@ -138,14 +183,14 @@ const Sprint = ({ location }) => {
       bell.play()
       setIsActive(true)
       gameCycle()
+      drawCircle()
     }
 
-    // console.log("start game")
-    // console.log("canvas.width ", canvas.width)
-    // console.log("canvas.height ", canvas.height)
-    // ctx.lineWidth = 7
-    // ctx.strokeStyle = "#0788b8"
-    // requestAnimationFrame(drawCircle)
+    console.log("start game")
+    console.log("canvas.width ", canvas.width)
+    console.log("canvas.height ", canvas.height)
+    ctx.lineWidth = 10
+    ctx.strokeStyle = "#0788b8"
   }
 
   const addWordSToStatistic = (flag) => {
@@ -243,30 +288,26 @@ const Sprint = ({ location }) => {
 
   useEffect(() => {
     canvas = timerRef.current
-    // eslint-disable-next-line no-unused-vars
     ctx = canvas.getContext("2d")
     canvas.height = canvasSize.height
     canvas.width = canvasSize.height
+    ctx.lineWidth = 10
+    ctx.strokeStyle = "#0788b8"
+    ctx.beginPath()
+    ctx.arc(50, 50, 45, -0.5 * Math.PI, (3 / 2) * Math.PI, false)
+    ctx.stroke()
+
+    // ctx.font = block.size + "px Arial";
+    ctx.textAlign = "center"
+    ctx.textBaseline = "middle"
+    ctx.fillStyle = "#045a79"
+    ctx.font = "40px  Arial"
+    // ctx.shadowColor = "#bfbfbf"
+    // ctx.shadowOffsetX = 3
+    // ctx.shadowOffsetY = 3
+    // ctx.shadowBlur = 3
+    ctx.fillText(String(60), 50, 50)
   }, [])
-
-  // useEffect(() => {
-  //   let timer60 = null
-  //   if (isActive) {
-  //     timer60 = setInterval(() => {
-  //       if (timer > 0) {
-  //         setTimer((prevTimer) => prevTimer - 1)
-  //       }
-
-  //       if (timer <= 0) {
-  //         clearInterval(timer60)
-  //         setIsActive(false)
-  //         console.log("time up")
-  //       }
-  //     }, 1000)
-  //   }
-
-  //   return () => clearInterval(timer60)
-  // })
 
   useEffect(() => {
     dispatch(getWordsPageAC(wordGroup, random(0, 19)))
@@ -326,11 +367,10 @@ const Sprint = ({ location }) => {
       </div>
 
       {/* game block */}
-      <div className="brd-g absolute  text-4xl right-32 top-60 ">{timer}</div>
 
       <canvas
         ref={timerRef}
-        className="brd absolute  right-20"
+        className="absolute  top-48 right-20"
         style={{
           width: `${canvasSize.width}px`,
           height: `${canvasSize.height}px"`,
@@ -343,7 +383,7 @@ const Sprint = ({ location }) => {
         className="bg-white border-2 border-blue-500 bg-opacity-20 absolute top-1/3 h-52 rounded-lg w-1/2"
         style={{ right: "5vw" }}
       >
-        <div className="text-center text-blue-700 font-bold text-4xl">
+        <div className="text-center mt-5 text-blue-700 font-bold text-4xl">
           {currentWord.word}
         </div>
         <div className="text-center text-blue-900 font-medium text-3xl">

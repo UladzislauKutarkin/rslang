@@ -3,13 +3,8 @@
 import { useEffect, useState, useMemo, useRef } from "react"
 import { Link, withRouter } from "react-router-dom"
 import PropTypes from "prop-types"
-
 import { useDispatch, useSelector } from "react-redux"
-
 import { onNavbarAC, offNavbarAC } from "../../../redux/games/navbar"
-
-// eslint-disable-next-line no-unused-vars
-
 import StatisticsModal from "../gamesComponents/StatisticsModal"
 
 import savannaBack from "../../../assets/img/games/back_audio.jpg"
@@ -28,35 +23,27 @@ import random from "../../../helpers/random"
 import correct from "../../../assets/sound/correct.mp3"
 import wrong from "../../../assets/sound/wrong.mp3"
 
-// eslint-disable-next-line no-unused-vars
 import { shuffle } from "../../../helpers/shuffle"
 
 // eslint-disable-next-line no-unused-vars
 const AudioCall = ({ location }) => {
   // console.log("location", location)
-  // eslint-disable-next-line no-unused-vars
   const [isStartGame, setIsStartGame] = useState(false)
-
   const [wordGroup, setWordGroup] = useState("0")
-
   const [wordsCount, setWordsCount] = useState(19)
-  // eslint-disable-next-line no-unused-vars
-  const [shuffledAnswers, setShuffledAnswers] = useState(["test"])
-  // eslint-disable-next-line no-unused-vars
   const [statistics, setStatistics] = useState([])
   // eslint-disable-next-line no-unused-vars
   const [title, setTitle] = useState("Audio Call")
   const [life, setLife] = useState(5)
   const [currentWord, setCurrentWord] = useState({
-    word: "test",
-    translate: "Это тест",
-    shuffled: ["shuffled test"],
+    word: "",
+    translate: "",
+    shuffled: [],
     isRight: false,
     isWrong: false,
     selected: false,
   })
 
-  // eslint-disable-next-line no-unused-vars
   const [doGameCycle, setDoGameCycle] = useState(false)
 
   const backEnd = "https://rs-lang-back.herokuapp.com/"
