@@ -10,7 +10,6 @@ import StatisticsModal from "../gamesComponents/StatisticsModal"
 
 import sprintBack from "../../../assets/img/games/back_sprint.jpg"
 
-import heart from "../../../assets/img/games/heart.png"
 // eslint-disable-next-line no-unused-vars
 import ok from "../../../assets/img/icons/icon_ok.png"
 // eslint-disable-next-line no-unused-vars
@@ -20,6 +19,8 @@ import close from "../../../assets/img/icons/icon_close.svg"
 import fullscreen from "../../../assets/img/icons/icon_fullscreen.svg"
 // eslint-disable-next-line no-unused-vars
 import speak from "../../../assets/img/icons/icon_speek.svg"
+import bellSound from "../../../assets/sound/bell-sound.mp3"
+import clickSound from "../../../assets/sound/click.mp3"
 
 import { getWordsPageAC } from "../../../redux/games/games"
 import random from "../../../helpers/random"
@@ -31,10 +32,9 @@ import wrong from "../../../assets/sound/wrong.mp3"
 const Sprint = ({ location }) => {
   // eslint-disable-next-line no-unused-vars
   const [isStartGame, setIsStartGame] = useState(false)
-
   const [wordGroup, setWordGroup] = useState("0")
-
   const [wordsCount, setWordsCount] = useState(19)
+  const [isRunGame, setIsRunGame] = useState(false)
 
   // eslint-disable-next-line no-unused-vars
   const [canvasSize, setCanvasSize] = useState({
@@ -44,6 +44,7 @@ const Sprint = ({ location }) => {
 
   // eslint-disable-next-line no-unused-vars
   const [timer, setTimer] = useState(60)
+  // eslint-disable-next-line no-unused-vars
   const [isActive, setIsActive] = useState(false)
 
   // eslint-disable-next-line no-unused-vars
@@ -52,13 +53,12 @@ const Sprint = ({ location }) => {
   const [timerArcStep, setTimerArcStep] = useState(Math.PI / 60)
 
   // eslint-disable-next-line no-unused-vars
-  const [shuffledAnswers, setShuffledAnswers] = useState(["test"])
-  // eslint-disable-next-line no-unused-vars
+
   const [statistics, setStatistics] = useState([])
   // eslint-disable-next-line no-unused-vars
   const [title, setTitle] = useState("Sprint")
-  const [life, setLife] = useState(5)
   // eslint-disable-next-line no-unused-vars
+  const [life, setLife] = useState(5)
   const [currentWord, setCurrentWord] = useState({
     word: "",
     translate: "",
@@ -72,8 +72,11 @@ const Sprint = ({ location }) => {
   const correctSound = useMemo(() => new Audio(correct), [])
   // eslint-disable-next-line no-unused-vars
   const wrongSound = useMemo(() => new Audio(wrong), [])
+  const bell = useMemo(() => new Audio(bellSound), [])
+  const click = useMemo(() => new Audio(clickSound), [])
 
   const timerRef = useRef()
+  const choiceRef = useRef()
   let canvas = {}
 
   // eslint-disable-next-line no-unused-vars
@@ -120,6 +123,7 @@ const Sprint = ({ location }) => {
     if (wordsCount >= 0) {
       setWordsCount((prevWordCount) => prevWordCount - 1)
     }
+    console.log("wordsCount", wordsCount, "currentWord", currentWord)
   }
 
   // const drawCircle = () => {
@@ -129,8 +133,13 @@ const Sprint = ({ location }) => {
   // }
 
   const startGame = () => {
-    setIsActive(true)
-    gameCycle()
+    if (!isRunGame) {
+      setIsRunGame(true)
+      bell.play()
+      setIsActive(true)
+      gameCycle()
+    }
+
     // console.log("start game")
     // console.log("canvas.width ", canvas.width)
     // console.log("canvas.height ", canvas.height)
@@ -140,8 +149,12 @@ const Sprint = ({ location }) => {
   }
 
   const addWordSToStatistic = (flag) => {
+    const filtered = statistics.filter((el) => el.word !== currentWord.word)
+    console.log("filtered", filtered)
+    console.log("currentWord", currentWord)
+
     setStatistics([
-      ...statistics,
+      ...filtered,
       {
         word: `${currentWord.word}`,
         translate: `${currentWord.translate}`,
@@ -150,25 +163,85 @@ const Sprint = ({ location }) => {
     ])
   }
 
+  const showChoice = (flag) => {
+    if (flag) {
+      choiceRef.current.innerHTML = `<img class=" h-16 mx-auto" src="${ok}" alt="ok" />`
+    } else
+      choiceRef.current.innerHTML = `<img class="h-16 mx-auto" src="${not}" alt="ok" />`
+    choiceRef.current.style.animation = "none"
+    setTimeout(() => {
+      choiceRef.current.style.animation = `showChoice 0.5s`
+    }, 20)
+    setTimeout(() => {
+      choiceRef.current.innerHTML = ""
+    }, 500)
+  }
+
   const rightHandler = () => {
-    if (currentWord.translate === currentWord.possibleTranslate) {
-      addWordSToStatistic(true)
-      setCurrentWord({
-        ...currentWord,
-        selected: true,
-      })
-    } else addWordSToStatistic(false)
-    gameCycle()
+    if (isRunGame) {
+      click.play()
+      if (currentWord.translate === currentWord.possibleTranslate) {
+        showChoice(true)
+        addWordSToStatistic(true)
+        setCurrentWord({
+          ...currentWord,
+          selected: true,
+          isRight: true,
+        })
+      } else {
+        showChoice(false)
+        addWordSToStatistic(false)
+      }
+      if (wordsCount > -1) {
+        setTimeout(() => {
+          gameCycle()
+        }, 500)
+      } else {
+        setLife(0)
+        setIsRunGame(false)
+        setCurrentWord({
+          word: "",
+          translate: "",
+          possibleTranslate: "",
+          isRight: false,
+          isWrong: false,
+          selected: false,
+        })
+      }
+    }
   }
   const wrongHandler = () => {
-    if (currentWord.translate !== currentWord.possibleTranslate) {
-      addWordSToStatistic(true)
-      setCurrentWord({
-        ...currentWord,
-        selected: true,
-      })
-    } else addWordSToStatistic(false)
-    gameCycle()
+    if (isRunGame) {
+      click.play()
+      if (currentWord.translate !== currentWord.possibleTranslate) {
+        showChoice(true)
+        addWordSToStatistic(true)
+        setCurrentWord({
+          ...currentWord,
+          selected: true,
+          isWrong: true,
+        })
+      } else {
+        showChoice(false)
+        addWordSToStatistic(false)
+      }
+      if (wordsCount > -1) {
+        setTimeout(() => {
+          gameCycle()
+        }, 500)
+      } else {
+        setLife(0)
+        setIsRunGame(false)
+        setCurrentWord({
+          word: "",
+          translate: "",
+          possibleTranslate: "",
+          isRight: false,
+          isWrong: false,
+          selected: false,
+        })
+      }
+    }
   }
 
   useEffect(() => {
@@ -179,24 +252,24 @@ const Sprint = ({ location }) => {
     canvas.width = canvasSize.height
   }, [])
 
-  useEffect(() => {
-    let timer60 = null
-    if (isActive) {
-      timer60 = setInterval(() => {
-        if (timer > 0) {
-          setTimer((prevTimer) => prevTimer - 1)
-        }
+  // useEffect(() => {
+  //   let timer60 = null
+  //   if (isActive) {
+  //     timer60 = setInterval(() => {
+  //       if (timer > 0) {
+  //         setTimer((prevTimer) => prevTimer - 1)
+  //       }
 
-        if (timer <= 0) {
-          clearInterval(timer60)
-          setIsActive(false)
-          console.log("time up")
-        }
-      }, 1000)
-    }
+  //       if (timer <= 0) {
+  //         clearInterval(timer60)
+  //         setIsActive(false)
+  //         console.log("time up")
+  //       }
+  //     }, 1000)
+  //   }
 
-    return () => clearInterval(timer60)
-  })
+  //   return () => clearInterval(timer60)
+  // })
 
   useEffect(() => {
     dispatch(getWordsPageAC(wordGroup, random(0, 19)))
@@ -208,7 +281,7 @@ const Sprint = ({ location }) => {
       className="h-screen  w-full bg-cover bg-center"
       style={{ backgroundImage: `url(${sprintBack})` }}
     >
-      <h1 className="text-3xl text-center text-gray-400 pt-8  hidden  lg:block">
+      <h1 className="text-3xl text-center text-indigo-800 pt-8  hidden  lg:block">
         {title}
       </h1>
 
@@ -240,12 +313,7 @@ const Sprint = ({ location }) => {
         </div>
       </div>
 
-      <div className="absolute  flex top-20 md:top-20 right-24">
-        {[...Array(life)].map((el, idx) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <img key={idx} className="mx-0.5 w-6" src={heart} alt="life" />
-        ))}
-      </div>
+      <div className="absolute  flex top-20 md:top-20 right-24"> </div>
 
       {/* exit */}
       <div className="absolute top-20 right-5">
@@ -275,7 +343,7 @@ const Sprint = ({ location }) => {
       </canvas>
 
       <div
-        className="bg-white border-2 border-blue-500 bg-opacity-20 absolute top-1/3 h-52 rounded-lg w-2/5"
+        className="bg-white border-2 border-blue-500 bg-opacity-20 absolute top-1/3 h-52 rounded-lg w-1/2"
         style={{ right: "5vw" }}
       >
         <div className="text-center text-blue-700 font-bold text-4xl">
@@ -284,8 +352,14 @@ const Sprint = ({ location }) => {
         <div className="text-center text-blue-900 font-medium text-3xl">
           {currentWord.possibleTranslate}
         </div>
+        <div className="" ref={choiceRef}>
+          {" "}
+        </div>
       </div>
-      <div className="absolute bottom-1/4 right-28">
+      <div
+        className="absolute  flex justify-center items-center   w-1/2 bottom-1/4"
+        style={{ right: "5vw" }}
+      >
         <button
           type="button"
           className="inline-block px-10 py-3 m-3 text-2xl font-medium leading-6 text-center text-white
@@ -308,7 +382,7 @@ const Sprint = ({ location }) => {
       {/* game block end */}
 
       <StatisticsModal
-        show={wordsCount === -1 && currentWord.selected}
+        show={life === 0}
         statistics={statistics}
         setWordsCount={setWordsCount}
         setLife={setLife}
