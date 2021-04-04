@@ -101,7 +101,8 @@ const Sprint = ({ location }) => {
   }
 
   const gameCycle = () => {
-    if (wordsCount > 0) {
+    if (wordsCount >= 0) {
+      console.log("wordsCount", wordsCount)
       const possibleTrans = Math.floor(random(0, 1))
         ? currentWordsPage[wordsCount].wordTranslate
         : currentWordsPage[random(0, 1)].wordTranslate
@@ -115,6 +116,9 @@ const Sprint = ({ location }) => {
         isWrong: false,
         selected: false,
       })
+    }
+    if (wordsCount >= 0) {
+      setWordsCount((prevWordCount) => prevWordCount - 1)
     }
   }
 
@@ -133,6 +137,38 @@ const Sprint = ({ location }) => {
     // ctx.lineWidth = 7
     // ctx.strokeStyle = "#0788b8"
     // requestAnimationFrame(drawCircle)
+  }
+
+  const addWordSToStatistic = (flag) => {
+    setStatistics([
+      ...statistics,
+      {
+        word: `${currentWord.word}`,
+        translate: `${currentWord.translate}`,
+        ok: flag,
+      },
+    ])
+  }
+
+  const rightHandler = () => {
+    if (currentWord.translate === currentWord.possibleTranslate) {
+      addWordSToStatistic(true)
+      setCurrentWord({
+        ...currentWord,
+        selected: true,
+      })
+    } else addWordSToStatistic(false)
+    gameCycle()
+  }
+  const wrongHandler = () => {
+    if (currentWord.translate !== currentWord.possibleTranslate) {
+      addWordSToStatistic(true)
+      setCurrentWord({
+        ...currentWord,
+        selected: true,
+      })
+    } else addWordSToStatistic(false)
+    gameCycle()
   }
 
   useEffect(() => {
@@ -255,6 +291,7 @@ const Sprint = ({ location }) => {
           className="inline-block px-10 py-3 m-3 text-2xl font-medium leading-6 text-center text-white
         border-2 border-green-800 uppercase transition bg-green-600 rounded shadow ripple 
         hover:shadow-lg hover:bg-green-900 focus:outline-none"
+          onClick={rightHandler}
         >
           Верно
         </button>
@@ -263,6 +300,7 @@ const Sprint = ({ location }) => {
           className="inline-block px-10 py-3 m-3 text-2xl font-medium leading-6 text-center text-white
         border-2 border-green-800 uppercase transition bg-yellow-700 rounded shadow ripple 
         hover:shadow-lg hover:bg-green-900 focus:outline-none"
+          onClick={wrongHandler}
         >
           Не верно
         </button>
@@ -270,7 +308,7 @@ const Sprint = ({ location }) => {
       {/* game block end */}
 
       <StatisticsModal
-        show={!wordsCount || !life}
+        show={wordsCount === -1 && currentWord.selected}
         statistics={statistics}
         setWordsCount={setWordsCount}
         setLife={setLife}
