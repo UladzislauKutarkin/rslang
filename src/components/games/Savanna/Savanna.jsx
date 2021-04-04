@@ -69,8 +69,11 @@ const Savanna = ({ location }) => {
   }
 
   const addWordSToStatistic = (flag) => {
+    const filtered = statistics.filter(
+      (el) => el.word !== shuffledAnswersGlob.word
+    )
     setStatistics([
-      ...statistics,
+      ...filtered,
       {
         word: `${shuffledAnswersGlob.word}`,
         translate: `${shuffledAnswersGlob.translate}`,

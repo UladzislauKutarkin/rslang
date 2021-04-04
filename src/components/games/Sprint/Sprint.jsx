@@ -150,9 +150,6 @@ const Sprint = ({ location }) => {
 
   const addWordSToStatistic = (flag) => {
     const filtered = statistics.filter((el) => el.word !== currentWord.word)
-    console.log("filtered", filtered)
-    console.log("currentWord", currentWord)
-
     setStatistics([
       ...filtered,
       {

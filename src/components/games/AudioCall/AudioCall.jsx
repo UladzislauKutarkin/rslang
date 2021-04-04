@@ -136,8 +136,9 @@ const AudioCall = ({ location }) => {
   }
 
   const addWordSToStatistic = (flag) => {
+    const filtered = statistics.filter((el) => el.word !== currentWord.word)
     setStatistics([
-      ...statistics,
+      ...filtered,
       {
         word: `${currentWord.word}`,
         translate: `${currentWord.translate}`,
