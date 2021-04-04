@@ -77,6 +77,8 @@ const Sprint = ({ location }) => {
 
   const timerRef = useRef()
   const choiceRef = useRef()
+  // eslint-disable-next-line no-unused-vars
+  const reqRef = useRef()
   let canvas = {}
 
   // eslint-disable-next-line no-unused-vars
@@ -153,13 +155,15 @@ const Sprint = ({ location }) => {
       // ctx.shadowBlur = 3
       ctx.fillText(String(Math.round(ang.timer / 60)), 50, 50)
 
+      console.log("wordsCount-----", wordsCount)
+
       ang.ang += step
-      if (ang.timer > 0) {
-        ang.timer -= 1
-      } else {
+
+      ang.timer -= 1
+      if (ang.timer < 0 || wordsCount < 2) {
         setLife(0)
         setIsRunGame(false)
-        setWordsCount(-1)
+        setWordsCount(() => -1)
         setCurrentWord({
           word: "",
           translate: "",
@@ -168,13 +172,13 @@ const Sprint = ({ location }) => {
           isWrong: false,
           selected: false,
         })
-
+        reqRef.current = cancelAnimationFrame(reqRef.current)
         return
       }
 
-      requestAnimationFrame(innerDraw)
+      reqRef.current = requestAnimationFrame(innerDraw)
     }
-    requestAnimationFrame(innerDraw)
+    innerDraw()
   }
 
   const startGame = () => {
@@ -239,6 +243,7 @@ const Sprint = ({ location }) => {
           gameCycle()
         }, 500)
       } else {
+        reqRef.current = cancelAnimationFrame(reqRef.current)
         setLife(0)
         setIsRunGame(false)
         setCurrentWord({
@@ -272,6 +277,7 @@ const Sprint = ({ location }) => {
           gameCycle()
         }, 500)
       } else {
+        reqRef.current = cancelAnimationFrame(reqRef.current)
         setLife(0)
         setIsRunGame(false)
         setCurrentWord({
