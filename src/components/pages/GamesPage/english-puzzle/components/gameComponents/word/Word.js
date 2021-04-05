@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* eslint-disable*/
 import React, { useContext, useState, useEffect, useRef } from "react"
 import { useDrag, useDrop } from "react-dnd"
 import { storeGame } from "../../storeGame"
@@ -139,38 +139,21 @@ function Word(props) {
       const dragIndex = item.index
       const hoverIndex = index
       const { sentenceIndex } = item
-      // Don't replace items with themselves
       if (dragIndex === hoverIndex) {
         return
       }
-      // Determine rectangle on screen
       const hoverBoundingRect = ref.current?.getBoundingClientRect()
-      // Get vertical middle
       const hoverMiddleX =
         (hoverBoundingRect.right - hoverBoundingRect.left) / 2
-      // Determine mouse position
       const clientOffset = monitor.getClientOffset()
-      // Get pixels to the top
       const hoverClientX = clientOffset.x - hoverBoundingRect.left
-      // Only perform the move when the mouse has crossed half of the items height
-      // When dragging downwards, only move when the cursor is below 50%
-      // When dragging upwards, only move when the cursor is above 50%
-      // Dragging downwards
       if (dragIndex < hoverIndex && hoverClientX < hoverMiddleX) {
         return
       }
-      // Dragging upwards
       if (dragIndex > hoverIndex && hoverClientX > hoverMiddleX) {
         return
       }
-      // Time to actually perform the action
-      // console.log(id, index, ref.current.innerHTML,item);
       moveWord(dragIndex, hoverIndex, sentenceIndex)
-      // Note: we're mutating the monitor item here!
-      // Generally it's better to avoid mutations,
-      // but it's good here for the sake of performance
-      // to avoid expensive index searches.
-      // eslint-disable-next-line no-param-reassign
       item.index = hoverIndex
     },
     canDrop,
@@ -190,8 +173,6 @@ function Word(props) {
       const res = monitor.getDropResult()
       if (!res) return
       if (res.changedLine) {
-        // console.log(monitor.getDropResult().changedLine);
-        // removeWord(item.index);
         handleClick(props.value)
       }
     },

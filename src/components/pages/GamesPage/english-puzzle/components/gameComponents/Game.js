@@ -44,11 +44,13 @@ function Game() {
             alt="The man pushing puzzles"
           />
           <Button
-            text="Collect"
+            text="Play"
             className={styles.startBtn}
             onClick={() => handleClick({ type: "start" })}
           />
-          <p className={styles.buttonDescription}>Push the button to start</p>
+          <p className={styles.buttonDescription}>
+            Push the button to playing...
+          </p>
           <h3 className={styles.gameName}>English Puzzle</h3>
         </div>
       )}
