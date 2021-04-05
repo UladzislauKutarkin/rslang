@@ -40,8 +40,10 @@ const Sprint = ({ location }) => {
   const [isRunGame, setIsRunGame] = useState(false)
   // eslint-disable-next-line no-unused-vars
   const [score, setScore] = useState(0)
-  // eslint-disable-next-line no-unused-vars
+
   const [bonus, setBonus] = useState(0)
+  // eslint-disable-next-line no-unused-vars
+  const [addToScore, setAddToScore] = useState(10)
 
   // eslint-disable-next-line no-unused-vars
   const [canvasSize, setCanvasSize] = useState({
@@ -220,10 +222,25 @@ const Sprint = ({ location }) => {
     }, 500)
   }
 
+  const calculateScore = () => {
+    let addTo = 10
+    if (bonus >= 9) {
+      addTo = 80
+    } else if (bonus >= 6 && bonus < 9) {
+      addTo = 40
+    } else if (bonus >= 3 && bonus < 6) {
+      addTo = 20
+    } else {
+      addTo = 10
+    }
+    setAddToScore(addTo)
+    setScore((prev) => prev + addTo)
+  }
+
   const rightHandler = () => {
     if (isRunGame) {
       click.play()
-      setBonus((prev) => prev + 1)
+
       if (currentWord.translate === currentWord.possibleTranslate) {
         showChoice(true)
         addWordSToStatistic(true)
@@ -232,6 +249,8 @@ const Sprint = ({ location }) => {
           selected: true,
           isRight: true,
         })
+        setBonus((prev) => prev + 1)
+        calculateScore()
       } else {
         showChoice(false)
         addWordSToStatistic(false)
@@ -244,6 +263,8 @@ const Sprint = ({ location }) => {
       } else {
         reqRef.current = cancelAnimationFrame(reqRef.current)
         setLife(0)
+        setScore(0)
+        setBonus(0)
         setIsRunGame(false)
         setCurrentWord({
           word: "",
@@ -259,7 +280,7 @@ const Sprint = ({ location }) => {
   const wrongHandler = () => {
     if (isRunGame) {
       click.play()
-      setBonus((prev) => prev + 1)
+
       if (currentWord.translate !== currentWord.possibleTranslate) {
         showChoice(true)
         addWordSToStatistic(true)
@@ -268,6 +289,8 @@ const Sprint = ({ location }) => {
           selected: true,
           isWrong: true,
         })
+        setBonus((prev) => prev + 1)
+        calculateScore()
       } else {
         showChoice(false)
         addWordSToStatistic(false)
@@ -279,6 +302,8 @@ const Sprint = ({ location }) => {
         }, 500)
       } else {
         reqRef.current = cancelAnimationFrame(reqRef.current)
+        setScore(0)
+        setBonus(0)
         setLife(0)
         setIsRunGame(false)
         setCurrentWord({
@@ -368,16 +393,20 @@ const Sprint = ({ location }) => {
 
       {/* game block */}
 
-      <div className="absolute top-1/3 left-1/6">
-        <img src={owl1} alt="owl1" />
-        <img src={owl2} alt="owl2" />
-        <img src={owl3} alt="owl3" />
+      <div
+        className=" absolute  justify-end  w-1/3 flex mx-1 top-72 left-0 md:left-20"
+        style={{ top: "32vh" }}
+      >
+        {bonus >= 9 && <img className=" h-28" src={owl3} alt="owl3" />}
+        {bonus >= 6 && <img className=" h-28" src={owl2} alt="owl2" />}
+        {bonus >= 3 && <img className=" h-28" src={owl1} alt="owl1" />}
       </div>
 
       <div>
         {isRunGame && (
-          <div className="bg-blue-300  absolute top-56 text-center text-3xl right-56 rounded-lg w-24 h-10">
-            {score} {bonus}
+          <div className="bg-blue-300  absolute top-56 text-center text-3xl right-56 rounded-lg px-4 h-10">
+            {<span className="text-xl mr-3"> {`+${addToScore}`}</span>}{" "}
+            {<span className=" text-3xl font-bold">{score}</span>}
           </div>
         )}
       </div>
