@@ -14,6 +14,9 @@ import sprintBack from "../../../assets/img/games/back_sprint.jpg"
 import ok from "../../../assets/img/icons/icon_ok.png"
 // eslint-disable-next-line no-unused-vars
 import not from "../../../assets/img/icons/icon_not.png"
+import owl1 from "../../../assets/img/games/owl1.png"
+import owl2 from "../../../assets/img/games/owl2.png"
+import owl3 from "../../../assets/img/games/owl3.png"
 
 import close from "../../../assets/img/icons/icon_close.svg"
 import fullscreen from "../../../assets/img/icons/icon_fullscreen.svg"
@@ -35,6 +38,10 @@ const Sprint = ({ location }) => {
   const [wordGroup, setWordGroup] = useState("0")
   const [wordsCount, setWordsCount] = useState(19)
   const [isRunGame, setIsRunGame] = useState(false)
+  // eslint-disable-next-line no-unused-vars
+  const [score, setScore] = useState(0)
+  // eslint-disable-next-line no-unused-vars
+  const [bonus, setBonus] = useState(0)
 
   // eslint-disable-next-line no-unused-vars
   const [canvasSize, setCanvasSize] = useState({
@@ -47,8 +54,6 @@ const Sprint = ({ location }) => {
   // eslint-disable-next-line no-unused-vars
   const [isActive, setIsActive] = useState(false)
 
-  // eslint-disable-next-line no-unused-vars
-  const [angle, setAngle] = useState(-Math.PI / 2)
   // eslint-disable-next-line no-unused-vars
   const [timerArcStep, setTimerArcStep] = useState(Math.PI / 60)
 
@@ -149,10 +154,6 @@ const Sprint = ({ location }) => {
       ctx.textBaseline = "middle"
       ctx.fillStyle = "#045a79"
       ctx.font = "40px  Arial"
-      // ctx.shadowColor = "#bfbfbf"
-      // ctx.shadowOffsetX = 3
-      // ctx.shadowOffsetY = 3
-      // ctx.shadowBlur = 3
       ctx.fillText(String(Math.round(ang.timer / 60)), 50, 50)
 
       console.log("wordsCount-----", wordsCount)
@@ -189,10 +190,6 @@ const Sprint = ({ location }) => {
       gameCycle()
       drawCircle()
     }
-
-    console.log("start game")
-    console.log("canvas.width ", canvas.width)
-    console.log("canvas.height ", canvas.height)
     ctx.lineWidth = 10
     ctx.strokeStyle = "#0788b8"
   }
@@ -226,6 +223,7 @@ const Sprint = ({ location }) => {
   const rightHandler = () => {
     if (isRunGame) {
       click.play()
+      setBonus((prev) => prev + 1)
       if (currentWord.translate === currentWord.possibleTranslate) {
         showChoice(true)
         addWordSToStatistic(true)
@@ -237,6 +235,7 @@ const Sprint = ({ location }) => {
       } else {
         showChoice(false)
         addWordSToStatistic(false)
+        setBonus(0)
       }
       if (wordsCount > -1) {
         setTimeout(() => {
@@ -260,6 +259,7 @@ const Sprint = ({ location }) => {
   const wrongHandler = () => {
     if (isRunGame) {
       click.play()
+      setBonus((prev) => prev + 1)
       if (currentWord.translate !== currentWord.possibleTranslate) {
         showChoice(true)
         addWordSToStatistic(true)
@@ -271,6 +271,7 @@ const Sprint = ({ location }) => {
       } else {
         showChoice(false)
         addWordSToStatistic(false)
+        setBonus(0)
       }
       if (wordsCount > -1) {
         setTimeout(() => {
@@ -302,16 +303,10 @@ const Sprint = ({ location }) => {
     ctx.beginPath()
     ctx.arc(50, 50, 45, -0.5 * Math.PI, (3 / 2) * Math.PI, false)
     ctx.stroke()
-
-    // ctx.font = block.size + "px Arial";
     ctx.textAlign = "center"
     ctx.textBaseline = "middle"
     ctx.fillStyle = "#045a79"
     ctx.font = "40px  Arial"
-    // ctx.shadowColor = "#bfbfbf"
-    // ctx.shadowOffsetX = 3
-    // ctx.shadowOffsetY = 3
-    // ctx.shadowBlur = 3
     ctx.fillText(String(60), 50, 50)
   }, [])
 
@@ -319,7 +314,6 @@ const Sprint = ({ location }) => {
     dispatch(getWordsPageAC(wordGroup, random(0, 19)))
   }, [])
 
-  // setAngle((prevAngle) => prevAngle - timerArcStep)
   return (
     <div
       className="h-screen  w-full bg-cover bg-center"
@@ -373,6 +367,20 @@ const Sprint = ({ location }) => {
       </div>
 
       {/* game block */}
+
+      <div className="absolute top-1/3 left-1/6">
+        <img src={owl1} alt="owl1" />
+        <img src={owl2} alt="owl2" />
+        <img src={owl3} alt="owl3" />
+      </div>
+
+      <div>
+        {isRunGame && (
+          <div className="bg-blue-300  absolute top-56 text-center text-3xl right-56 rounded-lg w-24 h-10">
+            {score} {bonus}
+          </div>
+        )}
+      </div>
 
       <canvas
         ref={timerRef}
