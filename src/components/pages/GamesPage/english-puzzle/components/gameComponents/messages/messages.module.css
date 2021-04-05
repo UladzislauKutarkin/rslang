@@ -1,0 +1,17 @@
+.messages {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    position: relative;
+    top: 0;
+}
+.audioPlay {
+    margin: 0;
+}
+.translation {
+    margin: 0 5px 0;
+    background-color: #f6f6f6d2;
+    padding: 2px 10px 3px;
+    border-radius: 5px;
+    font-size: 1rem;
+}

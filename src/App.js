@@ -8,7 +8,7 @@ import StatisticsPage from "./components/pages/StatisticsPage/StatisticsPage"
 import SignUp from "./components/Register/Register"
 import SignIn from "./components/SignIn/SignIn"
 import ResponsiveNavbar from "./components/Navbar/ResponsiveNavbar"
-import GameApp from "./components/pages/GamesPage/PuzzleGame/GameApp"
+import EnglishPuzzle from "./components/pages/GamesPage/english-puzzle/english-puzzle"
 
 function App() {
   return (
@@ -21,9 +21,10 @@ function App() {
         <Route exact path="/statistics/" component={StatisticsPage} />
         <Route exact path="/register/" component={SignUp} />
         <Route exact path="/signin/" component={SignIn} />
+
         <Redirect from="*" to="/" />
       </Switch>
-      <GameApp />
+      <EnglishPuzzle />
     </div>
   )
 }
