@@ -22,6 +22,7 @@ module.exports = {
       spaceInUp: "swap 1s",
       spaceInRight: "spaceInRight 1s",
       spaceOutLeft: "spaceOutLeft 1s",
+      showChoice: "showChoice  0.5s",
     },
 
     keyframes: {
@@ -110,6 +111,16 @@ module.exports = {
           opacity: 0,
           transformOrigin: "0% 50%",
           transform: "scale(0.2) translate(-200%, 0%)",
+        },
+      },
+      showChoice: {
+        "0%": {
+          transform: "scale(1.2)",
+          height: "1rem",
+        },
+        "100%": {
+          transform: "scale(0.2)",
+          height: 0,
         },
       },
     },

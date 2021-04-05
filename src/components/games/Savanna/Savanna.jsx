@@ -61,7 +61,6 @@ const Savanna = ({ location }) => {
   const currentWordsPage = {
     page: useSelector(({ wordsPage }) => wordsPage.wordsPage) || [],
   }
-
   const reduceLives = () => {
     if (life > 0) {
       setLife(life - 1)
@@ -69,8 +68,11 @@ const Savanna = ({ location }) => {
   }
 
   const addWordSToStatistic = (flag) => {
+    const filtered = statistics.filter(
+      (el) => el.word !== shuffledAnswersGlob.word
+    )
     setStatistics([
-      ...statistics,
+      ...filtered,
       {
         word: `${shuffledAnswersGlob.word}`,
         translate: `${shuffledAnswersGlob.translate}`,
@@ -96,14 +98,20 @@ const Savanna = ({ location }) => {
       }, 20)
 
       wordRef.current.innerHTML = currentWordsPage.page[wordsCount].word
-      const answers = [currentWordsPage.page[wordsCount].wordTranslate] || []
+
       shuffledAnswersGlob.translate =
         currentWordsPage.page[wordsCount].wordTranslate
       shuffledAnswersGlob.word = currentWordsPage.page[wordsCount].word
 
-      for (let index = 0; index < 3; index += 1) {
-        answers.push(currentWordsPage.page[random(0, 19)].wordTranslate)
+      const answers = [currentWordsPage.page[wordsCount].wordTranslate] || []
+
+      while (answers.length < 4) {
+        const candidate = currentWordsPage.page[random(0, 19)].wordTranslate
+        if (!answers.includes(candidate)) {
+          answers.push(candidate)
+        }
       }
+
       shuffledAnswersGlob.shufl = shuffle(answers)
 
       setShuffledAnswers(shuffledAnswersGlob.shufl)

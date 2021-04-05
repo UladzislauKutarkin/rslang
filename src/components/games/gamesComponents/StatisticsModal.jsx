@@ -20,12 +20,10 @@ const StatisticsModal = ({ show, statistics, setWordsCount, setLife }) => {
 
   return (
     <PureModal
-      replace="true"
-      width="50vh"
-      className=" justify-center  h-auto w-11/12 md:w-1/2 p-5   bg-white text-center rounded-md "
       isOpen={modal}
-      closeButton={<div className="x brd bg-white "> </div>}
-      closeButtonPosition="header"
+      width="50vh"
+      closeButton={<div className=" bg-white "> &nbsp; </div>}
+      className=" justify-center  h-auto w-11/12 md:w-1/2 p-5   bg-white text-center rounded-md "
       onClose={() => {
         setModal(false)
         return true
