@@ -116,8 +116,8 @@ const Sprint = ({ location }) => {
     if (wordsCount >= 0) {
       console.log("wordsCount", wordsCount)
       const possibleTrans = Math.floor(random(0, 1))
-        ? currentWordsPage[wordsCount].wordTranslate
-        : currentWordsPage[random(0, 1)].wordTranslate
+        ? currentWordsPage[wordsCount]?.wordTranslate
+        : currentWordsPage[random(0, 1)]?.wordTranslate
 
       setCurrentWord({
         ...currentWord,
@@ -233,7 +233,7 @@ const Sprint = ({ location }) => {
     } else {
       addTo = 10
     }
-    setAddToScore(addTo)
+    setAddToScore(() => addTo)
     setScore((prev) => prev + addTo)
   }
 
@@ -397,9 +397,9 @@ const Sprint = ({ location }) => {
         className=" absolute  justify-end  w-1/3 flex mx-1 top-72 left-0 md:left-20"
         style={{ top: "32vh" }}
       >
-        {bonus >= 9 && <img className=" h-28" src={owl3} alt="owl3" />}
-        {bonus >= 6 && <img className=" h-28" src={owl2} alt="owl2" />}
-        {bonus >= 3 && <img className=" h-28" src={owl1} alt="owl1" />}
+        {bonus > 9 && <img className=" h-28" src={owl3} alt="owl3" />}
+        {bonus > 6 && <img className=" h-28" src={owl2} alt="owl2" />}
+        {bonus > 3 && <img className=" h-28" src={owl1} alt="owl1" />}
       </div>
 
       <div>
