@@ -142,7 +142,6 @@ const Sprint = ({ location }) => {
     const ang = { ang: -0.5 * Math.PI, timer: time * 60 }
     const step = (2 * Math.PI) / (time * 60)
 
-    // todo
     const innerDraw = () => {
       ctx.clearRect(0, 0, canvasSize.width, canvasSize.height) // clear canvas
       ctx.lineWidth = 10
@@ -163,8 +162,9 @@ const Sprint = ({ location }) => {
       ang.ang += step
 
       ang.timer -= 1
-      if (ang.timer < 0 || wordsCount < 2) {
+      if (ang.timer < 0) {
         setLife(0)
+        setBonus(0)
         setIsRunGame(false)
         setWordsCount(() => -1)
         setCurrentWord({
@@ -186,6 +186,8 @@ const Sprint = ({ location }) => {
 
   const startGame = () => {
     if (!isRunGame) {
+      setScore(0)
+      setBonus(0)
       setIsRunGame(true)
       bell.play()
       setIsActive(true)
