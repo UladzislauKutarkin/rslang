@@ -53,10 +53,10 @@ const Settings = ({
           <ChangeButtons />
         </PureModal>
       ) : null}
-      <div className="container">
-        <div className="flex justify-between h-10">
+      <div className="container mx-auto mb-0 mb-6">
+        <div className="flex sm:flex-col justify-between">
           {isCounter ? <Counter counter={userCounter} /> : null}
-          <div className="flex justify-between w-2/5">
+          <div className="flex brd w-2/3 justify-between">
             {["Cаванна", "Аудиовызов", "Спринт", "Своя игра"].map((index) => (
               <button
                 // eslint-disable-next-line react/no-array-index-key
@@ -68,26 +68,28 @@ const Settings = ({
               </button>
             ))}
           </div>
-          <Link to="/vocabulary/">
-            {isAuthorized || userCurrent.userId ? (
-              <button
-                // eslint-disable-next-line react/no-array-index-key
-                type="button"
-                className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-yellow-900 rounded shadow ripple hover:shadow-lg hover:bg-yellow-700 focus:outline-none"
-              >
-                Cловарь
-              </button>
+          <div className="flex w-1/3 justify-around brd-g">
+            <Link to="/vocabulary/">
+              {isAuthorized || userCurrent.userId ? (
+                <button
+                  // eslint-disable-next-line react/no-array-index-key
+                  type="button"
+                  className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-yellow-900 rounded shadow ripple hover:shadow-lg hover:bg-yellow-700 focus:outline-none"
+                >
+                  Cловарь
+                </button>
+              ) : null}
+            </Link>
+            {isSetings ? (
+              <div onClick={() => setModal(true)}>
+                <img
+                  className="w-8 h-8 cursor-pointer"
+                  src={settings}
+                  alt="settings"
+                />
+              </div>
             ) : null}
-          </Link>
-          {isSetings ? (
-            <div onClick={() => setModal(true)}>
-              <img
-                className="w-8 h-8 cursor-pointer"
-                src={settings}
-                alt="settings"
-              />
-            </div>
-          ) : null}
+          </div>
         </div>
         {isStudied ? (
           <div className="flex justify-center">

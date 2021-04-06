@@ -1,16 +1,20 @@
 // import { useDispatch } from "react-redux"
 // import { useState } from "react"
-import { Link } from "react-router-dom"
 // import { setPageActionCreator } from "../../../redux/pages/pages"
 import TeamMarket from "./TeamMarket"
 import imgHeaderPromo from "../../../assets/img/english_promo_header.jpg"
+import Footer from "../../Footer/Footer"
+import ForWhom from "./ForWhom"
+import LandingDescription from "./LandingDescription"
+import photo1 from "../../../assets/img/photo/beiduk.jpg"
+import photo2 from "../../../assets/img/photo/kutarkin.jpg"
+import photo3 from "../../../assets/img/photo/yakubouski.jpg"
 
 const HomePage = () => {
   // const [page] = useState("home")
   // const [showNavbar] = useState(true)
   // const dispatch = useDispatch()
   // dispatch(setPageActionCreator({ page, showNavbar }))
-
   return (
     <>
       <main>
@@ -44,75 +48,38 @@ const HomePage = () => {
         <section className="pb-20 bg-blueGray-200 -mt-24">
           <div className="container mx-auto px-4">
             <div className="flex flex-wrap">
-              <div className="lg:pt-12 pt-6 w-full md:w-4/12 px-4 text-center">
-                <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg">
-                  <div className="px-4 py-5 flex-auto">
-                    <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-red-400">
-                      <i className="fas fa-award" />
-                    </div>
-                    <h6 className="text-xl font-semibold">
-                      {" "}
-                      Английский язык в моей жизни
-                    </h6>
-                    <p className="mt-2 mb-4 text-blueGray-500">
-                      Не секрет, что в настоящее время английский язык является
-                      самым популярным и распространенным языком в мире. Для
-                      этого есть много причин. Во-первых, это язык английской
-                      литературы и Шекспира. Во-вторых, он стал действительно
-                      важным в таких областях как туризм, бизнес, медицина,
-                      образование, информационные технологии, юриспруденция и
-                      т.д. В-третьих, английский язык мелодичен и практичен в
-                      изучении. Помимо этого, знание английского языка открывает
-                      безграничные возможности в развитии карьеры и в обучении.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="w-full md:w-4/12 px-4 text-center">
-                <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg">
-                  <div className="px-4 py-5 flex-auto">
-                    <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-lightBlue-400">
-                      <i className="fas fa-retweet" />
-                    </div>
-                    <h6 className="text-xl font-semibold">
-                      Изучение английского языка
-                    </h6>
-                    <p className="mt-2 mb-4 text-blueGray-500">
-                      KАнглийский язык преподается в большинстве школ по всему
-                      миру, так как он сегодня имеет международное значение. Во
-                      многих странах изучения английского, в качестве второго
-                      языка, стало просто необходимым. Страна, где он на самом
-                      деле возник, это Великобритания, расширившая свою империю
-                      в результате длительной колонизации. Многие люди сегодня
-                      хотят изучать английский язык, так как понимают, как он
-                      важен в ведении бизнеса.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-6 w-full md:w-4/12 px-4 text-center">
-                <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg">
-                  <div className="px-4 py-5 flex-auto">
-                    <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-emerald-400">
-                      <i className="fas fa-fingerprint" />
-                    </div>
-                    <h6 className="text-xl font-semibold">
-                      Важность английского языка
-                    </h6>
-                    <p className="mt-2 mb-4 text-blueGray-500">
-                      Причины для изучения языков различны. Однако люди сходятся
-                      во мнении, что все языки предназначены для облегчения
-                      процесса коммуникации. На мой взгляд, родиться в
-                      многоязычной семье очень хорошо. Это означает, что ребенок
-                      будет расти, зная сразу несколько языков. В противном
-                      случае, придется изучать иностранные языки в школе,
-                      университете или любом другом учреждении.
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <LandingDescription
+                title="Английский язык в моей жизни"
+                description=" Не секрет, что в настоящее время английский язык является самым
+            популярным и распространенным языком в мире. Для этого есть много
+            причин. Во-первых, это язык английской литературы и Шекспира.
+            Во-вторых, он стал действительно важным в таких областях как туризм,
+            бизнес, медицина, образование, информационные технологии,
+            юриспруденция и т.д. В-третьих, английский язык мелодичен и
+            практичен в изучении. Помимо этого, знание английского языка
+            открывает безграничные возможности в развитии карьеры и в обучении."
+              />
+              <LandingDescription
+                title="Изучение английского языка"
+                description="Английский язык преподается в большинстве школ по всему
+                миру, так как он сегодня имеет международное значение. Во
+                многих странах изучения английского, в качестве второго
+                языка, стало просто необходимым. Страна, где он на самом
+                деле возник, это Великобритания, расширившая свою империю
+                в результате длительной колонизации. Многие люди сегодня
+                хотят изучать английский язык, так как понимают, как он
+                важен в ведении бизнеса."
+              />
+              <LandingDescription
+                title="Важность английского языка"
+                description="Причины для изучения языков различны. Однако люди сходятся
+                во мнении, что все языки предназначены для облегчения
+                процесса коммуникации. На мой взгляд, родиться в
+                многоязычной семье очень хорошо. Это означает, что ребенок
+                будет расти, зная сразу несколько языков. В противном
+                случае, придется изучать иностранные языки в школе,
+                университете или любом другом учреждении."
+              />
             </div>
 
             <div className="flex flex-wrap items-center mt-32">
@@ -121,22 +88,18 @@ const HomePage = () => {
                   <i className="fas fa-user-friends text-xl" />
                 </div>
                 <h3 className="text-3xl mb-2 font-semibold leading-normal">
-                  Working with us is a pleasure
+                  Как проходят занятия?
                 </h3>
                 <p className="text-lg font-light leading-relaxed mt-4 mb-4 text-blueGray-600">
-                  Don't let your uses guess by attaching tooltips and popoves to
-                  any element. Just make sure you enable them first via
-                  JavaScript.
+                  Все занятия профессиональным английским языком проходят на
+                  нашей интерактивной платформе самостоятельно.
                 </p>
                 <p className="text-lg font-light leading-relaxed mt-0 mb-4 text-blueGray-600">
-                  The kit comes with three pre-built pages to help you get
-                  started faster. You can change the text and images and you're
-                  good to go. Just make sure you enable them first via
-                  JavaScript.
+                  У вас будет личный интерактивный словарь, в который Вы можете
+                  добавлять новую лексику. Специальные упражнения помогут
+                  быстрее выучить слова и начать их использовать. Также Вы
+                  можете обучаться в игровой форме, с помощью мини-игр.
                 </p>
-                <Link to="/" className="font-bold text-blueGray-700 mt-8">
-                  Check Notus React!
-                </Link>
               </div>
 
               <div className="w-full md:w-4/12 px-4 mr-auto ml-auto">
@@ -144,29 +107,8 @@ const HomePage = () => {
                   <img
                     alt="..."
                     src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1051&q=80"
-                    className="w-full align-middle rounded-t-lg"
+                    className="w-full align-middle rounded-lg"
                   />
-                  <blockquote className="relative p-8 mb-4">
-                    <svg
-                      preserveAspectRatio="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 583 95"
-                      className="absolute left-0 w-full block h-95-px -top-94-px"
-                    >
-                      <polygon
-                        points="-30,95 583,95 583,65"
-                        className="text-lightBlue-500 fill-current"
-                      />
-                    </svg>
-                    <h4 className="text-xl font-bold text-white">
-                      Top Notch Services
-                    </h4>
-                    <p className="text-md font-light mt-2 text-white">
-                      The Arctic Ocean freezes every winter and much of the
-                      sea-ice then thaws every summer, and that process will
-                      continue whatever happens.
-                    </p>
-                  </blockquote>
                 </div>
               </div>
             </div>
@@ -208,85 +150,33 @@ const HomePage = () => {
                   <div className="text-lightBlue-600 p-3 text-center inline-flex items-center justify-center w-16 h-16 mb-6 shadow-lg rounded-full bg-lightBlue-300">
                     <i className="fas fa-rocket text-xl" />
                   </div>
-                  <h3 className="text-3xl font-semibold">A growing company</h3>
+                  <h3 className="text-3xl font-semibold">
+                    Преимущества обучения
+                  </h3>
                   <p className="mt-4 text-lg leading-relaxed text-blueGray-500">
-                    The extension comes with three pre-built pages to help you
-                    get started faster. You can change the text and images and
-                    you're good to go.
+                    Действительно удобное расписание, в отличие от занятий в
+                    группах. Вы можете выбрать время обучения самостоятельно.
                   </p>
-                  <ul className="list-none mt-6">
-                    <li className="py-2">
-                      <div className="flex items-center">
-                        <div>
-                          <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-lightBlue-600 bg-lightBlue-200 mr-3">
-                            <i className="fas fa-fingerprint" />
-                          </span>
-                        </div>
-                        <div>
-                          <h4 className="text-blueGray-500">
-                            Carefully crafted components
-                          </h4>
-                        </div>
-                      </div>
-                    </li>
-                    <li className="py-2">
-                      <div className="flex items-center">
-                        <div>
-                          <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-lightBlue-600 bg-lightBlue-200 mr-3">
-                            <i className="fab fa-html5" />
-                          </span>
-                        </div>
-                        <div>
-                          <h4 className="text-blueGray-500">
-                            Amazing page examples
-                          </h4>
-                        </div>
-                      </div>
-                    </li>
-                    <li className="py-2">
-                      <div className="flex items-center">
-                        <div>
-                          <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-lightBlue-600 bg-lightBlue-200 mr-3">
-                            <i className="far fa-paper-plane" />
-                          </span>
-                        </div>
-                        <div>
-                          <h4 className="text-blueGray-500">
-                            Dynamic components
-                          </h4>
-                        </div>
-                      </div>
-                    </li>
-                  </ul>
+                  <p className="mt-4 text-lg leading-relaxed text-blueGray-500">
+                    Преподаватель подбирается лично под вас. Мы обязательно
+                    постараемся подобрать человека с опытом работы, учебы или
+                    преподавания именно в вашей профессиональной сфере. Также
+                    учтем характеристики, которые вы укажете на вводном уроке.
+                    Если преподаватель не понравился — бесплатно заменим.
+                  </p>
+                  <p className="mt-4 text-lg leading-relaxed text-blueGray-500">
+                    Экономия времени. Занимайтесь где угодно: главное — иметь
+                    под рукой компьютер,ноутбук или телефон. Не нужно тратить
+                    время на дорогу до школы — лучше потратьте его на
+                    профессиональное развитие или отдых.
+                  </p>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="pt-20 pb-48">
-          <div className="container mx-auto px-4">
-            <div className="flex flex-wrap justify-center text-center mb-24">
-              <div className="w-full lg:w-6/12 px-4">
-                <h2 className="text-4xl font-semibold">Here are our heroes</h2>
-                <p className="text-lg leading-relaxed m-4 text-blueGray-500">
-                  According to the National Oceanic and Atmospheric
-                  Administration, Ted, Scambos, NSIDClead scentist, puts the
-                  potentially record maximum.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap">
-              <TeamMarket name="Yauheni Beiduk" />
-              <TeamMarket name="Uladzislau Kutarkin" />
-              <TeamMarket name="Alexandr Yakubouski" />
-              <TeamMarket name="Alexey Stalpec" />
-            </div>
-          </div>
-        </section>
-
-        <section className="pb-20 relative block bg-blueGray-800">
+        <section className="relative block bg-blueGray-800">
           <div
             className="bottom-auto top-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden -mt-20 h-20"
             style={{ transform: "translateZ(0)" }}
@@ -307,128 +197,52 @@ const HomePage = () => {
             </svg>
           </div>
 
-          <div className="container mx-auto px-4 lg:pt-24 lg:pb-64">
+          <div className="container mx-auto px-4 lg:pt-24">
             <div className="flex flex-wrap text-center justify-center">
               <div className="w-full lg:w-6/12 px-4">
-                <h2 className="text-4xl font-semibold text-white">
-                  Build something
+                <h2 className="text-4xl font-semibold mt-12 text-gray-800">
+                  Для кого подойдут наши курсы ?
                 </h2>
-                <p className="text-lg leading-relaxed mt-4 mb-4 text-blueGray-400">
-                  Put the potentially record low maximum sea ice extent tihs
-                  year down to low ice. According to the National Oceanic and
-                  Atmospheric Administration, Ted, Scambos.
-                </p>
               </div>
             </div>
             <div className="flex flex-wrap mt-12 justify-center">
-              <div className="w-full lg:w-3/12 px-4 text-center">
-                <div className="text-blueGray-800 p-3 w-12 h-12 shadow-lg rounded-full bg-white inline-flex items-center justify-center">
-                  <i className="fas fa-medal text-xl" />
-                </div>
-                <h6 className="text-xl mt-5 font-semibold text-white">
-                  Excelent Services
-                </h6>
-                <p className="mt-2 mb-4 text-blueGray-400">
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
-                </p>
-              </div>
-              <div className="w-full lg:w-3/12 px-4 text-center">
-                <div className="text-blueGray-800 p-3 w-12 h-12 shadow-lg rounded-full bg-white inline-flex items-center justify-center">
-                  <i className="fas fa-poll text-xl" />
-                </div>
-                <h5 className="text-xl mt-5 font-semibold text-white">
-                  Grow your market
-                </h5>
-                <p className="mt-2 mb-4 text-blueGray-400">
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
-                </p>
-              </div>
-              <div className="w-full lg:w-3/12 px-4 text-center">
-                <div className="text-blueGray-800 p-3 w-12 h-12 shadow-lg rounded-full bg-white inline-flex items-center justify-center">
-                  <i className="fas fa-lightbulb text-xl" />
-                </div>
-                <h5 className="text-xl mt-5 font-semibold text-white">
-                  Launch time
-                </h5>
-                <p className="mt-2 mb-4 text-blueGray-400">
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
-                </p>
-              </div>
+              <ForWhom
+                name="Студенты IT-специальностей"
+                description="Интенсивная программа наших курсов дает возможность в первый месяц обучения, получить уровень знаний, требуемый для работы"
+              />
+              <ForWhom
+                name="Хотите уехать из страны, но не знаете иностранного языка?"
+                description="Мы можем органиовать выездную группы в англоговорящие страны, где можно совместить отдых и обучение, пообщаться с самими носителями языка"
+              />
+              <ForWhom
+                name="Готовитесь к международным экзаменам?"
+                description="Мы гарантируем положительный результат сдачи экзамена на необходимом Вам уровне"
+              />
+              <ForWhom
+                name="Есть базовые знания, но Вы не знаете как их применить?"
+                description="Вы будете обучаться по кембриджской методике, где акцент делается на общение, а не на конспектировании лекций"
+              />
             </div>
           </div>
         </section>
-        <section className="relative block py-24 lg:pt-0 bg-blueGray-800">
+
+        <section className="pt-12 pb-24">
           <div className="container mx-auto px-4">
-            <div className="flex flex-wrap justify-center lg:-mt-64 -mt-48">
+            <div className="flex flex-wrap justify-center text-center mb-8">
               <div className="w-full lg:w-6/12 px-4">
-                <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-200">
-                  <div className="flex-auto p-5 lg:p-10">
-                    <h4 className="text-2xl font-semibold">
-                      Want to work with us?
-                    </h4>
-                    <p className="leading-relaxed mt-1 mb-4 text-blueGray-500">
-                      Complete this form and we will get back to you in 24
-                      hours.
-                    </p>
-                    <div className="relative w-full mb-3 mt-8">
-                      <label
-                        className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                        htmlFor="full-name"
-                      >
-                        Full Name
-                      </label>
-                      <input
-                        type="text"
-                        className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                        placeholder="Full Name"
-                      />
-                    </div>
-
-                    <div className="relative w-full mb-3">
-                      <label
-                        className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                        htmlFor="email"
-                      >
-                        Email
-                      </label>
-                      <input
-                        type="email"
-                        className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                        placeholder="Email"
-                      />
-                    </div>
-
-                    <div className="relative w-full mb-3">
-                      <label
-                        className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                        htmlFor="message"
-                      >
-                        Message
-                      </label>
-                      <textarea
-                        rows="4"
-                        cols="80"
-                        className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"
-                        placeholder="Type a message..."
-                      />
-                    </div>
-                    <div className="text-center mt-6">
-                      <button
-                        className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                        type="button"
-                      >
-                        Send Message
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                <h2 className="text-4xl font-semibold">Наша команда</h2>
               </div>
+            </div>
+
+            <div className="flex flex-wrap">
+              <TeamMarket name="Yauheni Beiduk" photoURL={photo1} />
+              <TeamMarket name="Uladzislau Kutarkin" photoURL={photo2} />
+              <TeamMarket name="Alexandr Yakubouski" photoURL={photo3} />
+              <TeamMarket name="Alexey Stalpec" photoURL={photo3} />
             </div>
           </div>
         </section>
+        <Footer />
       </main>
     </>
   )
