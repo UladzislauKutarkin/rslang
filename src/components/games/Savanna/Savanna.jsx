@@ -4,10 +4,16 @@ import { Link, withRouter } from "react-router-dom"
 import PropTypes from "prop-types"
 
 import { useDispatch, useSelector } from "react-redux"
+import {
+  getUserWordsVocabulary,
+  getVocabulary,
+} from "../../../redux/vocabulary/vocabulary"
 
 import { onNavbarAC, offNavbarAC } from "../../../redux/games/navbar"
 
 import StatisticsModal from "../gamesComponents/StatisticsModal"
+// eslint-disable-next-line no-unused-vars
+import { isAuthorized } from "../../../helpers/globals"
 
 import savannaBack from "../../../assets/img/games/savanna_back.jpg"
 import lotos from "../../../assets/img/games/lotos_1.png"
@@ -27,6 +33,13 @@ import { shuffle } from "../../../helpers/shuffle"
 
 // eslint-disable-next-line no-unused-vars
 const Savanna = ({ match }) => {
+  // eslint-disable-next-line no-unused-vars
+  const currentGroup = match.params.group ?? 0
+  // eslint-disable-next-line no-unused-vars
+  const currentPage = match.params.page ?? 0
+  // eslint-disable-next-line no-unused-vars
+  const userCurrent = useSelector(({ user }) => user.user)
+
   // eslint-disable-next-line no-unused-vars
   const [referenceFromBook, setReferenceFromBook] = useState(false)
 
@@ -57,22 +70,20 @@ const Savanna = ({ match }) => {
   const music = useMemo(() => new Audio(forsavanna), [])
   const correctSound = useMemo(() => new Audio(correct), [])
   const wrongSound = useMemo(() => new Audio(wrong), [])
-  let currentWordsPage
+  // let currentWordsPage
   const dispatch = useDispatch()
-  const serverWordsPage =
-    useSelector(({ wordsPage }) => wordsPage.wordsPage) ?? []
-  // eslint-disable-next-line no-unused-vars
-  const vocabWordsPage =
-    useSelector(({ vocabulary }) => vocabulary?.vocabulary) ?? []
+  // // eslint-disable-next-line no-unused-vars
 
-  if (match.params.group) {
-    currentWordsPage = vocabWordsPage
-    setReferenceFromBook(() => true)
-  } else {
-    currentWordsPage = serverWordsPage
-  }
+  // const currentWordsPage = useSelector(({ wordsPage }) => wordsPage.wordsPage)
+  const currentWordsPage = useSelector(
+    ({ vocabulary }) => vocabulary.vocabulary
+  )
 
-  console.log("voc")
+  // Array.from({ length: 20 }, (_, i) => {
+  //   return { word: `word-${i}`, wordTranslate: `translate-${i}` }
+  // })
+  console.log("currentWordsPage", currentWordsPage)
+
   const reduceLives = () => {
     if (life > 0) {
       setLife(life - 1)
@@ -202,7 +213,24 @@ const Savanna = ({ match }) => {
   }
 
   useEffect(() => {
-    dispatch(getWordsPageAC(0, random(0, 29)))
+    if (match.params.group) {
+      setReferenceFromBook(true)
+      if (isAuthorized || userCurrent.userId) {
+        dispatch(getUserWordsVocabulary(currentPage, currentGroup))
+      }
+      dispatch(getVocabulary(currentPage, currentGroup))
+    } else {
+      dispatch(getVocabulary(random(0, 29), 0))
+    }
+
+    // const auth = true
+    // if (match.params.group) {
+    //   // from bok
+    //   if (auth) {
+    //     dispatch(getWordsPageAC(0, random(0, 29)))
+    //   } else dispatch(getWordsPageAC(currentGroup, currentPage))
+    // } else dispatch(getWordsPageAC(0, random(0, 29))) // from menu
+    // dispatch(getWordsPageAC(0, random(0, 29))) // from menu
   }, [])
 
   useEffect(() => {
