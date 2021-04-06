@@ -14,6 +14,9 @@ import sprintBack from "../../../assets/img/games/back_sprint.jpg"
 import ok from "../../../assets/img/icons/icon_ok.png"
 // eslint-disable-next-line no-unused-vars
 import not from "../../../assets/img/icons/icon_not.png"
+import owl1 from "../../../assets/img/games/owl1.png"
+import owl2 from "../../../assets/img/games/owl2.png"
+import owl3 from "../../../assets/img/games/owl3.png"
 
 import close from "../../../assets/img/icons/icon_close.svg"
 import fullscreen from "../../../assets/img/icons/icon_fullscreen.svg"
@@ -35,6 +38,12 @@ const Sprint = ({ location }) => {
   const [wordGroup, setWordGroup] = useState("0")
   const [wordsCount, setWordsCount] = useState(19)
   const [isRunGame, setIsRunGame] = useState(false)
+  // eslint-disable-next-line no-unused-vars
+  const [score, setScore] = useState(0)
+
+  const [bonus, setBonus] = useState(0)
+  // eslint-disable-next-line no-unused-vars
+  const [addToScore, setAddToScore] = useState(10)
 
   // eslint-disable-next-line no-unused-vars
   const [canvasSize, setCanvasSize] = useState({
@@ -47,8 +56,6 @@ const Sprint = ({ location }) => {
   // eslint-disable-next-line no-unused-vars
   const [isActive, setIsActive] = useState(false)
 
-  // eslint-disable-next-line no-unused-vars
-  const [angle, setAngle] = useState(-Math.PI / 2)
   // eslint-disable-next-line no-unused-vars
   const [timerArcStep, setTimerArcStep] = useState(Math.PI / 60)
 
@@ -109,8 +116,8 @@ const Sprint = ({ location }) => {
     if (wordsCount >= 0) {
       console.log("wordsCount", wordsCount)
       const possibleTrans = Math.floor(random(0, 1))
-        ? currentWordsPage[wordsCount].wordTranslate
-        : currentWordsPage[random(0, 1)].wordTranslate
+        ? currentWordsPage[wordsCount]?.wordTranslate
+        : currentWordsPage[random(0, 1)]?.wordTranslate
 
       setCurrentWord({
         ...currentWord,
@@ -135,7 +142,6 @@ const Sprint = ({ location }) => {
     const ang = { ang: -0.5 * Math.PI, timer: time * 60 }
     const step = (2 * Math.PI) / (time * 60)
 
-    // todo
     const innerDraw = () => {
       ctx.clearRect(0, 0, canvasSize.width, canvasSize.height) // clear canvas
       ctx.lineWidth = 10
@@ -149,10 +155,6 @@ const Sprint = ({ location }) => {
       ctx.textBaseline = "middle"
       ctx.fillStyle = "#045a79"
       ctx.font = "40px  Arial"
-      // ctx.shadowColor = "#bfbfbf"
-      // ctx.shadowOffsetX = 3
-      // ctx.shadowOffsetY = 3
-      // ctx.shadowBlur = 3
       ctx.fillText(String(Math.round(ang.timer / 60)), 50, 50)
 
       console.log("wordsCount-----", wordsCount)
@@ -160,8 +162,9 @@ const Sprint = ({ location }) => {
       ang.ang += step
 
       ang.timer -= 1
-      if (ang.timer < 0 || wordsCount < 2) {
+      if (ang.timer < 0) {
         setLife(0)
+        setBonus(0)
         setIsRunGame(false)
         setWordsCount(() => -1)
         setCurrentWord({
@@ -183,16 +186,14 @@ const Sprint = ({ location }) => {
 
   const startGame = () => {
     if (!isRunGame) {
+      setScore(0)
+      setBonus(0)
       setIsRunGame(true)
       bell.play()
       setIsActive(true)
       gameCycle()
       drawCircle()
     }
-
-    console.log("start game")
-    console.log("canvas.width ", canvas.width)
-    console.log("canvas.height ", canvas.height)
     ctx.lineWidth = 10
     ctx.strokeStyle = "#0788b8"
   }
@@ -223,9 +224,25 @@ const Sprint = ({ location }) => {
     }, 500)
   }
 
+  const calculateScore = () => {
+    let addTo = 10
+    if (bonus >= 9) {
+      addTo = 80
+    } else if (bonus >= 6 && bonus < 9) {
+      addTo = 40
+    } else if (bonus >= 3 && bonus < 6) {
+      addTo = 20
+    } else {
+      addTo = 10
+    }
+    setAddToScore(() => addTo)
+    setScore((prev) => prev + addTo)
+  }
+
   const rightHandler = () => {
     if (isRunGame) {
       click.play()
+
       if (currentWord.translate === currentWord.possibleTranslate) {
         showChoice(true)
         addWordSToStatistic(true)
@@ -234,9 +251,12 @@ const Sprint = ({ location }) => {
           selected: true,
           isRight: true,
         })
+        setBonus((prev) => prev + 1)
+        calculateScore()
       } else {
         showChoice(false)
         addWordSToStatistic(false)
+        setBonus(0)
       }
       if (wordsCount > -1) {
         setTimeout(() => {
@@ -245,6 +265,8 @@ const Sprint = ({ location }) => {
       } else {
         reqRef.current = cancelAnimationFrame(reqRef.current)
         setLife(0)
+        setScore(0)
+        setBonus(0)
         setIsRunGame(false)
         setCurrentWord({
           word: "",
@@ -260,6 +282,7 @@ const Sprint = ({ location }) => {
   const wrongHandler = () => {
     if (isRunGame) {
       click.play()
+
       if (currentWord.translate !== currentWord.possibleTranslate) {
         showChoice(true)
         addWordSToStatistic(true)
@@ -268,9 +291,12 @@ const Sprint = ({ location }) => {
           selected: true,
           isWrong: true,
         })
+        setBonus((prev) => prev + 1)
+        calculateScore()
       } else {
         showChoice(false)
         addWordSToStatistic(false)
+        setBonus(0)
       }
       if (wordsCount > -1) {
         setTimeout(() => {
@@ -278,6 +304,8 @@ const Sprint = ({ location }) => {
         }, 500)
       } else {
         reqRef.current = cancelAnimationFrame(reqRef.current)
+        setScore(0)
+        setBonus(0)
         setLife(0)
         setIsRunGame(false)
         setCurrentWord({
@@ -302,16 +330,10 @@ const Sprint = ({ location }) => {
     ctx.beginPath()
     ctx.arc(50, 50, 45, -0.5 * Math.PI, (3 / 2) * Math.PI, false)
     ctx.stroke()
-
-    // ctx.font = block.size + "px Arial";
     ctx.textAlign = "center"
     ctx.textBaseline = "middle"
     ctx.fillStyle = "#045a79"
     ctx.font = "40px  Arial"
-    // ctx.shadowColor = "#bfbfbf"
-    // ctx.shadowOffsetX = 3
-    // ctx.shadowOffsetY = 3
-    // ctx.shadowBlur = 3
     ctx.fillText(String(60), 50, 50)
   }, [])
 
@@ -319,7 +341,6 @@ const Sprint = ({ location }) => {
     dispatch(getWordsPageAC(wordGroup, random(0, 19)))
   }, [])
 
-  // setAngle((prevAngle) => prevAngle - timerArcStep)
   return (
     <div
       className="h-screen  w-full bg-cover bg-center"
@@ -373,6 +394,24 @@ const Sprint = ({ location }) => {
       </div>
 
       {/* game block */}
+
+      <div
+        className=" absolute  justify-end  w-1/3 flex mx-1 top-72 left-0 md:left-20"
+        style={{ top: "32vh" }}
+      >
+        {bonus > 9 && <img className=" h-28" src={owl3} alt="owl3" />}
+        {bonus > 6 && <img className=" h-28" src={owl2} alt="owl2" />}
+        {bonus > 3 && <img className=" h-28" src={owl1} alt="owl1" />}
+      </div>
+
+      <div>
+        {isRunGame && (
+          <div className="bg-blue-300  absolute top-56 text-center text-3xl right-56 rounded-lg px-4 h-10">
+            {<span className="text-xl mr-3"> {`+${addToScore}`}</span>}{" "}
+            {<span className=" text-3xl font-bold">{score}</span>}
+          </div>
+        )}
+      </div>
 
       <canvas
         ref={timerRef}
