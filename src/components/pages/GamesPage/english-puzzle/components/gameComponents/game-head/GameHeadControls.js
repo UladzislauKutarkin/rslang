@@ -10,7 +10,7 @@ function GameHeadControls() {
   const gameState = useContext(storeGame)
   const dispatchGame = gameState.dispatch
   const stateGame = gameState.state
-  const [pages, setPages] = useState([])
+  const [pages, setPages] = useState([1])
 
   function handleClick(types) {
     if (types.type === "difficulty") {
@@ -21,7 +21,7 @@ function GameHeadControls() {
     settingsStored.save(`puzzle-${types.type}`, types.value)
   }
   useEffect(() => {
-    if (pages.length === stateGame.pages) {
+    if (pages.length !== stateGame.pages) {
       setPages(
         Array(stateGame.pages)
           .fill()

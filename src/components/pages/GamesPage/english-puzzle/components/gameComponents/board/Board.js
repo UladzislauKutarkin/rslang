@@ -42,23 +42,20 @@ function Board() {
           </span>
         </div>
       ))}
-      {
-        // Иван Константинович Айвазовский – Смотр Черноморского флота в 1849 г.
-        stateGame.isRoundFinished && (
-          <div
-            className={`${styles.img} ${styles.appear}`}
-            style={{
-              backgroundImage: `url(${bg.image})`,
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "863px 460px",
-            }}
-          >
-            <span className={styles.paintName}>
-              {`${bg.author} – ${bg.name} ${bg.year}`}
-            </span>
-          </div>
-        )
-      }
+      {stateGame.isRoundFinished && (
+        <div
+          className={`${styles.img} ${styles.appear}`}
+          style={{
+            backgroundImage: `url(${bg.image})`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "863px 460px",
+          }}
+        >
+          <span className={styles.paintName}>
+            {`${bg.author} – ${bg.name} ${bg.year}`}
+          </span>
+        </div>
+      )}
       {!stateGame.isRoundFinished && (
         <Sentence
           sentence={stateGame.currentSentence}
