@@ -33,6 +33,13 @@ const TextBookPage = () => {
   const userCurrent = useSelector(({ user }) => user.user)
   const countPagination = Math.ceil(pageUserCounter / 20)
 
+  // YA
+  console.log(
+    "all",
+    useSelector((state) => state)
+  )
+  console.log("pagination.group, pagination.page ", group, pageNumber)
+
   useEffect(() => {
     localStorage.setItem("page", pageNumber)
     if (isAuthorized || userCurrent.userId) {

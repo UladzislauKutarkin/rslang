@@ -32,6 +32,17 @@ const Settings = ({
     },
     [dispatch]
   )
+
+  // YA
+  const groupForGame = useSelector(({ pagination }) => pagination.group)
+  const pageNumberForGame = useSelector(({ pagination }) => pagination.page)
+  // eslint-disable-next-line no-console
+  console.log(
+    "pagination.group, pagination.page ",
+    groupForGame,
+    pageNumberForGame
+  )
+
   return (
     <>
       {isSetings ? (
@@ -57,15 +68,21 @@ const Settings = ({
         <div className="flex justify-between h-10">
           {isCounter ? <Counter counter={userCounter} /> : null}
           <div className="flex justify-between w-2/5">
-            {["Cаванна", "Аудиовызов", "Спринт", "Своя игра"].map((index) => (
-              <button
-                // eslint-disable-next-line react/no-array-index-key
-                key={index}
+            {[
+              ["Cаванна", "savanna"],
+              ["Аудиовызов", "audiocall"],
+              ["Спринт", "sprint"],
+              ["Своя игра", "castomgame"],
+            ].map((element) => (
+              <Link
+                to={`/${element[1]}/${groupForGame}/${pageNumberForGame}`}
+                key={element[0]}
                 type="button"
-                className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-yellow-600 rounded shadow ripple hover:shadow-lg hover:bg-yellow-700 focus:outline-none"
+                className="block px-6  mx-2 py-2 text-xs font-medium  text-center text-white uppercase transition
+                 bg-yellow-600 rounded shadow ripple hover:shadow-lg hover:bg-yellow-700 focus:outline-none"
               >
-                {index}
-              </button>
+                {element[0]}
+              </Link>
             ))}
           </div>
           <Link to="/vocabulary/">
