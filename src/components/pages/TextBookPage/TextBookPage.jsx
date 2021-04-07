@@ -22,9 +22,7 @@ const TextBookPage = () => {
   const pageNumber = useSelector(({ pagination }) => pagination.pageTextBook)
   const isTranslate = useSelector(({ settings }) => settings.translate)
   const isButtons = useSelector(({ settings }) => settings.buttons)
-
   const pages = useSelector(({ pagination }) => pagination.pagesCount)
-
   const [complicatedWords, setComplicatedWords] = useState([])
 
   const handleButtonClick = useCallback(
@@ -63,7 +61,7 @@ const TextBookPage = () => {
   //       top: 0,
   //       behavior: "smooth",
   //     })
-  //   }, [])
+  //   }, [pageNumber])
   //   return null
   // }
 

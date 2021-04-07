@@ -10,7 +10,6 @@ const initialState = {
   pageHardVocabulary: +localStorage.getItem("pageHardVocabulary") || 0,
   groupHardVocabulary: +localStorage.getItem("groupHardVocabulary") || 0,
   pageStudiedVocabulary: +localStorage.getItem("pageStudiedVocabulary") || 0,
-  groupStudiedVocabulary: +localStorage.getItem("groupStudiedVocabulary") || 0,
   pagesCount: 0,
 }
 

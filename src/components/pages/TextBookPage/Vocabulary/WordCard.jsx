@@ -13,9 +13,7 @@ const WordCard = ({
   handleButtonClick,
   pageNumber,
   userWordsVocabulary,
-  handleVocavularyChangeGroup,
   group,
-  selectedGroup,
   difficulty,
   isStudied,
   isCounter,
@@ -52,8 +50,6 @@ const WordCard = ({
           isSetings={false}
           isStudied={isStudied}
           isCounter={isCounter}
-          handleVocavularyChangeGroup={handleVocavularyChangeGroup}
-          selectedGroup={selectedGroup}
           userCounter={userCounter}
         />
         {userWordsVocabulary?.length === 0 ? (
@@ -176,9 +172,7 @@ WordCard.propTypes = {
   handleButtonClick: PropTypes.func.isRequired,
   pageNumber: PropTypes.number.isRequired,
   userWordsVocabulary: PropTypes.arrayOf(PropTypes.object),
-  handleVocavularyChangeGroup: PropTypes.func.isRequired,
   group: PropTypes.number.isRequired,
-  selectedGroup: PropTypes.number.isRequired,
   difficulty: PropTypes.string.isRequired,
   isStudied: PropTypes.bool,
   isCounter: PropTypes.bool,

@@ -14,7 +14,6 @@ import { isAuthorized } from "../../../helpers/globals"
 
 const Settings = ({
   isSetings,
-  // handleVocavularyChangeGroup,
   isStudied,
   isCounter,
   userCounter,
@@ -146,7 +145,6 @@ export default Settings
 
 Settings.propTypes = {
   isSetings: PropTypes.bool.isRequired,
-  // handleVocavularyChangeGroup: PropTypes.func,
   userCounter: PropTypes.number,
   isStudied: PropTypes.bool,
   isCounter: PropTypes.bool,
@@ -155,7 +153,6 @@ Settings.propTypes = {
 }
 
 Settings.defaultProps = {
-  // handleVocavularyChangeGroup: func,
   isStudied: true,
   isCounter: false,
   userCounter: 0,

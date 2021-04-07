@@ -48,7 +48,6 @@ export const RestoreUserWord = (mode) => {
 export const getUsersWords = (page = 0, queryDifficulty, group = 0) => (
   dispatch
 ) => {
-  console.log(page, group)
   const { token } = JSON.parse(localStorage.getItem("user"))
   const { userID } = JSON.parse(localStorage.getItem("user"))
   axios
