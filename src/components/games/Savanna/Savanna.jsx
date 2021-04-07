@@ -282,7 +282,7 @@ const Savanna = (props) => {
 
   useEffect(() => {
     setWordsCount(() => {
-      if (currentWordsPage === undefined) {
+      if (currentWordsPage === undefined || currentWordsPage === null) {
         return 0
       }
       // if (currentWordsPage.length <= 0) {
