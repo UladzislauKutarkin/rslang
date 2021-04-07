@@ -1,11 +1,10 @@
 /* eslint-disable */
 async function getPages({ group }) {
-  const url = `https://rs-lang-back.herokuapp.com/words?group=${group}`;
-  const rawResponse = await fetch(url);
-  if (rawResponse.status !== 200) return { error: 'Failed to get pages' };
-  const content = await rawResponse.json();
-  return content;
+  const url = `https://rs-lang-back.herokuapp.com/words?group=${group}&wordsPerPage=10`;
+  const rawResponse = await fetch(url)
+  if (rawResponse.status !== 200) return { error: 'Failed to get pages' }
+  const content = await rawResponse.json()
+  return content
 }
 
-export default getPages;
-// ${group}
+export default getPages

@@ -1,5 +1,6 @@
 /* eslint-disable */
 import React, { useContext, useState, useEffect } from "react"
+import { useSelector } from "react-redux"
 import update from "immutability-helper"
 import { useDrop } from "react-dnd"
 import { storeGame } from "../../storeGame"
@@ -15,6 +16,8 @@ function Sentence(props) {
   const [width, setWidth] = useState(1)
   const [words, setWords] = useState([])
   const { index } = props
+  const vocabularyData = useSelector(({ vocabulary }) => vocabulary.vocabulary)
+  console.log(vocabularyData)
 
   useEffect(() => {
     if (stateGame.sentenceHasMistake !== null && props.isBuilding) {

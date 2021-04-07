@@ -10,7 +10,8 @@ function GameHeadControls() {
   const gameState = useContext(storeGame)
   const dispatchGame = gameState.dispatch
   const stateGame = gameState.state
-  const [pages, setPages] = useState([1])
+  const [pages, setPages] = useState([])
+  console.log(pages)
 
   function handleClick(types) {
     if (types.type === "difficulty") {
@@ -35,7 +36,7 @@ function GameHeadControls() {
       <div className={styles.levelControls}>
         <span>Level:</span>
         <Select
-          values={[1, 2, 3]}
+          values={[1, 2, 3, 4, 5, 6]}
           value={stateGame.difficulty}
           onChange={(diff) => handleClick({ type: "difficulty", value: diff })}
         />

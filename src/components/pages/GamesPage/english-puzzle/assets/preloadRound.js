@@ -23,7 +23,7 @@ async function preloadRound(dispatchGame, stateGame, difficulty, page) {
   let pageN = page
   if (!pageN) {
     pageN = await makePage(dispatchGame, roundDifficulty)
-    settingsStored.save("puzzle-page", 1)
+    settingsStored.save("puzzle-page", pageN)
   } else {
     makePage(dispatchGame, roundDifficulty)
   }
