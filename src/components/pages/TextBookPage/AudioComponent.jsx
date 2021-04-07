@@ -16,6 +16,7 @@ const AudioComponent = React.memo(({ audios }) => {
 
   return (
     <ReactAudioPlayer
+      className="w-full"
       ref={audioPlayer}
       src={`https://rs-lang-back.herokuapp.com/${audios[playIndex]}`}
       onEnded={handleEnd}

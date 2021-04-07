@@ -1,4 +1,5 @@
 import axios from "axios"
+import { changePagesCount } from "../pagination/pagination"
 import { getUserWordsVocabulary } from "../vocabulary/vocabulary"
 
 export const ADD_USER_WORD = "ADD_USER_WORD"
@@ -8,7 +9,7 @@ export const RESTORE_USER_WORD = "RESTORE_USER_WORD"
 export const STUDIED_USER_WORD = "STUDIED_USER_WORD"
 
 const initialState = {
-  wordBook: [],
+  wordBook: null,
   deletedCounter: 0,
   hardWordCounter: 0,
 }
@@ -44,7 +45,9 @@ export const RestoreUserWord = (mode) => {
   }
 }
 
-export const getUsersWords = (page, queryDifficulty, group) => (dispatch) => {
+export const getUsersWords = (page = 0, queryDifficulty, group = 0) => (
+  dispatch
+) => {
   const { token } = JSON.parse(localStorage.getItem("user"))
   const { userID } = JSON.parse(localStorage.getItem("user"))
   axios
@@ -56,7 +59,20 @@ export const getUsersWords = (page, queryDifficulty, group) => (dispatch) => {
         },
       }
     )
-    .then(({ data }) => dispatch(fetchUserWordsSucsess(data)))
+    .then(({ data }) => {
+      let result = []
+      if (data[0].paginatedResults) {
+        result = data[0].paginatedResults.map((item) => ({
+          // eslint-disable-next-line no-underscore-dangle
+          id: item._id,
+          ...item,
+        }))
+        dispatch(
+          changePagesCount(Math.ceil(data[0]?.totalCount[0]?.count / 20))
+        )
+      }
+      return dispatch(fetchUserWordsSucsess(result))
+    })
 }
 
 export const getStudied = (queryDifficulty) => (dispatch) => {
@@ -71,10 +87,18 @@ export const getStudied = (queryDifficulty) => (dispatch) => {
         },
       }
     )
-    .then(({ data }) => dispatch(fetchUserWordsSucsess(data)))
+    .then(({ data }) => {
+      const result = data[0].paginatedResults.map((item) => ({
+        // eslint-disable-next-line no-underscore-dangle
+        id: item._id,
+        ...item,
+      }))
+      dispatch(changePagesCount(Math.ceil(data[0]?.totalCount[0]?.count / 20)))
+      return dispatch(fetchUserWordsSucsess(result))
+    })
 }
 
-export const addWordToWordBook = (wordId, difficulty, page, group) => (
+export const addWordToWordBook = (wordId, difficulty, page = 0, group = 0) => (
   dispatch
 ) => {
   const { token } = JSON.parse(localStorage.getItem("user"))
@@ -94,9 +118,12 @@ export const addWordToWordBook = (wordId, difficulty, page, group) => (
     .then(() => dispatch(getUserWordsVocabulary(page, group)))
 }
 
-export const restoreWordBook = (wordId, page, queryDifficulty, group) => (
-  dispatch
-) => {
+export const restoreWordBook = (
+  wordId,
+  page = 0,
+  queryDifficulty,
+  group = 0
+) => (dispatch) => {
   const { token } = JSON.parse(localStorage.getItem("user"))
   const { userID } = JSON.parse(localStorage.getItem("user"))
   axios

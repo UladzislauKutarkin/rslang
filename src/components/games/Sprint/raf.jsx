@@ -9,7 +9,7 @@ const Counter = () => {
   const previousTimeRef = React.useRef()
 
   const animate = (time) => {
-    if (previousTimeRef.current != undefined) {
+    if (previousTimeRef.current !== undefined) {
       const deltaTime = time - previousTimeRef.current
 
       // Pass on a function to the setter of the state

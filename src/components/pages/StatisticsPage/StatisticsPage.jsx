@@ -1,4 +1,5 @@
 import imgHeader from "../../../assets/img/english_statistics_header+.jpg"
+import Footer from "../../Footer/Footer"
 
 const StatisticsPage = () => (
   <>
@@ -13,6 +14,7 @@ const StatisticsPage = () => (
       </section>
 
       <section className="relative py-16 bg-blueGray-200 " />
+      <Footer />
     </main>
   </>
 )
