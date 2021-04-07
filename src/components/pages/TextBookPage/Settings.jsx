@@ -54,7 +54,7 @@ const Settings = ({
         </PureModal>
       ) : null}
       <div className="container mx-auto mb-0 mb-6">
-        <div className="flex flex-wrap w-auto justify-between">
+        <div className="flex flex-wrap w-auto mx-8 justify-between">
           {isCounter ? <Counter counter={userCounter} /> : null}
           {["Cаванна", "Аудиовызов", "Спринт", "Своя игра"].map((index) => (
             <button
@@ -79,7 +79,10 @@ const Settings = ({
               ) : null}
             </Link>
             {isSetings ? (
-              <div className="sm:my-0 my-2" onClick={() => setModal(true)}>
+              <div
+                className="absolute top-20 right-2 sm:my-0 my-2"
+                onClick={() => setModal(true)}
+              >
                 <img
                   className="w-8 h-8 cursor-pointer"
                   src={settings}
