@@ -23,7 +23,7 @@ const Settings = (props) => {
     location,
   } = props
 
-  console.log("---location---", location.pathname)
+  // console.log("---location---", location.pathname)
   const userCurrent = useSelector(({ user }) => user.user)
   const dispatch = useDispatch()
   const [modal, setModal] = useState(false)
@@ -41,11 +41,11 @@ const Settings = (props) => {
   const groupForGame = useSelector(({ pagination }) => pagination.group)
   const pageNumberForGame = useSelector(({ pagination }) => pagination.page)
   // eslint-disable-next-line no-console
-  console.log(
-    "pagination.group, pagination.page ",
-    groupForGame,
-    pageNumberForGame
-  )
+  // console.log(
+  //   "pagination.group, pagination.page ",
+  //   groupForGame,
+  //   pageNumberForGame
+  // )
 
   return (
     <>

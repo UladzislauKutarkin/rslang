@@ -7,11 +7,13 @@ import PropTypes from "prop-types"
 import { useDispatch, useSelector } from "react-redux"
 import { createSelector } from "reselect"
 
+// eslint-disable-next-line no-unused-vars
 import { getStudied } from "../../../redux/wordBook/wordBook"
 
 import {
   getUserWordsVocabulary,
   getVocabulary,
+  getCounterUser,
 } from "../../../redux/vocabulary/vocabulary"
 
 import { onNavbarAC, offNavbarAC } from "../../../redux/games/navbar"
@@ -40,16 +42,16 @@ import { shuffle } from "../../../helpers/shuffle"
 const Savanna = (props) => {
   const { match } = props
 
-  const referencePage = match.params.page ?? ""
+  const referencePage = match.params.reference ?? ""
   const currentGroup = match.params.group ?? 0
   const currentPage = match.params.page ?? 0
 
   const [referenceFromBook, setReferenceFromBook] = useState(false)
   const [isStartGame, setIsStartGame] = useState(false)
 
-  const [wordGroup, setWordGroup] = useState("0")
+  const [wordGroup, setWordGroup] = useState(2)
   const [musicON, setMusicON] = useState(false)
-  const [wordsCount, setWordsCount] = useState(0)
+  const [wordsCount, setWordsCount] = useState(1)
   const [shuffledAnswers, setShuffledAnswers] = useState(["dump"])
   const [statistics, setStatistics] = useState([])
   const [alive, setAlive] = useState(false)
@@ -81,14 +83,18 @@ const Savanna = (props) => {
   // eslint-disable-next-line no-unused-vars
   const selectPageStudied = createSelector(
     (state) => state.wordBook,
-    (wordBook) => wordBook.wordBook
+    (wordBook) => wordBook.wordBook[0]?.paginatedResults
   )
 
   // eslint-disable-next-line no-constant-condition
-  if (true) {
+  if (referencePage === "wordbook") {
+    cloneSelector = selectPageStudied
+  } else {
     cloneSelector = selectPageFromTextBook
   }
   const currentWordsPage = useSelector(cloneSelector)
+  console.log("currentWordsPage", currentWordsPage)
+  console.log("wordsCount", wordsCount)
   const userCurrent = useSelector(({ user }) => user.user)
 
   // Array.from({ length: 20 }, (_, i) => {
@@ -116,7 +122,7 @@ const Savanna = (props) => {
   }
 
   const runCycle = () => {
-    if (wordsCount > 0) {
+    if (wordsCount >= 0) {
       InCycle.on = true
 
       isSelectRef.current = false
@@ -131,7 +137,7 @@ const Savanna = (props) => {
         buttonsRef.current.style.animation = `appear 2s`
       }, 20)
 
-      wordRef.current.innerHTML = currentWordsPage[wordsCount].word
+      wordRef.current.innerHTML = currentWordsPage[wordsCount].word ?? ""
 
       shuffledAnswersGlob.translate = currentWordsPage[wordsCount].wordTranslate
       shuffledAnswersGlob.word = currentWordsPage[wordsCount].word
@@ -139,9 +145,15 @@ const Savanna = (props) => {
       const answers = [currentWordsPage[wordsCount].wordTranslate] || []
 
       while (answers.length < 4) {
-        const candidate = currentWordsPage[random(0, 19)].wordTranslate
-        if (!answers.includes(candidate)) {
-          answers.push(candidate)
+        if (currentWordsPage.length > 4) {
+          const candidate =
+            currentWordsPage[random(0, currentWordsPage.length - 1)]
+              .wordTranslate
+          if (!answers.includes(candidate)) {
+            answers.push(candidate)
+          }
+        } else {
+          answers.push("один", "два", "три")
         }
       }
 
@@ -161,7 +173,7 @@ const Savanna = (props) => {
           addWordSToStatistic(false)
         } else setTitle("Savanna")
 
-        if (wordsCount > 0) {
+        if (wordsCount >= 0) {
           setWordsCount(wordsCount - 1)
         }
       }, speed * 1000)
@@ -224,29 +236,19 @@ const Savanna = (props) => {
   }
 
   useEffect(() => {
-    if (match.params.page) {
+    if (match.params.reference) {
       setReferenceFromBook(true)
-      if (referencePage === "/textbook/") {
-        console.log("/textbook/")
+      if (referencePage === "textbook") {
         if (isAuthorized || userCurrent.userId) {
           dispatch(getUserWordsVocabulary(currentPage, currentGroup))
         }
         dispatch(getVocabulary(currentPage, currentGroup))
-      } else if (referencePage === "/studied/") {
-        dispatch(getStudied("hard"))
+      } else if (referencePage === "wordbook") {
+        dispatch(getCounterUser("hard"))
       }
     } else {
       dispatch(getVocabulary(random(0, 29), 0))
     }
-
-    // const auth = true
-    // if (match.params.group) {
-    //   // from bok
-    //   if (auth) {
-    //     dispatch(getWordsPageAC(0, random(0, 29)))
-    //   } else dispatch(getWordsPageAC(currentGroup, currentPage))
-    // } else dispatch(getWordsPageAC(0, random(0, 29))) // from menu
-    // dispatch(getWordsPageAC(0, random(0, 29))) // from menu
   }, [])
 
   useEffect(() => {
@@ -279,7 +281,15 @@ const Savanna = (props) => {
   }, [])
 
   useEffect(() => {
-    setWordsCount(currentWordsPage.length - 1)
+    setWordsCount(() => {
+      if (currentWordsPage === undefined) {
+        return 0
+      }
+      if (currentWordsPage.length <= 0) {
+        return 0
+      }
+      return currentWordsPage.length - 1
+    })
   }, [currentWordsPage])
 
   const musicControlHandler = () => {
@@ -433,7 +443,7 @@ const Savanna = (props) => {
         />
       </div>
       <StatisticsModal
-        show={!wordsCount || !life}
+        show={wordsCount < 0 || !life}
         statistics={statistics}
         setWordsCount={setWordsCount}
         setLife={setLife}
