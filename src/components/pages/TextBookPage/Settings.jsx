@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import PropTypes, { func } from "prop-types"
+import PropTypes from "prop-types"
 import cn from "classnames"
 import PureModal from "react-pure-modal"
 import "react-pure-modal/dist/react-pure-modal.min.css"
@@ -12,40 +12,32 @@ import ChangeButtons from "./ChangeButtons"
 import Counter from "./Counter"
 import { isAuthorized } from "../../../helpers/globals"
 
-const Settings = (props) => {
-  const {
-    isSetings,
-    handleVocavularyChangeGroup,
-    selectedGroup,
-    isStudied,
-    isCounter,
-    userCounter,
-    location,
-  } = props
-
-  // console.log("---location---", location.pathname)
+const Settings = ({
+  isSetings,
+  isStudied,
+  isCounter,
+  userCounter,
+  groupType,
+  pageType,
+  location,
+}) => {
   const userCurrent = useSelector(({ user }) => user.user)
   const dispatch = useDispatch()
   const [modal, setModal] = useState(false)
-  // const userCurrent = useSelector(({ user }) => user.user)
+  const selectedGroup = useSelector(({ pagination }) => pagination[groupType])
   const handleChangeGroup = useCallback(
-    (group) => () => {
-      dispatch(changeGroup(group))
-      localStorage.setItem("group", group)
-      dispatch(changePage(0))
+    (value) => () => {
+      dispatch(changeGroup(value, groupType))
+      localStorage.setItem(groupType, value)
+      dispatch(changePage(0, pageType))
     },
-    [dispatch]
+    [dispatch, groupType, pageType]
   )
 
-  // YA
-  const groupForGame = useSelector(({ pagination }) => pagination.group)
-  const pageNumberForGame = useSelector(({ pagination }) => pagination.page)
-  // eslint-disable-next-line no-console
-  // console.log(
-  //   "pagination.group, pagination.page ",
-  //   groupForGame,
-  //   pageNumberForGame
-  // )
+  const groupForGame = useSelector(({ pagination }) => pagination.groupTextBook)
+  const pageNumberForGame = useSelector(
+    ({ pagination }) => pagination.pageTextBook
+  )
 
   return (
     <>
@@ -68,51 +60,53 @@ const Settings = (props) => {
           <ChangeButtons />
         </PureModal>
       ) : null}
-      <div className="container">
-        <div className="flex justify-between h-10">
+      <div className="container mx-auto mb-0 mb-6">
+        <div className="flex flex-wrap w-auto mx-8 justify-between">
           {isCounter ? <Counter counter={userCounter} /> : null}
-          <div className="flex justify-between w-2/5">
-            {[
-              ["Cаванна", "savanna"],
-              ["Аудиовызов", "audiocall"],
-              ["Спринт", "sprint"],
-              ["Своя игра", "castomgame"],
-            ].map((element) => (
-              <Link
-                to={`/${element[1]}${location.pathname}${groupForGame}/${pageNumberForGame}`}
-                key={element[0]}
-                type="button"
-                className="block px-6  mx-2 py-2 text-xs font-medium  text-center text-white uppercase transition
-                 bg-yellow-600 rounded shadow ripple hover:shadow-lg hover:bg-yellow-700 focus:outline-none"
+          {[
+            ["Cаванна", "savanna"],
+            ["Аудиовызов", "audiocall"],
+            ["Спринт", "sprint"],
+            ["Своя игра", "castomgame"],
+          ].map((element) => (
+            <Link
+              to={`/${element[1]}${location.pathname}${groupForGame}/${pageNumberForGame}`}
+              key={element[0]}
+              type="button"
+              className="inline-block w-36 text-xs mx-6 font-medium my-2 px-6 py-2 text-center text-white uppercase transition bg-yellow-600 rounded shadow ripple hover:shadow-lg hover:bg-yellow-700 focus:outline-none"
+            >
+              {element[0]}
+            </Link>
+          ))}
+          <div className="flex flex-wrap mt-8  h-20  my-2 w-full justify-between">
+            <Link to="/vocabulary/">
+              {isAuthorized || userCurrent.userId ? (
+                <button
+                  // eslint-disable-next-line react/no-array-index-key
+                  type="button"
+                  className="inline-block w-36 mx-6 px-6 py-2 text-xs font-medium text-center text-white uppercase transition bg-yellow-900 rounded shadow ripple hover:shadow-lg hover:bg-yellow-700 focus:outline-none"
+                >
+                  Cловарь
+                </button>
+              ) : null}
+            </Link>
+            {isSetings ? (
+              <div
+                className="absolute top-20 right-2 sm:my-0 my-2"
+                onClick={() => setModal(true)}
               >
-                {element[0]}
-              </Link>
-            ))}
-          </div>
-          <Link to="/vocabulary/">
-            {isAuthorized || userCurrent.userId ? (
-              <button
-                // eslint-disable-next-line react/no-array-index-key
-                type="button"
-                className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-yellow-900 rounded shadow ripple hover:shadow-lg hover:bg-yellow-700 focus:outline-none"
-              >
-                Cловарь
-              </button>
+                <img
+                  className="w-8 h-8 cursor-pointer"
+                  src={settings}
+                  alt="settings"
+                />
+              </div>
             ) : null}
-          </Link>
-          {isSetings ? (
-            <div onClick={() => setModal(true)}>
-              <img
-                className="w-8 h-8 cursor-pointer"
-                src={settings}
-                alt="settings"
-              />
-            </div>
-          ) : null}
+          </div>
         </div>
         {isStudied ? (
-          <div className="flex justify-center">
-            <div className="w-3/4 flex justify-between mt-8">
+          <div className="flex flex-wrap justify-center">
+            <div className="w-3/4  flex flex-wrap justify-between mt-8">
               {[
                 "Группа 1",
                 "Группа 2",
@@ -125,13 +119,9 @@ const Settings = (props) => {
                   // eslint-disable-next-line react/no-array-index-key
                   key={index}
                   type="button"
-                  onClick={
-                    isSetings
-                      ? handleChangeGroup(index)
-                      : handleVocavularyChangeGroup(index)
-                  }
+                  onClick={handleChangeGroup(index)}
                   className={cn(
-                    "inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition rounded shadow ripple hover:shadow-lg  focus:outline-none",
+                    "inline-block  my-2 mx-2 px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition rounded shadow ripple hover:shadow-lg  focus:outline-none",
                     {
                       "bg-red-200 hover:bg-red-600": index === 1,
                     },
@@ -170,17 +160,15 @@ export default withRouter(Settings)
 
 Settings.propTypes = {
   isSetings: PropTypes.bool.isRequired,
-  handleVocavularyChangeGroup: PropTypes.func,
   userCounter: PropTypes.number,
-  selectedGroup: PropTypes.number.isRequired,
   isStudied: PropTypes.bool,
   isCounter: PropTypes.bool,
-  // eslint-disable-next-line react/forbid-prop-types
-  location: PropTypes.any.isRequired,
+  location: PropTypes.string.isRequired,
+  groupType: PropTypes.string.isRequired,
+  pageType: PropTypes.string.isRequired,
 }
 
 Settings.defaultProps = {
-  handleVocavularyChangeGroup: func,
   isStudied: true,
   isCounter: false,
   userCounter: 0,

@@ -1,50 +1,43 @@
-import React, { useEffect, useState, useCallback } from "react"
+import React, { useEffect, useCallback } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { getUsersWords } from "../../../../../redux/wordBook/wordBook"
 import WordCard from "../WordCard"
 import { getCounterUser } from "../../../../../redux/vocabulary/vocabulary"
-
-//  import { changePage } from "../../../../redux/pagination/pagination"
+import { changePage } from "../../../../../redux/pagination/pagination"
 
 const WordBook = () => {
-  const [page, setPage] = useState(0)
-  const [group, setGroup] = useState(0)
-  const [selectedGroup, setSelectedGroup] = useState(0)
   const dispatch = useDispatch()
   const userWordsVocabulary = useSelector(({ wordBook }) => wordBook.wordBook)
   const userCounter = useSelector(({ vocabulary }) => vocabulary.counter)
-  const countPagination = Math.ceil(
-    userWordsVocabulary[0]?.totalCount[0]?.count / 20
+  const pageNumber = useSelector(
+    ({ pagination }) => pagination.pageHardVocabulary
   )
+  const group = useSelector(({ pagination }) => pagination.groupHardVocabulary)
   useEffect(() => {
-    dispatch(getUsersWords(page, "hard", group))
+    dispatch(getUsersWords(pageNumber, "hard", group))
     dispatch(getCounterUser("hard"))
-  }, [dispatch, group, page])
+  }, [dispatch, group, pageNumber])
 
-  const handleButtonClick = (pageCounter) => {
-    setPage(pageCounter.selected)
-  }
-  const handleVocavularyChangeGroup = useCallback(
-    (groupIndex) => () => {
-      setGroup(groupIndex)
-      setSelectedGroup(groupIndex)
-      setPage(0)
+  const handleButtonClick = useCallback(
+    (pageCounter) => {
+      dispatch(changePage(pageCounter.selected, "pageHardVocabulary"))
+      localStorage.setItem("pageHardVocabulary", pageCounter.selected)
     },
-    []
+    [dispatch]
   )
+
   return (
     <>
       <WordCard
         group={group}
+        pageType="pageHardVocabulary"
         handleButtonClick={handleButtonClick}
-        countPagination={countPagination}
-        page={page}
+        pageNumber={pageNumber}
         userWordsVocabulary={userWordsVocabulary}
-        handleVocavularyChangeGroup={handleVocavularyChangeGroup}
-        selectedGroup={selectedGroup}
         difficulty="hard"
         isCounter
         userCounter={userCounter}
+        groupType="groupHardVocabulary"
       />
     </>
   )

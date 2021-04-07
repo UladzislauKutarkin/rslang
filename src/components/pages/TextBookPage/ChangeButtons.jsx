@@ -6,6 +6,7 @@ const ChangeButtons = () => {
   const buttonOn = useSelector(({ settings }) => settings.buttons)
   const [button, setButton] = useState(buttonOn)
   const dispatch = useDispatch()
+
   const handleSwitchButtons = useCallback(
     (e) => {
       dispatch(changeSettingsButtons(e.target.checked))

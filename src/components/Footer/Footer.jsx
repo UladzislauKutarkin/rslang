@@ -1,12 +1,14 @@
 import React from "react"
-import { Link } from "react-router-dom"
+import FooterLinks from "./FooterLinks"
+import githubIcon from "../../assets/img/icons/github.png"
+import rs from "../../assets/img/icons/rs_school_js.svg"
 
 export default function Footer() {
   return (
     <>
       <footer className="relative bg-blueGray-200 pt-8 pb-6">
         <div
-          className="bottom-auto top-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden -mt-20 h-20"
+          className="bottom-auto top-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden -mt-14 h-20"
           style={{ transform: "translateZ(0)" }}
         >
           <svg
@@ -19,67 +21,39 @@ export default function Footer() {
             y="0"
           >
             <polygon
-              className="text-blueGray-200 fill-current"
+              className="text-white fill-current"
               points="2560 0 2560 100 0 100"
             />
           </svg>
         </div>
-        <div className="container mx-auto px-4">
-          <div className="flex flex-wrap text-center lg:text-left">
-            <div className="w-full lg:w-6/12 px-4">
-              <h4 className="text-3xl font-semibold">
-                Давайте поддерживать связь!
-              </h4>
-              <h5 className="text-lg mt-0 mb-2 text-blueGray-600">
-                Пишите, звоните, присылайте голубей!
-              </h5>
-              <div className="mt-6 lg:mb-0 mb-6">
-                <button
-                  className="bg-white text-lightBlue-400 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
-                  type="button"
-                >
-                  <i className="fab fa-twitter" />
-                </button>
-              </div>
+        <div className="container min-h-screen-75 mx-auto px-4 mt-6 mb-0 mb-6">
+          <div className="flex mx-auto flex-col">
+            <div className="flex justify-center">
+              <FooterLinks
+                gitLink="https://github.com/ya6"
+                gitName="Alexandr Yakubouski"
+                icon={githubIcon}
+              />
+              <FooterLinks
+                gitLink="https://github.com/yauheni-beiduk"
+                gitName="Yauheni Beiduk"
+                icon={githubIcon}
+              />
+              <FooterLinks
+                gitLink="https://github.com/UladzislauKutarkin"
+                gitName="Uladzislau Kutarkin"
+                icon={githubIcon}
+              />
+              <FooterLinks
+                gitLink="https://github.com/AlekseyGrimm"
+                gitName="Alexey Stalpec"
+                icon={githubIcon}
+              />
             </div>
-            <div className="w-full lg:w-6/12 px-4">
-              <div className="flex flex-wrap items-top mb-6">
-                <div className="w-full lg:w-4/12 px-4 ml-auto">
-                  <span className="block uppercase text-blueGray-500 text-sm font-semibold mb-2">
-                    Useful Links
-                  </span>
-                  <ul className="list-unstyled">
-                    <li>
-                      <Link
-                        to="/"
-                        className="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm"
-                      >
-                        About Us
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-                <div className="w-full lg:w-4/12 px-4">
-                  <span className="block uppercase text-blueGray-500 text-sm font-semibold mb-2">
-                    Other Resources
-                  </span>
-                  <ul className="list-unstyled">
-                    <li>
-                      <Link
-                        to="/"
-                        className="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm"
-                      >
-                        Terms & Conditions
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-              </div>
+            <div className="flex justify-center mt-8">
+              <div className="text-3xl">2021 &copy;</div>
+              <FooterLinks gitLink="https://rs.school/js/" icon={rs} />
             </div>
-          </div>
-          <hr className="my-6 border-blueGray-300" />
-          <div className="flex flex-wrap items-center md:justify-between justify-center">
-            <div className="w-full md:w-4/12 px-4 mx-auto text-center" />
           </div>
         </div>
       </footer>

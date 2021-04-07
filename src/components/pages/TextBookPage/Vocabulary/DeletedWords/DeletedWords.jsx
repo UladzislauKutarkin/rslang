@@ -1,52 +1,45 @@
-import React, { useEffect, useState, useCallback } from "react"
+import React, { useEffect, useCallback } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import WordCard from "../WordCard"
 import { getUsersWords } from "../../../../../redux/wordBook/wordBook"
 import { getCounterUser } from "../../../../../redux/vocabulary/vocabulary"
+import { changePage } from "../../../../../redux/pagination/pagination"
 
 const DeletedWords = () => {
-  const [page, setPage] = useState(0)
-  const [group, setGroup] = useState(0)
-  const [selectedGroup, setSelectedGroup] = useState(0)
   const dispatch = useDispatch()
   const userWordsVocabulary = useSelector(({ wordBook }) => wordBook.wordBook)
-  const countPagination = Math.ceil(
-    userWordsVocabulary[0]?.totalCount[0]?.count / 20
-  )
-  const [restoreWord, setRestoreWord] = useState(true)
   const userCounter = useSelector(({ vocabulary }) => vocabulary.counter)
-  useEffect(() => {
-    dispatch(getUsersWords(page, "deleted", group))
-    dispatch(getCounterUser("deleted"))
-  }, [dispatch, page, group, restoreWord])
-
-  const handleButtonClick = (pageCounter) => {
-    //  dispatch(changePage(pageCounter.selected))
-    setPage(pageCounter.selected)
-  }
-  const handleVocavularyChangeGroup = useCallback(
-    (groupIndex) => () => {
-      setGroup(groupIndex)
-      setSelectedGroup(groupIndex)
-      setPage(0)
-    },
-    []
+  const pageNumber = useSelector(
+    ({ pagination }) => pagination.pageDeletedVocabulary
   )
+  const group = useSelector(
+    ({ pagination }) => pagination.groupDeletedVocabulary
+  )
+  useEffect(() => {
+    dispatch(getUsersWords(pageNumber, "deleted", group))
+    dispatch(getCounterUser("deleted"))
+  }, [dispatch, group, pageNumber])
+
+  const handleButtonClick = useCallback(
+    (pageCounter) => {
+      dispatch(changePage(pageCounter.selected, "pageDeletedVocabulary"))
+      localStorage.setItem("pageDeletedVocabulary", pageCounter.selected)
+    },
+    [dispatch]
+  )
+
   return (
     <>
       <WordCard
-        group={group}
         handleButtonClick={handleButtonClick}
-        countPagination={countPagination}
-        page={page}
         userWordsVocabulary={userWordsVocabulary}
-        handleVocavularyChangeGroup={handleVocavularyChangeGroup}
-        selectedGroup={selectedGroup}
-        setRestoreWord={setRestoreWord}
-        restoredWord={restoreWord}
         difficulty="deleted"
         isCounter
+        group={group}
         userCounter={userCounter}
+        groupType="groupDeletedVocabulary"
+        pageType="pageDeletedVocabulary"
+        pageNumber={pageNumber}
       />
     </>
   )
