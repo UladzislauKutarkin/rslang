@@ -35,6 +35,13 @@ const TextBookPage = () => {
 
   const userCurrent = useSelector(({ user }) => user.user)
 
+  // YA
+  console.log(
+    "all",
+    useSelector((state) => state)
+  )
+  console.log("pagination.group, pagination.page ", group, pageNumber)
+
   useEffect(() => {
     localStorage.setItem("pageTextBook", pageNumber)
     if (isAuthorized || userCurrent.userId) {

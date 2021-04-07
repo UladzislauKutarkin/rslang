@@ -4,7 +4,7 @@ import PropTypes from "prop-types"
 import cn from "classnames"
 import PureModal from "react-pure-modal"
 import "react-pure-modal/dist/react-pure-modal.min.css"
-import { Link } from "react-router-dom"
+import { Link, withRouter } from "react-router-dom"
 import settings from "../../../assets/img/settings.svg"
 import ChangeTranslate from "./ChangeTranslate"
 import { changeGroup, changePage } from "../../../redux/pagination/pagination"
@@ -19,6 +19,7 @@ const Settings = ({
   userCounter,
   groupType,
   pageType,
+  location,
 }) => {
   const userCurrent = useSelector(({ user }) => user.user)
   const dispatch = useDispatch()
@@ -32,6 +33,12 @@ const Settings = ({
     },
     [dispatch, groupType, pageType]
   )
+
+  const groupForGame = useSelector(({ pagination }) => pagination.groupTextBook)
+  const pageNumberForGame = useSelector(
+    ({ pagination }) => pagination.pageTextBook
+  )
+
   return (
     <>
       {isSetings ? (
@@ -56,15 +63,20 @@ const Settings = ({
       <div className="container mx-auto mb-0 mb-6">
         <div className="flex flex-wrap w-auto mx-8 justify-between">
           {isCounter ? <Counter counter={userCounter} /> : null}
-          {["Cаванна", "Аудиовызов", "Спринт", "Своя игра"].map((index) => (
-            <button
-              // eslint-disable-next-line react/no-array-index-key
-              key={index}
+          {[
+            ["Cаванна", "savanna"],
+            ["Аудиовызов", "audiocall"],
+            ["Спринт", "sprint"],
+            ["Своя игра", "castomgame"],
+          ].map((element) => (
+            <Link
+              to={`/${element[1]}${location.pathname}${groupForGame}/${pageNumberForGame}`}
+              key={element[0]}
               type="button"
               className="inline-block w-36 text-xs mx-6 font-medium my-2 px-6 py-2 text-center text-white uppercase transition bg-yellow-600 rounded shadow ripple hover:shadow-lg hover:bg-yellow-700 focus:outline-none"
             >
-              {index}
-            </button>
+              {element[0]}
+            </Link>
           ))}
           <div className="flex flex-wrap mt-8  h-20  my-2 w-full justify-between">
             <Link to="/vocabulary/">
@@ -144,13 +156,14 @@ const Settings = ({
   )
 }
 
-export default Settings
+export default withRouter(Settings)
 
 Settings.propTypes = {
   isSetings: PropTypes.bool.isRequired,
   userCounter: PropTypes.number,
   isStudied: PropTypes.bool,
   isCounter: PropTypes.bool,
+  location: PropTypes.string.isRequired,
   groupType: PropTypes.string.isRequired,
   pageType: PropTypes.string.isRequired,
 }

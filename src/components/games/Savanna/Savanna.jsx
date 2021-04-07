@@ -1,13 +1,26 @@
 /* eslint-disable no-console */
 import { useEffect, useState, useMemo, useRef } from "react"
 import { Link, withRouter } from "react-router-dom"
+// eslint-disable-next-line no-unused-vars
 import PropTypes from "prop-types"
 
 import { useDispatch, useSelector } from "react-redux"
+import { createSelector } from "reselect"
+
+// eslint-disable-next-line no-unused-vars
+import { getStudied } from "../../../redux/wordBook/wordBook"
+
+import {
+  getUserWordsVocabulary,
+  getVocabulary,
+  getCounterUser,
+} from "../../../redux/vocabulary/vocabulary"
 
 import { onNavbarAC, offNavbarAC } from "../../../redux/games/navbar"
 
 import StatisticsModal from "../gamesComponents/StatisticsModal"
+// eslint-disable-next-line no-unused-vars
+import { isAuthorized } from "../../../helpers/globals"
 
 import savannaBack from "../../../assets/img/games/savanna_back.jpg"
 import lotos from "../../../assets/img/games/lotos_1.png"
@@ -26,13 +39,19 @@ import wrong from "../../../assets/sound/wrong.mp3"
 import { shuffle } from "../../../helpers/shuffle"
 
 // eslint-disable-next-line no-unused-vars
-const Savanna = ({ location }) => {
-  // console.log("location", location)
+const Savanna = (props) => {
+  const { match } = props
+
+  const referencePage = match.params.reference ?? ""
+  const currentGroup = match.params.group ?? 0
+  const currentPage = match.params.page ?? 0
+
+  const [referenceFromBook, setReferenceFromBook] = useState(false)
   const [isStartGame, setIsStartGame] = useState(false)
 
-  const [wordGroup, setWordGroup] = useState("0")
+  const [wordGroup, setWordGroup] = useState(2)
   const [musicON, setMusicON] = useState(false)
-  const [wordsCount, setWordsCount] = useState(19)
+  const [wordsCount, setWordsCount] = useState(1)
   const [shuffledAnswers, setShuffledAnswers] = useState(["dump"])
   const [statistics, setStatistics] = useState([])
   const [alive, setAlive] = useState(false)
@@ -45,7 +64,6 @@ const Savanna = ({ location }) => {
   const lotosRef = useRef()
   const isWrongSelectRef = useRef()
   const isSelectRef = useRef()
-  const backRef = useRef()
 
   const InCycle = useMemo(() => ({ on: false }), [])
   const speed = 5
@@ -55,12 +73,34 @@ const Savanna = ({ location }) => {
   const music = useMemo(() => new Audio(forsavanna), [])
   const correctSound = useMemo(() => new Audio(correct), [])
   const wrongSound = useMemo(() => new Audio(wrong), [])
-
   const dispatch = useDispatch()
+  let cloneSelector
+  const selectPageFromTextBook = createSelector(
+    (state) => state.vocabulary,
+    (vocabulary) => vocabulary.vocabulary
+  )
 
-  const currentWordsPage = {
-    page: useSelector(({ wordsPage }) => wordsPage.wordsPage) || [],
+  // eslint-disable-next-line no-unused-vars
+  const selectPageStudied = createSelector(
+    (state) => state.wordBook,
+    (wordBook) => wordBook.wordBook[0]?.paginatedResults
+  )
+
+  // eslint-disable-next-line no-constant-condition
+  if (referencePage === "wordbook") {
+    cloneSelector = selectPageStudied
+  } else {
+    cloneSelector = selectPageFromTextBook
   }
+  const currentWordsPage = useSelector(cloneSelector)
+  console.log("currentWordsPage", currentWordsPage)
+  console.log("wordsCount", wordsCount)
+  const userCurrent = useSelector(({ user }) => user.user)
+
+  // Array.from({ length: 20 }, (_, i) => {
+  //   return { word: `word-${i}`, wordTranslate: `translate-${i}` }
+  // })
+
   const reduceLives = () => {
     if (life > 0) {
       setLife(life - 1)
@@ -82,7 +122,7 @@ const Savanna = ({ location }) => {
   }
 
   const runCycle = () => {
-    if (wordsCount > 0) {
+    if (wordsCount >= 0) {
       InCycle.on = true
 
       isSelectRef.current = false
@@ -97,18 +137,23 @@ const Savanna = ({ location }) => {
         buttonsRef.current.style.animation = `appear 2s`
       }, 20)
 
-      wordRef.current.innerHTML = currentWordsPage.page[wordsCount].word
+      wordRef.current.innerHTML = currentWordsPage[wordsCount].word ?? ""
 
-      shuffledAnswersGlob.translate =
-        currentWordsPage.page[wordsCount].wordTranslate
-      shuffledAnswersGlob.word = currentWordsPage.page[wordsCount].word
+      shuffledAnswersGlob.translate = currentWordsPage[wordsCount].wordTranslate
+      shuffledAnswersGlob.word = currentWordsPage[wordsCount].word
 
-      const answers = [currentWordsPage.page[wordsCount].wordTranslate] || []
+      const answers = [currentWordsPage[wordsCount].wordTranslate] || []
 
       while (answers.length < 4) {
-        const candidate = currentWordsPage.page[random(0, 19)].wordTranslate
-        if (!answers.includes(candidate)) {
-          answers.push(candidate)
+        if (currentWordsPage.length > 4) {
+          const candidate =
+            currentWordsPage[random(0, currentWordsPage.length - 1)]
+              .wordTranslate
+          if (!answers.includes(candidate)) {
+            answers.push(candidate)
+          }
+        } else {
+          answers.push("один", "два", "три")
         }
       }
 
@@ -123,12 +168,12 @@ const Savanna = ({ location }) => {
         if (!isSelectRef.current || isWrongSelectRef.current) {
           reduceLives()
           setTitle(
-            `${currentWordsPage.page[wordsCount].word} - ${currentWordsPage.page[wordsCount].wordTranslate}`
+            `${currentWordsPage[wordsCount].word} - ${currentWordsPage[wordsCount].wordTranslate}`
           )
           addWordSToStatistic(false)
         } else setTitle("Savanna")
 
-        if (wordsCount > 0) {
+        if (wordsCount >= 0) {
           setWordsCount(wordsCount - 1)
         }
       }, speed * 1000)
@@ -145,7 +190,7 @@ const Savanna = ({ location }) => {
   const getWordPage = (e) => {
     const group = e.target.value || 0
     setWordGroup(group)
-    dispatch(getWordsPageAC(group, random(0, 19)))
+    dispatch(getWordsPageAC(group, random(0, 29)))
   }
 
   const correctSelect = () => {
@@ -191,7 +236,19 @@ const Savanna = ({ location }) => {
   }
 
   useEffect(() => {
-    dispatch(getWordsPageAC(wordGroup, random(0, 19)))
+    if (match.params.reference) {
+      setReferenceFromBook(true)
+      if (referencePage === "textbook") {
+        if (isAuthorized || userCurrent.userId) {
+          dispatch(getUserWordsVocabulary(currentPage, currentGroup))
+        }
+        dispatch(getVocabulary(currentPage, currentGroup))
+      } else if (referencePage === "wordbook") {
+        dispatch(getCounterUser("hard"))
+      }
+    } else {
+      dispatch(getVocabulary(random(0, 29), 0))
+    }
   }, [])
 
   useEffect(() => {
@@ -222,6 +279,18 @@ const Savanna = ({ location }) => {
       document.removeEventListener("keypress", keyCompareHandler)
     }
   }, [])
+
+  useEffect(() => {
+    setWordsCount(() => {
+      if (currentWordsPage === undefined) {
+        return 0
+      }
+      if (currentWordsPage.length <= 0) {
+        return 0
+      }
+      return currentWordsPage.length - 1
+    })
+  }, [currentWordsPage])
 
   const musicControlHandler = () => {
     music.loop = true
@@ -257,27 +326,29 @@ const Savanna = ({ location }) => {
 
   return (
     <div
-      ref={backRef}
       className="h-screen  w-full bg-cover bg-center"
       style={{ backgroundImage: `url(${savannaBack})` }}
     >
       <h1 className="text-3xl text-center pt-8  hidden  lg:block">{title}</h1>
 
       <div className=" absolute top-24 left-1  md:left-10 md:top-20">
+        <h1 className="5xl"> {referenceFromBook}</h1>
         <div className="">
-          {/* eslint-disable-next-line jsx-a11y/no-onchange */}
-          <select
-            className="focus:border-gray-200 m-2  border-2 border-gray-500 bg-transparent h-full py-2 px-2 pr-7  text-gray-800 sm:text-sm rounded-md"
-            value={wordGroup}
-            onChange={getWordPage}
-          >
-            <option value="0">Простые </option>
-            <option value="1">Простые +</option>
-            <option value="2">Средние</option>
-            <option value="3">Средние +</option>
-            <option value="4">Сложные</option>
-            <option value="5">Сложные +</option>
-          </select>
+          {!referenceFromBook && (
+            /* eslint-disable-next-line jsx-a11y/no-onchange */
+            <select
+              className="focus:border-gray-200 m-2  border-2 border-gray-500 bg-transparent h-full py-2 px-2 pr-7  text-gray-800 sm:text-sm rounded-md"
+              value={wordGroup}
+              onChange={getWordPage}
+            >
+              <option value="0">Простые </option>
+              <option value="1">Простые +</option>
+              <option value="2">Средние</option>
+              <option value="3">Средние +</option>
+              <option value="4">Сложные</option>
+              <option value="5">Сложные +</option>
+            </select>
+          )}
 
           <button
             type="button"
@@ -372,7 +443,7 @@ const Savanna = ({ location }) => {
         />
       </div>
       <StatisticsModal
-        show={!wordsCount || !life}
+        show={wordsCount < 0 || !life}
         statistics={statistics}
         setWordsCount={setWordsCount}
         setLife={setLife}
@@ -383,5 +454,7 @@ const Savanna = ({ location }) => {
 export default withRouter(Savanna)
 Savanna.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
-  location: PropTypes.any.isRequired,
+  // props: PropTypes.any.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  match: PropTypes.any.isRequired,
 }
