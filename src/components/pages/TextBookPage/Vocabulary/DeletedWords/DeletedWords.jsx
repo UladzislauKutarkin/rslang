@@ -10,17 +10,13 @@ const DeletedWords = () => {
   const userWordsVocabulary = useSelector(({ wordBook }) => wordBook.wordBook)
   const [restoreWord, setRestoreWord] = useState(true)
   const userCounter = useSelector(({ vocabulary }) => vocabulary.counter)
-  const pages = useSelector(({ pagination }) => pagination.pagesCount)
   const pageNumber = useSelector(
     ({ pagination }) => pagination.pageDeletedVocabulary
   )
   const group = useSelector(
     ({ pagination }) => pagination.groupDeletedVocabulary
   )
-  // const selectedGroup = useSelector(({ pagination }) => pagination[groupType])
-
   useEffect(() => {
-    localStorage.setItem("pageDeletedVocabulary", pageNumber)
     dispatch(getUsersWords(pageNumber, "deleted", group))
     dispatch(getCounterUser("deleted"))
   }, [dispatch, group, pageNumber])
@@ -38,15 +34,12 @@ const DeletedWords = () => {
       <WordCard
         handleButtonClick={handleButtonClick}
         userWordsVocabulary={userWordsVocabulary}
-        // handleVocavularyChangeGroup={handleVocavularyChangeGroup}
-        //  selectedGroup={selectedGroup}
         setRestoreWord={setRestoreWord}
         restoredWord={restoreWord}
         difficulty="deleted"
         isCounter
         group={group}
         userCounter={userCounter}
-        pages={pages}
         groupType="groupDeletedVocabulary"
         pageType="pageDeletedVocabulary"
         pageNumber={pageNumber}

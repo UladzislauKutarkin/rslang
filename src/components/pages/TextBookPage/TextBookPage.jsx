@@ -6,7 +6,7 @@ import {
   getVocabulary,
 } from "../../../redux/vocabulary/vocabulary"
 import { addWordToWordBook } from "../../../redux/wordBook/wordBook"
-import Pragination from "./Pragination"
+import Pagination from "./Pagination"
 import AudioComponent from "./AudioComponent"
 import Settings from "./Settings"
 import { changePage } from "../../../redux/pagination/pagination"
@@ -175,9 +175,9 @@ const TextBookPage = () => {
                           item.audioMeaning,
                         ]}
                       />
-                      <div className="mt-10 flex justify-center items-center">
+                      <div className="mt-10 flex flex-wrap justify-center items-center">
                         {isButtons && (
-                          <div className="m-6 space-x-5">
+                          <div className="flex  w-auto m-6 space-x-5">
                             {["Удалить", "В сложные"].map((el) => (
                               <button
                                 key={el}
@@ -212,7 +212,7 @@ const TextBookPage = () => {
             </div>
           ))}
         </div>
-        <Pragination
+        <Pagination
           countPagination={pages}
           handleClick={handleButtonClick}
           pageNumber={pageNumber}

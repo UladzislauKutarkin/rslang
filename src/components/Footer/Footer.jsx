@@ -21,7 +21,7 @@ export default function Footer() {
             y="0"
           >
             <polygon
-              className="text-blueGray-200 fill-current"
+              className="text-white fill-current"
               points="2560 0 2560 100 0 100"
             />
           </svg>
@@ -51,7 +51,7 @@ export default function Footer() {
               />
             </div>
             <div className="flex justify-center mt-8">
-              <div className="">2021 &copy;</div>
+              <div className="text-3xl">2021 &copy;</div>
               <FooterLinks gitLink="https://rs.school/js/" icon={rs} />
             </div>
           </div>

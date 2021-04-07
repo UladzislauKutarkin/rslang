@@ -57,7 +57,10 @@ export const fetchVocabularyFailure = (error) => ({
 export const getVocabulary = (page, group) => (dispatch) => {
   axios
     .get(`https://rs-lang-back.herokuapp.com/words?page=${page}&group=${group}`)
-    .then(({ data }) => dispatch(fetchVocabularySucsess(data)))
+    .then(({ data }) => {
+      dispatch(changePagesCount(30))
+      dispatch(fetchVocabularySucsess(data))
+    })
     .catch((error) => dispatch(fetchVocabularyFailure(error)))
 }
 

@@ -29,9 +29,6 @@ const GamesPage = () => {
               <h3 className="pl-4 md:pl-8 mt-6 text-white text-xl">
                 Развиваем <br /> словарный запас
               </h3>
-              <p className="absolute bottom-1 p-4 md:pl-8 text-white text-xs">
-                Упражнения в игровой форме
-              </p>
               <br />
               <p className="pl-4 md:pl-8 mt-6 text-white">
                 Необходимо выбрать <br />
@@ -63,9 +60,6 @@ const GamesPage = () => {
               <h3 className="pl-4 md:pl-8 mt-6 text-white text-xl">
                 Развиваем <br /> словарный запас
               </h3>
-              <p className="absolute bottom-1 p-4 md:pl-8 text-white text-xs">
-                Упражнения в игровой форме
-              </p>
               <br />
               <p className="pl-4 md:pl-8 mt-6 text-white">
                 Выбираем слово <br />
@@ -99,9 +93,6 @@ const GamesPage = () => {
                 Упражнение <br />
                 на время
               </h3>
-              <p className="absolute bottom-1 p-4 md:pl-8 text-white text-xs">
-                Упражнения в игровой форме
-              </p>
               <br />
               <p className="pl-4 md:pl-8 mt-6 text-white">
                 Необходимо подтветдить <br />
@@ -134,9 +125,6 @@ const GamesPage = () => {
               <h3 className="pl-4 md:pl-8 mt-6 text-white text-xl">
                 Развиваем <br /> словарный запас
               </h3>
-              <p className="absolute bottom-1 p-4 md:pl-8 text-white text-xs">
-                Упражнения в игровой форме
-              </p>
               <br />
               <p className="pl-4 md:pl-8 mt-6 text-white">
                 Необходимо выбрать <br />

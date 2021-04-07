@@ -84,7 +84,7 @@ const HomePage = () => {
 
             <div className="flex flex-wrap items-center mt-32">
               <div className="w-full md:w-5/12 px-4 mr-auto ml-auto">
-                <div className="text-blueGray-500 p-3 text-center inline-flex items-center justify-center w-16 h-16 mb-6 shadow-lg rounded-full bg-white">
+                <div className="text-blueGray-500 p-3 text-center inline-flex items-center justify-center w-16 h-16 mb-6 shadow-lg rounded-full bg-red-400">
                   <i className="fas fa-user-friends text-xl" />
                 </div>
                 <h3 className="text-3xl mb-2 font-semibold leading-normal">
@@ -147,7 +147,7 @@ const HomePage = () => {
               </div>
               <div className="w-full md:w-5/12 ml-auto mr-auto px-4">
                 <div className="md:pr-12">
-                  <div className="text-lightBlue-600 p-3 text-center inline-flex items-center justify-center w-16 h-16 mb-6 shadow-lg rounded-full bg-lightBlue-300">
+                  <div className="text-lightBlue-600 p-3 text-center inline-flex items-center justify-center w-16 h-16 mb-6 shadow-lg rounded-full bg-red-400">
                     <i className="fas fa-rocket text-xl" />
                   </div>
                   <h3 className="text-3xl font-semibold">
@@ -191,7 +191,7 @@ const HomePage = () => {
               y="0"
             >
               <polygon
-                className="text-blueGray-800 fill-current"
+                className="text-white fill-current"
                 points="2560 0 2560 100 0 100"
               />
             </svg>
@@ -227,7 +227,26 @@ const HomePage = () => {
         </section>
 
         <section className="pt-12 pb-24">
-          <div className="container mx-auto px-4">
+          <div
+            className="bottom-auto top-0 left-0 right-0 w-full pointer-events-none overflow-hidden -mt-20 h-20"
+            style={{ transform: "translateZ(0)" }}
+          >
+            <svg
+              className="absolute bottom-0 overflow-hidden"
+              xmlns="http://www.w3.org/2000/svg"
+              preserveAspectRatio="none"
+              version="1.1"
+              viewBox="0 0 2560 100"
+              x="0"
+              y="0"
+            >
+              <polygon
+                className="text-white fill-current"
+                points="2560 0 2560 100 0 100"
+              />
+            </svg>
+          </div>
+          <div className="container mt-16 mx-auto px-4">
             <div className="flex flex-wrap justify-center text-center mb-8">
               <div className="w-full lg:w-6/12 px-4">
                 <h2 className="text-4xl font-semibold">Наша команда</h2>

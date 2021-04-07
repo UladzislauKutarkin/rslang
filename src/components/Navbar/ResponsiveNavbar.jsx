@@ -23,7 +23,7 @@ export default function ResponsiveNavbar() {
 
   const handleLogoutUser = () => {
     dispatch(logoutUser())
-    setShowUserDropDown(!showUserDropDown)
+    setShowUserDropDown((prevState) => !prevState)
   }
 
   const userDropDown = () => {

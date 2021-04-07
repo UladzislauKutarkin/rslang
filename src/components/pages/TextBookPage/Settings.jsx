@@ -25,7 +25,6 @@ const Settings = ({
   const dispatch = useDispatch()
   const [modal, setModal] = useState(false)
   const selectedGroup = useSelector(({ pagination }) => pagination[groupType])
-
   const handleChangeGroup = useCallback(
     (value) => () => {
       dispatch(changeGroup(value, groupType))
@@ -56,21 +55,19 @@ const Settings = ({
         </PureModal>
       ) : null}
       <div className="container mx-auto mb-0 mb-6">
-        <div className="container flex flex-wrap justify-between">
+        <div className="flex flex-wrap w-auto justify-between">
           {isCounter ? <Counter counter={userCounter} /> : null}
-          <div className="flex flex-wrap content-between w-auto h-20 justify-between">
-            {["Cаванна", "Аудиовызов", "Спринт", "Своя игра"].map((index) => (
-              <button
-                // eslint-disable-next-line react/no-array-index-key
-                key={index}
-                type="button"
-                className="inline-block w-36 text-xs mx-6 font-medium my-2 px-6 py-2 text-center text-white uppercase transition bg-yellow-600 rounded shadow ripple hover:shadow-lg hover:bg-yellow-700 focus:outline-none"
-              >
-                {index}
-              </button>
-            ))}
-          </div>
-          <div className="flex flex-wrap  h-20 w-80 my-2 sm:w-full justify-between">
+          {["Cаванна", "Аудиовызов", "Спринт", "Своя игра"].map((index) => (
+            <button
+              // eslint-disable-next-line react/no-array-index-key
+              key={index}
+              type="button"
+              className="inline-block w-36 text-xs mx-6 font-medium my-2 px-6 py-2 text-center text-white uppercase transition bg-yellow-600 rounded shadow ripple hover:shadow-lg hover:bg-yellow-700 focus:outline-none"
+            >
+              {index}
+            </button>
+          ))}
+          <div className="flex flex-wrap mt-8  h-20  my-2 w-full justify-between">
             <Link to="/vocabulary/">
               {isAuthorized || userCurrent.userId ? (
                 <button
@@ -94,8 +91,8 @@ const Settings = ({
           </div>
         </div>
         {isStudied ? (
-          <div className="flex justify-center">
-            <div className="w-3/4 flex justify-between mt-8">
+          <div className="flex flex-wrap justify-center">
+            <div className="w-3/4  flex flex-wrap justify-between mt-8">
               {[
                 "Группа 1",
                 "Группа 2",
@@ -110,7 +107,7 @@ const Settings = ({
                   type="button"
                   onClick={handleChangeGroup(index)}
                   className={cn(
-                    "inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition rounded shadow ripple hover:shadow-lg  focus:outline-none",
+                    "inline-block  my-2 mx-2 px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition rounded shadow ripple hover:shadow-lg  focus:outline-none",
                     {
                       "bg-red-200 hover:bg-red-600": index === 1,
                     },
