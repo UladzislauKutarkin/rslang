@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import PropTypes, { func } from "prop-types"
+import PropTypes from "prop-types"
 import cn from "classnames"
 import PureModal from "react-pure-modal"
 import "react-pure-modal/dist/react-pure-modal.min.css"
@@ -14,23 +14,25 @@ import { isAuthorized } from "../../../helpers/globals"
 
 const Settings = ({
   isSetings,
-  handleVocavularyChangeGroup,
-  selectedGroup,
+  // handleVocavularyChangeGroup,
   isStudied,
   isCounter,
   userCounter,
+  groupType,
+  pageType,
 }) => {
   const userCurrent = useSelector(({ user }) => user.user)
   const dispatch = useDispatch()
   const [modal, setModal] = useState(false)
-  // const userCurrent = useSelector(({ user }) => user.user)
+  const selectedGroup = useSelector(({ pagination }) => pagination[groupType])
+
   const handleChangeGroup = useCallback(
-    (group) => () => {
-      dispatch(changeGroup(group))
-      localStorage.setItem("group", group)
-      dispatch(changePage(0))
+    (value) => () => {
+      dispatch(changeGroup(value, groupType))
+      localStorage.setItem(groupType, value)
+      dispatch(changePage(0, pageType))
     },
-    [dispatch]
+    [dispatch, groupType, pageType]
   )
   return (
     <>
@@ -54,34 +56,34 @@ const Settings = ({
         </PureModal>
       ) : null}
       <div className="container mx-auto mb-0 mb-6">
-        <div className="flex sm:flex-col justify-between">
+        <div className="container flex flex-wrap justify-between">
           {isCounter ? <Counter counter={userCounter} /> : null}
-          <div className="flex brd w-2/3 justify-between">
+          <div className="flex flex-wrap content-between w-auto h-20 justify-between">
             {["Cаванна", "Аудиовызов", "Спринт", "Своя игра"].map((index) => (
               <button
                 // eslint-disable-next-line react/no-array-index-key
                 key={index}
                 type="button"
-                className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-yellow-600 rounded shadow ripple hover:shadow-lg hover:bg-yellow-700 focus:outline-none"
+                className="inline-block w-36 text-xs mx-6 font-medium my-2 px-6 py-2 text-center text-white uppercase transition bg-yellow-600 rounded shadow ripple hover:shadow-lg hover:bg-yellow-700 focus:outline-none"
               >
                 {index}
               </button>
             ))}
           </div>
-          <div className="flex w-1/3 justify-around brd-g">
+          <div className="flex flex-wrap  h-20 w-80 my-2 sm:w-full justify-between">
             <Link to="/vocabulary/">
               {isAuthorized || userCurrent.userId ? (
                 <button
                   // eslint-disable-next-line react/no-array-index-key
                   type="button"
-                  className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-yellow-900 rounded shadow ripple hover:shadow-lg hover:bg-yellow-700 focus:outline-none"
+                  className="inline-block w-36 mx-6 px-6 py-2 text-xs font-medium text-center text-white uppercase transition bg-yellow-900 rounded shadow ripple hover:shadow-lg hover:bg-yellow-700 focus:outline-none"
                 >
                   Cловарь
                 </button>
               ) : null}
             </Link>
             {isSetings ? (
-              <div onClick={() => setModal(true)}>
+              <div className="sm:my-0 my-2" onClick={() => setModal(true)}>
                 <img
                   className="w-8 h-8 cursor-pointer"
                   src={settings}
@@ -106,11 +108,7 @@ const Settings = ({
                   // eslint-disable-next-line react/no-array-index-key
                   key={index}
                   type="button"
-                  onClick={
-                    isSetings
-                      ? handleChangeGroup(index)
-                      : handleVocavularyChangeGroup(index)
-                  }
+                  onClick={handleChangeGroup(index)}
                   className={cn(
                     "inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition rounded shadow ripple hover:shadow-lg  focus:outline-none",
                     {
@@ -151,15 +149,16 @@ export default Settings
 
 Settings.propTypes = {
   isSetings: PropTypes.bool.isRequired,
-  handleVocavularyChangeGroup: PropTypes.func,
+  // handleVocavularyChangeGroup: PropTypes.func,
   userCounter: PropTypes.number,
-  selectedGroup: PropTypes.number.isRequired,
   isStudied: PropTypes.bool,
   isCounter: PropTypes.bool,
+  groupType: PropTypes.string.isRequired,
+  pageType: PropTypes.string.isRequired,
 }
 
 Settings.defaultProps = {
-  handleVocavularyChangeGroup: func,
+  // handleVocavularyChangeGroup: func,
   isStudied: true,
   isCounter: false,
   userCounter: 0,

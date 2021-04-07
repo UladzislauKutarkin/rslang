@@ -4,7 +4,6 @@ import cn from "classnames"
 import {
   getUserWordsVocabulary,
   getVocabulary,
-  getPageCounterUser,
 } from "../../../redux/vocabulary/vocabulary"
 import { addWordToWordBook } from "../../../redux/wordBook/wordBook"
 import Pragination from "./Pragination"
@@ -19,30 +18,39 @@ const TextBookPage = () => {
   const selectedGroup = useSelector(({ pagination }) => pagination.group)
   const [isSetings] = useState(true)
   const vocabularyData = useSelector(({ vocabulary }) => vocabulary.vocabulary)
-  const group = useSelector(({ pagination }) => pagination.group)
-  const pageNumber = useSelector(({ pagination }) => pagination.page)
+  const group = useSelector(({ pagination }) => pagination.groupTextBook)
+  const pageNumber = useSelector(({ pagination }) => pagination.pageTextBook)
   const isTranslate = useSelector(({ settings }) => settings.translate)
   const isButtons = useSelector(({ settings }) => settings.buttons)
-  const pageUserCounter = useSelector(
-    ({ vocabulary }) => vocabulary.pageCounter
-  )
+
+  const pages = useSelector(({ pagination }) => pagination.pagesCount)
+
   const [complicatedWords, setComplicatedWords] = useState([])
-  const handleButtonClick = (pageCounter) => {
-    dispatch(changePage(pageCounter.selected))
-    localStorage.setItem("page", pageCounter.selected)
-  }
+
+  const handleButtonClick = useCallback(
+    (pageCounter) => {
+      dispatch(changePage(pageCounter.selected, "pageTextBook"))
+      localStorage.setItem("pageTextBook", pageCounter.selected)
+    },
+    [dispatch]
+  )
+
   const userCurrent = useSelector(({ user }) => user.user)
-  const countPagination = Math.ceil(pageUserCounter / 20)
 
   useEffect(() => {
-    localStorage.setItem("page", pageNumber)
+    localStorage.setItem("pageTextBook", pageNumber)
     if (isAuthorized || userCurrent.userId) {
       dispatch(getUserWordsVocabulary(pageNumber, group))
-      dispatch(getPageCounterUser(pageNumber, group))
     } else {
       dispatch(getVocabulary(pageNumber, group))
     }
   }, [pageNumber, group, dispatch, userCurrent.userId])
+
+  useEffect(() => {
+    if (vocabularyData && vocabularyData.length === 0) {
+      dispatch(changePage(pages - 1, "pageTextBook"))
+    }
+  }, [dispatch, pages, vocabularyData])
 
   const CustomComponent = (item) => (
     // eslint-disable-next-line react/no-danger
@@ -82,7 +90,6 @@ const TextBookPage = () => {
     },
     [complicatedWords, dispatch, group, pageNumber]
   )
-
   return (
     <>
       <div className="flex-auto flex-wrap justify-center m-5">
@@ -90,7 +97,8 @@ const TextBookPage = () => {
         <Settings
           selectedGroup={selectedGroup}
           isSetings={isSetings}
-          group={group}
+          groupType="groupTextBook"
+          pageType="pageTextBook"
         />
         <div className="container mx-auto mt-20 auto-rows-fr auto-cols-max grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
           {vocabularyData?.map((item) => (
@@ -205,7 +213,7 @@ const TextBookPage = () => {
           ))}
         </div>
         <Pragination
-          countPagination={countPagination}
+          countPagination={pages}
           handleClick={handleButtonClick}
           pageNumber={pageNumber}
         />

@@ -1,4 +1,4 @@
-import React, { useCallback } from "react"
+import React, { useCallback, useEffect } from "react"
 import PropTypes from "prop-types"
 import cn from "classnames"
 import { useDispatch } from "react-redux"
@@ -7,11 +7,12 @@ import AudioComponent from "../AudioComponent"
 import Settings from "../Settings"
 import { restoreWordBook } from "../../../../redux/wordBook/wordBook"
 import Footer from "../../../Footer/Footer"
+import { changePage } from "../../../../redux/pagination/pagination"
 
 const WordCard = ({
   handleButtonClick,
-  countPagination,
-  page,
+  pageNumber,
+  pages,
   userWordsVocabulary,
   handleVocavularyChangeGroup,
   group,
@@ -20,23 +21,37 @@ const WordCard = ({
   isStudied,
   isCounter,
   userCounter,
+  groupType,
+  pageType,
 }) => {
   const CustomComponent = (item) => (
     // eslint-disable-next-line react/no-danger
     <span dangerouslySetInnerHTML={{ __html: item }} />
   )
   const dispatch = useDispatch()
+
   const restoreWord = useCallback(
     (id) => () => {
-      dispatch(restoreWordBook(id, page, difficulty, group))
+      dispatch(restoreWordBook(id, pageNumber, difficulty, group))
     },
-    [difficulty, dispatch, group, page]
+    [difficulty, dispatch, group, pageNumber]
   )
+
+  useEffect(() => {
+    if (
+      userWordsVocabulary &&
+      userWordsVocabulary[0]?.paginatedResults.length === 0
+    ) {
+      dispatch(changePage(pages - 1, pageType))
+    }
+  }, [dispatch, pageType, pages, userWordsVocabulary])
 
   return (
     <>
       <div className="flex-auto flex-wrap justify-center m-5">
         <Settings
+          groupType={groupType}
+          pageType={pageType}
           isSetings={false}
           isStudied={isStudied}
           isCounter={isCounter}
@@ -154,9 +169,9 @@ const WordCard = ({
           </>
         )}
         <Pragination
-          countPagination={countPagination}
+          countPagination={pages}
           handleClick={handleButtonClick}
-          pageNumber={page}
+          pageNumber={pageNumber}
         />
       </div>
       <Footer />
@@ -167,9 +182,9 @@ const WordCard = ({
 export default WordCard
 
 WordCard.propTypes = {
-  countPagination: PropTypes.number.isRequired,
   handleButtonClick: PropTypes.func.isRequired,
-  page: PropTypes.number.isRequired,
+  pageNumber: PropTypes.number.isRequired,
+  pages: PropTypes.number.isRequired,
   userWordsVocabulary: PropTypes.arrayOf(PropTypes.object),
   handleVocavularyChangeGroup: PropTypes.func.isRequired,
   group: PropTypes.number.isRequired,
@@ -178,6 +193,8 @@ WordCard.propTypes = {
   isStudied: PropTypes.bool,
   isCounter: PropTypes.bool,
   userCounter: PropTypes.number,
+  groupType: PropTypes.string.isRequired,
+  pageType: PropTypes.string.isRequired,
 }
 
 WordCard.defaultProps = {

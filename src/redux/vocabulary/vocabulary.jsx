@@ -1,36 +1,26 @@
 import axios from "axios"
+import { changePagesCount } from "../pagination/pagination"
 
 export const FETCH_VOCABULARY_REQUEST = "FETCH_VOCABULARY_REQUEST"
 export const FETCH_VOCABULARY_SUCSESS = "FETCH_VOCABULARY_SUCSESS"
 export const FETCH_VOCABULARY_FAILURE = "FETCH_VOCABULARY_FAILURE"
 export const FETCH_VOCABULARY_COUNT = "FETCH_VOCABULARY_COUNT"
-export const FETCH_VOCABULARY_PAGE_COUNT = "FETCH_VOCABULARY_PAGE_COUNT"
 
 const initialState = {
-  vocabulary: [],
-  counter: 0,
-  pageCounter: 600,
-  pageSize: 20,
-  currentPage: 1,
+  vocabulary: null,
   isLoading: false,
-  dataFetched: false,
 }
 
 const VocabularyReducer = (state = initialState, action) => {
   switch (action.type) {
     case FETCH_VOCABULARY_REQUEST:
-      return { ...state, isLoading: true, vocabulary: {}, error: "" }
+      return { ...state, isLoading: true, vocabulary: null, error: "" }
     case FETCH_VOCABULARY_SUCSESS:
       return {
         ...state,
         isLoading: false,
         vocabulary: action.payload,
         error: "",
-      }
-    case FETCH_VOCABULARY_PAGE_COUNT:
-      return {
-        ...state,
-        pageCounter: action.payload,
       }
     case FETCH_VOCABULARY_COUNT:
       return {
@@ -41,7 +31,7 @@ const VocabularyReducer = (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
-        vocabulary: {},
+        vocabulary: null,
         error: action.payload,
       }
     default:
@@ -50,10 +40,7 @@ const VocabularyReducer = (state = initialState, action) => {
 }
 
 export const fetchVocabularyRequest = () => ({ type: FETCH_VOCABULARY_REQUEST })
-export const fetchPageCounter = (data) => ({
-  type: FETCH_VOCABULARY_PAGE_COUNT,
-  payload: data,
-})
+
 export const fetchCountSucsess = (data) => ({
   type: FETCH_VOCABULARY_COUNT,
   payload: data,
@@ -92,6 +79,7 @@ export const getUserWordsVocabulary = (page, group) => (dispatch) => {
         id: item._id,
         ...item,
       }))
+      dispatch(changePagesCount(Math.ceil(data[0]?.totalCount[0]?.count / 20)))
       return dispatch(fetchVocabularySucsess(result))
     })
     .catch((error) => dispatch(fetchVocabularyFailure(error)))
@@ -111,24 +99,6 @@ export const getCounterUser = (queryDifficulty) => (dispatch) => {
     .then(({ data }) => {
       const result = data[0].totalCount[0]?.count
       return dispatch(fetchCountSucsess(result))
-    })
-}
-
-export const getPageCounterUser = (page, group) => (dispatch) => {
-  const { token } = JSON.parse(localStorage.getItem("user"))
-  const { userID } = JSON.parse(localStorage.getItem("user"))
-  axios
-    .get(
-      `/users/${userID}/aggregatedWords?wordsPerPage=20&page=${page}&group=${group}&filter=%7B%22$or%22:[%7B%22userWord.difficulty%22:%22hard%22%7D,%7B%22userWord%22:null%7D]%7D`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
-    .then(({ data }) => {
-      const result = data[0].totalCount[0]?.count
-      return dispatch(fetchPageCounter(result))
     })
 }
 

@@ -1,4 +1,5 @@
 import axios from "axios"
+import { changePagesCount } from "../pagination/pagination"
 import { getUserWordsVocabulary } from "../vocabulary/vocabulary"
 
 export const ADD_USER_WORD = "ADD_USER_WORD"
@@ -56,7 +57,10 @@ export const getUsersWords = (page, queryDifficulty, group) => (dispatch) => {
         },
       }
     )
-    .then(({ data }) => dispatch(fetchUserWordsSucsess(data)))
+    .then(({ data }) => {
+      dispatch(changePagesCount(Math.ceil(data[0]?.totalCount[0]?.count / 20)))
+      return dispatch(fetchUserWordsSucsess(data))
+    })
 }
 
 export const getStudied = (queryDifficulty) => (dispatch) => {
