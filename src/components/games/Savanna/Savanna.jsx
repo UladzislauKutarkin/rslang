@@ -285,9 +285,9 @@ const Savanna = (props) => {
       if (currentWordsPage === undefined) {
         return 0
       }
-      if (currentWordsPage.length <= 0) {
-        return 0
-      }
+      // if (currentWordsPage.length <= 0) {
+      //   return 0
+      // }
       return currentWordsPage.length - 1
     })
   }, [currentWordsPage])
