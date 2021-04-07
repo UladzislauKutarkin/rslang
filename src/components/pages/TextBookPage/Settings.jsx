@@ -4,7 +4,7 @@ import PropTypes, { func } from "prop-types"
 import cn from "classnames"
 import PureModal from "react-pure-modal"
 import "react-pure-modal/dist/react-pure-modal.min.css"
-import { Link } from "react-router-dom"
+import { Link, withRouter } from "react-router-dom"
 import settings from "../../../assets/img/settings.svg"
 import ChangeTranslate from "./ChangeTranslate"
 import { changeGroup, changePage } from "../../../redux/pagination/pagination"
@@ -12,14 +12,18 @@ import ChangeButtons from "./ChangeButtons"
 import Counter from "./Counter"
 import { isAuthorized } from "../../../helpers/globals"
 
-const Settings = ({
-  isSetings,
-  handleVocavularyChangeGroup,
-  selectedGroup,
-  isStudied,
-  isCounter,
-  userCounter,
-}) => {
+const Settings = (props) => {
+  const {
+    isSetings,
+    handleVocavularyChangeGroup,
+    selectedGroup,
+    isStudied,
+    isCounter,
+    userCounter,
+    location,
+  } = props
+
+  console.log("---location---", location.pathname)
   const userCurrent = useSelector(({ user }) => user.user)
   const dispatch = useDispatch()
   const [modal, setModal] = useState(false)
@@ -75,7 +79,7 @@ const Settings = ({
               ["Своя игра", "castomgame"],
             ].map((element) => (
               <Link
-                to={`/${element[1]}/${groupForGame}/${pageNumberForGame}`}
+                to={`/${element[1]}${location.pathname}${groupForGame}/${pageNumberForGame}`}
                 key={element[0]}
                 type="button"
                 className="block px-6  mx-2 py-2 text-xs font-medium  text-center text-white uppercase transition
@@ -162,7 +166,7 @@ const Settings = ({
   )
 }
 
-export default Settings
+export default withRouter(Settings)
 
 Settings.propTypes = {
   isSetings: PropTypes.bool.isRequired,
@@ -171,6 +175,8 @@ Settings.propTypes = {
   selectedGroup: PropTypes.number.isRequired,
   isStudied: PropTypes.bool,
   isCounter: PropTypes.bool,
+  // eslint-disable-next-line react/forbid-prop-types
+  location: PropTypes.any.isRequired,
 }
 
 Settings.defaultProps = {

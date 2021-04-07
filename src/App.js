@@ -27,7 +27,7 @@ function App() {
         <Route exact path="/register/" component={SignUp} />
         <Route exact path="/signin/" component={SignIn} />
         <Route exact path="/savanna" component={Savanna} />
-        <Route exact path="/savanna/:group/:page" component={Savanna} />
+        <Route exact path="/savanna/:page/:group/:page" component={Savanna} />
         <Route path="/audiocall" component={AudioCall} />
         <Route path="/sprint" component={Sprint} />
         <Route exact path="/vocabulary/" component={Vocabulary} />

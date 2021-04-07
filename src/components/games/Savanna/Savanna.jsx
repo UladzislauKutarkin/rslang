@@ -1,9 +1,14 @@
 /* eslint-disable no-console */
 import { useEffect, useState, useMemo, useRef } from "react"
 import { Link, withRouter } from "react-router-dom"
+// eslint-disable-next-line no-unused-vars
 import PropTypes from "prop-types"
 
 import { useDispatch, useSelector } from "react-redux"
+import { createSelector } from "reselect"
+
+import { getStudied } from "../../../redux/wordBook/wordBook"
+
 import {
   getUserWordsVocabulary,
   getVocabulary,
@@ -32,23 +37,19 @@ import wrong from "../../../assets/sound/wrong.mp3"
 import { shuffle } from "../../../helpers/shuffle"
 
 // eslint-disable-next-line no-unused-vars
-const Savanna = ({ match }) => {
-  // eslint-disable-next-line no-unused-vars
+const Savanna = (props) => {
+  const { match } = props
+
+  const referencePage = match.params.page ?? ""
   const currentGroup = match.params.group ?? 0
-  // eslint-disable-next-line no-unused-vars
   const currentPage = match.params.page ?? 0
-  // eslint-disable-next-line no-unused-vars
-  const userCurrent = useSelector(({ user }) => user.user)
 
-  // eslint-disable-next-line no-unused-vars
   const [referenceFromBook, setReferenceFromBook] = useState(false)
-
-  console.log("match", match.params)
   const [isStartGame, setIsStartGame] = useState(false)
 
   const [wordGroup, setWordGroup] = useState("0")
   const [musicON, setMusicON] = useState(false)
-  const [wordsCount, setWordsCount] = useState(19)
+  const [wordsCount, setWordsCount] = useState(0)
   const [shuffledAnswers, setShuffledAnswers] = useState(["dump"])
   const [statistics, setStatistics] = useState([])
   const [alive, setAlive] = useState(false)
@@ -70,19 +71,29 @@ const Savanna = ({ match }) => {
   const music = useMemo(() => new Audio(forsavanna), [])
   const correctSound = useMemo(() => new Audio(correct), [])
   const wrongSound = useMemo(() => new Audio(wrong), [])
-  // let currentWordsPage
   const dispatch = useDispatch()
-  // // eslint-disable-next-line no-unused-vars
-
-  // const currentWordsPage = useSelector(({ wordsPage }) => wordsPage.wordsPage)
-  const currentWordsPage = useSelector(
-    ({ vocabulary }) => vocabulary.vocabulary
+  let cloneSelector
+  const selectPageFromTextBook = createSelector(
+    (state) => state.vocabulary,
+    (vocabulary) => vocabulary.vocabulary
   )
+
+  // eslint-disable-next-line no-unused-vars
+  const selectPageStudied = createSelector(
+    (state) => state.wordBook,
+    (wordBook) => wordBook.wordBook
+  )
+
+  // eslint-disable-next-line no-constant-condition
+  if (true) {
+    cloneSelector = selectPageFromTextBook
+  }
+  const currentWordsPage = useSelector(cloneSelector)
+  const userCurrent = useSelector(({ user }) => user.user)
 
   // Array.from({ length: 20 }, (_, i) => {
   //   return { word: `word-${i}`, wordTranslate: `translate-${i}` }
   // })
-  console.log("currentWordsPage", currentWordsPage)
 
   const reduceLives = () => {
     if (life > 0) {
@@ -213,12 +224,17 @@ const Savanna = ({ match }) => {
   }
 
   useEffect(() => {
-    if (match.params.group) {
+    if (match.params.page) {
       setReferenceFromBook(true)
-      if (isAuthorized || userCurrent.userId) {
-        dispatch(getUserWordsVocabulary(currentPage, currentGroup))
+      if (referencePage === "/textbook/") {
+        console.log("/textbook/")
+        if (isAuthorized || userCurrent.userId) {
+          dispatch(getUserWordsVocabulary(currentPage, currentGroup))
+        }
+        dispatch(getVocabulary(currentPage, currentGroup))
+      } else if (referencePage === "/studied/") {
+        dispatch(getStudied("hard"))
       }
-      dispatch(getVocabulary(currentPage, currentGroup))
     } else {
       dispatch(getVocabulary(random(0, 29), 0))
     }
@@ -261,6 +277,10 @@ const Savanna = ({ match }) => {
       document.removeEventListener("keypress", keyCompareHandler)
     }
   }, [])
+
+  useEffect(() => {
+    setWordsCount(currentWordsPage.length - 1)
+  }, [currentWordsPage])
 
   const musicControlHandler = () => {
     music.loop = true
@@ -423,6 +443,8 @@ const Savanna = ({ match }) => {
 }
 export default withRouter(Savanna)
 Savanna.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  // props: PropTypes.any.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   match: PropTypes.any.isRequired,
 }
