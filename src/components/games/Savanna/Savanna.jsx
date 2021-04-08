@@ -1,14 +1,10 @@
 /* eslint-disable no-console */
 import { useEffect, useState, useMemo, useRef } from "react"
 import { Link, withRouter } from "react-router-dom"
-// eslint-disable-next-line no-unused-vars
 import PropTypes from "prop-types"
 
 import { useDispatch, useSelector } from "react-redux"
 import { createSelector } from "reselect"
-
-// eslint-disable-next-line no-unused-vars
-import { getStudied } from "../../../redux/wordBook/wordBook"
 
 import {
   getUserWordsVocabulary,
@@ -19,7 +15,6 @@ import {
 import { onNavbarAC, offNavbarAC } from "../../../redux/games/navbar"
 
 import StatisticsModal from "../gamesComponents/StatisticsModal"
-// eslint-disable-next-line no-unused-vars
 import { isAuthorized } from "../../../helpers/globals"
 
 import savannaBack from "../../../assets/img/games/savanna_back.jpg"
@@ -38,9 +33,24 @@ import wrong from "../../../assets/sound/wrong.mp3"
 
 import { shuffle } from "../../../helpers/shuffle"
 
-// eslint-disable-next-line no-unused-vars
-const Savanna = (props) => {
-  const { match } = props
+import {
+  // eslint-disable-next-line no-unused-vars
+  loginUser,
+  // eslint-disable-next-line no-unused-vars
+  signThenGetWords,
+  // eslint-disable-next-line no-unused-vars
+  signThenGetAggregatedWords,
+  // eslint-disable-next-line no-unused-vars
+  signThenGetSpecWords,
+} from "../../../api/reqRespTest"
+
+const Savanna = ({ match }) => {
+  // loginUser({ email: "test@test.com", password: "12345678" })
+  // signThenGetWords({ email: "test@test.com", password: "12345678" })
+  // signThenGetAggregatedWords({ email: "test@test.com", password: "12345678" })
+  // signThenGetSpecWords({ email: "test@test.com", password: "12345678" })
+
+  // const { match } = props
 
   const referencePage = match.params.reference ?? ""
   const currentGroup = match.params.group ?? 0
@@ -93,8 +103,8 @@ const Savanna = (props) => {
     cloneSelector = selectPageFromTextBook
   }
   const currentWordsPage = useSelector(cloneSelector)
-  console.log("currentWordsPage", currentWordsPage)
-  console.log("wordsCount", wordsCount)
+  // console.log("currentWordsPage", currentWordsPage)
+  // console.log("wordsCount", wordsCount)
   const userCurrent = useSelector(({ user }) => user.user)
 
   // Array.from({ length: 20 }, (_, i) => {
@@ -108,17 +118,52 @@ const Savanna = (props) => {
   }
 
   const addWordSToStatistic = (flag) => {
-    const filtered = statistics.filter(
-      (el) => el.word !== shuffledAnswersGlob.word
-    )
-    setStatistics([
-      ...filtered,
-      {
-        word: `${shuffledAnswersGlob.word}`,
-        translate: `${shuffledAnswersGlob.translate}`,
-        ok: flag,
-      },
-    ])
+    const idx = statistics.findIndex((el) => el.id === shuffledAnswersGlob.id)
+
+    if (idx === -1) {
+      console.log("new")
+      console.log(statistics.find((el) => el.id === shuffledAnswersGlob.id))
+      setStatistics((prev) => [
+        ...prev,
+        {
+          id: shuffledAnswersGlob.id,
+          word: shuffledAnswersGlob.word,
+          translate: shuffledAnswersGlob.translate,
+          right: flag ? 1 : 0,
+          wrong: !flag ? 1 : 0,
+          ok: flag,
+        },
+      ])
+    } else {
+      console.log("add")
+      setStatistics(() => {
+        console.log("+")
+        const newStat = statistics
+        newStat[idx] = {
+          ...statistics[idx],
+          right: flag ? statistics[idx].right + 0.5 : statistics[idx].right,
+          wrong: !flag ? statistics[idx].wrong + 0.5 : statistics[idx].wrong,
+          ok: flag,
+        }
+
+        return newStat
+      })
+    }
+
+    // const filtered = statistics.filter(
+    //   (el) => el.word !== shuffledAnswersGlob.word
+    // )
+    // setStatistics([
+    //   ...filtered,
+    //   {
+    //     id: shuffledAnswersGlob.id,
+    //     word: shuffledAnswersGlob.word,
+    //     translate: shuffledAnswersGlob.translate,
+    //     right: flag ? 1 : 0,
+    //     wrong: !flag ? 1 : 0,
+    //     ok: flag,
+    //   },
+    // ])
   }
 
   const runCycle = () => {
@@ -138,7 +183,7 @@ const Savanna = (props) => {
       }, 20)
 
       wordRef.current.innerHTML = currentWordsPage[wordsCount].word ?? ""
-
+      shuffledAnswersGlob.id = currentWordsPage[wordsCount].id
       shuffledAnswersGlob.translate = currentWordsPage[wordsCount].wordTranslate
       shuffledAnswersGlob.word = currentWordsPage[wordsCount].word
 
@@ -453,8 +498,6 @@ const Savanna = (props) => {
 }
 export default withRouter(Savanna)
 Savanna.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  // props: PropTypes.any.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   match: PropTypes.any.isRequired,
 }

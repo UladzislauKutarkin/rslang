@@ -42,6 +42,7 @@ const StatisticsModal = ({ show, statistics, setWordsCount, setLife }) => {
             <div key={filteredEl.word}>
               <strong>{`${filteredEl.word}`} </strong> -
               {`${filteredEl.translate}`}
+              {` ${filteredEl.right}-${filteredEl.wrong}`}
             </div>
           ))}
       </div>
@@ -58,6 +59,7 @@ const StatisticsModal = ({ show, statistics, setWordsCount, setLife }) => {
             <div key={filteredEl.word}>
               <strong>{`${filteredEl.word}`} </strong> -
               {`${filteredEl.translate}`}
+              {` ${filteredEl.right}-${filteredEl.wrong}`}
             </div>
           ))}
       </div>
@@ -65,7 +67,6 @@ const StatisticsModal = ({ show, statistics, setWordsCount, setLife }) => {
         <button
           type="button"
           className="focus:outline-none mx-5 text-white text-sm py-1 px-5 rounded-md bg-purple-800 hover:bg-purple-900 hover:shadow-lg"
-          // eslint-disable-next-line no-console
           onClick={() => {
             setWordsCount(19)
             setLife(5)
@@ -90,8 +91,6 @@ StatisticsModal.propTypes = {
   show: PropTypes.bool.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   statistics: PropTypes.any.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  setWordsCount: PropTypes.any.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  setLife: PropTypes.any.isRequired,
+  setWordsCount: PropTypes.func.isRequired,
+  setLife: PropTypes.func.isRequired,
 }
