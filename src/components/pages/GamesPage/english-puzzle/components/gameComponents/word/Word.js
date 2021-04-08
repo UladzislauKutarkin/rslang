@@ -119,7 +119,7 @@ function Word(props) {
     stateGame.readyToContinue,
     bg.imageSrc,
   ])
-
+debugger
   useEffect(() => {
     if (!props.mistake) setCheckClass("")
     else setCheckClass(`${props.mistake}Word`)
@@ -156,6 +156,7 @@ function Word(props) {
     },
     canDrop,
   })
+  
   const [{ isDragging }, drag] = useDrag({
     item: {
       type: ItemTypes.WORD,
