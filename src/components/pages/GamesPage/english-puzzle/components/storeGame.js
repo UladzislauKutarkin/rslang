@@ -57,7 +57,7 @@ const StateOfGameProvider = ({ children }) => {
         newState = { ...state, difficulty: action.value }
         return newState
       case "pages":
-        newState = { ...state, pages: action.value }
+        newState = { ...state, pages: action.number }
         return newState
       case "page":
         newState = { ...state, page: action.value }

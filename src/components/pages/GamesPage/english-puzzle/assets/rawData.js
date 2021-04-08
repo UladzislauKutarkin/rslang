@@ -1,5 +1,4 @@
-const url =
-  "https://raw.githubusercontent.com/AlekseyGrimm/RS_Lang_rawData/master/"
+const url = "https://raw.githubusercontent.com/AlekseyGrimm/Lang-Data/master/"
 
 function rawData({ filename, paint }) {
   if (!paint) return url + filename

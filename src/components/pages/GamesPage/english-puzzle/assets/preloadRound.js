@@ -67,7 +67,7 @@ async function preloadRound(dispatchGame, stateGame, difficulty, page) {
   const paint = {
     ...paints[pageN],
     image: rawData({ filename: paints[pageN].image, paint: true }),
-    cutSrc: rawData({ filename: paints[pageN].cutSrc, paint: true }),
+    cutSrc: rawData({ filename: paints[pageN].Src, paint: true }),
   }
   dispatchGame({ type: "roundImage", value: paint })
 }

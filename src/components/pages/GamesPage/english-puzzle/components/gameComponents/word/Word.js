@@ -32,8 +32,6 @@ function Word(props) {
   function handleClick(value) {
     if (!props.buildingWord && !props.guessWord) return
     if (props.buildingWord && stateGame.sentenceHasMistake === false) return
-    // false because null is when "Check" not clicked
-    //
     const guessSentence = [...stateGame.guessSentence]
     const buildingSentence = [...stateGame.buildingSentence]
     if (props.guessWord) {
@@ -169,7 +167,7 @@ function Word(props) {
       isDragging: monitor.isDragging(),
     }),
     canDrag,
-    end(item, monitor) {
+    end(_item, monitor) {
       const res = monitor.getDropResult()
       if (!res) return
       if (res.changedLine) {

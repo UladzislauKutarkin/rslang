@@ -40,7 +40,7 @@ function GameHeadControls() {
           value={stateGame.difficulty}
           onChange={(diff) => handleClick({ type: "difficulty", value: diff })}
         />
-        <span>Level:</span>
+        <span>Pages:</span>
         <Select
           values={pages}
           value={stateGame.page}
