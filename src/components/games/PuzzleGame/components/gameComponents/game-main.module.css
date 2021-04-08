@@ -1,0 +1,123 @@
+.puzzleContainer {
+    background-image: url('../../img/100.svg');
+    background-size: cover;
+}
+.puzzleContainer.start {
+    height: unset !important;
+}
+.startPuzzle {
+    display: grid;
+    justify-content: center;
+    align-content: start;
+    background-image: url("../../img/1.jpg");
+    background-position: bottom right;
+    background-repeat: no-repeat;
+    background-size: initial;
+    width: 100vw;
+    min-height: calc(100vh - 100px);
+    overflow: hidden;
+    background-color: #FAFAFA;
+    padding-top: 5%;
+}
+.gameContainer {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    position: relative;
+    width: 60%;
+    min-width: 865px;
+    margin: 0 auto 0;
+}
+.imagePuzzle {
+    margin-left: 18px;
+    margin-bottom: -1px;
+    width: 90%;
+    min-width: 250px;
+    max-width: 290px;
+}
+.startBtn {
+    background: #1194C8;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 70px;
+    margin: 0;
+    padding: 20px 80px 28px 80px;
+    font-size: 64px;
+    font-weight: bold;
+    line-height: 78px;
+    text-align: center;
+    text-transform: none;
+    cursor: pointer;
+    transition: .2s ease-in-out;
+}
+.startBtn:hover {
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2), 0px 1px 18px rgba(0, 0, 0, 0.12), 0px 6px 10px rgba(0, 0, 0, 0.14);
+    animation: ChangeSize 1s linear;
+}
+.startBtn:active {
+    transform: scale(.9);
+}
+.startBtn:focus {
+    outline: none;
+}
+
+.gameName {
+    position: absolute;
+    max-width: 200px;
+    left: 5%;
+    bottom: 0;
+    font-weight: 800;
+    font-size: 96px;
+    line-height: 117px;
+    color: rgba(0, 134, 181, 0.32);
+}
+
+.buttonDescription {
+    font-weight: 300;
+    font-size: 18px;
+    line-height: 22px;
+    color: #263655;
+    margin-top: 20px;
+}
+
+@media (min-width: 1200px) {
+    .puzzleContainer {
+        height: 100vh;
+        max-height: 866px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .puzzleContainer {
+        height: unset;
+    }
+    .gameContainer {
+        width: 70vw;
+    }
+}
+
+@media (max-width: 1020px) {
+    .gameContainer {
+        width: 90vw;
+        min-width: unset;
+    }
+}
+
+@media (max-width: 768px) {
+
+}
+
+@keyframes ChangeSize {
+    0% {
+        width: 100%;
+    }
+    50% {
+        width: 120%;
+        margin-left: -10%;
+    }
+    100% {
+        width: 100%;
+        margin-left: 0;
+    }
+}

@@ -132,13 +132,13 @@ const GamesPage = () => {
                 перевод слова
               </p>
               <div className="absolute z-50 bottom-32 md:bottom-10 right-0 transform translate-x-12 flex items-center justify-center w-20 h-20 rounded-full bg-white group-hover:bg-green-500 text-indigo-800 group-hover:text-white font-semibold cursor-pointer group-hover:scale-110 duration-500 select-none">
-                <Link to="/savanna">Вперед</Link>
+                <Link to="/puzzle">Вперед</Link>
               </div>
             </div>
             <div className="md:w-1/2  md:block ">
               <img
                 src={savannaPromo}
-                alt="savannaPromo"
+                alt="puzzle"
                 className="max-h-96 rounded-lg"
               />
             </div>

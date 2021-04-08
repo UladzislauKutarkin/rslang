@@ -9,6 +9,7 @@ import ResponsiveNavbar from "./components/Navbar/ResponsiveNavbar"
 import Savanna from "./components/games/Savanna/Savanna"
 import AudioCall from "./components/games/AudioCall/AudioCall"
 import Sprint from "./components/games/Sprint/Sprint"
+import EnglishPuzzle from "./components/games/PuzzleGame/english-puzzle"
 
 import WordBook from "./components/pages/TextBookPage/Vocabulary/WordBook/WordBook"
 import Vocabulary from "./components/pages/TextBookPage/Vocabulary/Vocabulary"
@@ -34,6 +35,7 @@ function App() {
         />
         <Route path="/audiocall" component={AudioCall} />
         <Route path="/sprint" component={Sprint} />
+        <Route path="/puzzle" component={EnglishPuzzle} />
         <Route exact path="/vocabulary/" component={Vocabulary} />
         <Route exact path="/wordbook/" component={WordBook} />
         <Route exact path="/studied/" component={StudiedWords} />

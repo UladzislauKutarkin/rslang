@@ -1,0 +1,32 @@
+.gameHints {
+    display: flex;
+    flex-direction: row;
+}
+.hintBtn {
+    opacity: .3;
+    border-radius: 15px !important;
+    background-color: #1958DB;
+    color: #eeecec;
+    font-size: 22px;
+    width: 55px;
+    max-height: 39px;
+    padding: 5px 10px;
+    transition: all .3s;
+    margin: 0 4px 0 0;
+}
+.hintBtn:hover {
+    border-radius: 15px;
+    background-color: #eeecec;
+    color: #1958DB;
+    font-size: 24px;
+    padding: 3px 10px;
+}
+.hintBtn.active {
+    opacity: 1;
+}
+.hintBtn:hover {
+    opacity: 1;
+}
+.hintBtn svg {
+    vertical-align: 0.075em;
+}

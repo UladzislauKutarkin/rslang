@@ -1,0 +1,117 @@
+.word {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    flex: 0 0 auto;
+    max-height: 44px;
+    padding: 0;
+    margin: 0 1px 0 0;
+    font-size: 24px;
+    background-color: #fbd6d6;
+    border-radius: 3px;
+    color: #000;
+    font-family: 'Montserrat', sans-serif;
+    text-shadow: -2px 0 2px #ffffff, 2px 0 2px #ffffff, 0 2px 2px #ffffff;
+    text-align: center;
+    cursor: pointer;
+    transition: all .1s;
+    user-select: none;
+}
+
+.word > span {
+    position: relative;
+    display: flex;
+    z-index: 5;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    padding: 0 0 0 29px;
+    white-space: nowrap;
+    user-select: none;
+}
+.word span {
+    user-select: none;
+    -moz-user-select: none;
+}
+
+.word::before {
+    position: absolute;
+    z-index: 4;
+    width: 27px;
+    height: 32px;
+    background-color: transparent;
+    -webkit-clip-path: url(#my-clip-path);
+    clip-path: url(#my-clip-path);
+    content: '';
+    left: 0;
+}
+.word.dragging::before {
+    display: none;
+}
+.clipped {
+    position: absolute;
+    z-index: 4;
+    right: -23px;
+    width: 24px;
+    height: 30px;
+    background-color: #fbd6d6;
+    -webkit-clip-path: url(#my-clip-path);
+    clip-path: url(#my-clip-path);
+}
+.clipped2 {
+    position: absolute;
+    z-index: 3;
+    right: -25px;
+    width: 25px;
+    height: 34px;
+    background-color: #333333c2;
+    -webkit-clip-path: url(#my-clip-path);
+    clip-path: url(#my-clip-path);
+}
+.word:hover {
+    background-color: #ffffff;
+    color: #ec5990;
+}
+.word:hover .clipped {
+    background-color: #ffffff;
+}
+.wrongWord {
+    box-shadow: 1px 0px 2px 2px #d10330;
+}
+.rightWord {
+    box-shadow: 2px 0px 2px 2px #04f611;
+}
+.clipped2.wrongWord {
+    background-color: #d10330;
+    box-shadow: none;
+}
+.clipped2.rightWord {
+    background-color: #04f610d8;
+    box-shadow: none;
+}
+
+@media (max-width: 1200px) {
+    .word {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 1020px) {
+    .word {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .word {
+        font-size: .9rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .word {
+        font-size: .7rem;
+    }
+}
