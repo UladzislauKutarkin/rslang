@@ -26,7 +26,7 @@ function Results() {
   return (
     <div className={styles.resultsWindow}>
       <div className={styles.results}>
-        <img className={styles.resultsImg} src={bg.image} alt={bg.name} />
+        <img className={styles.resultsImg} src={bg.imageSrc} alt={bg.name} />
         <span>{`${bg.author} – ${bg.name} ${bg.year}`}</span>
         <div className="results__dont-know">
           <h4>

@@ -71,7 +71,7 @@ function Word(props) {
       : 9 - stateGame.currWordIndex
     let stylesWordBg = {
       width: `${width.toFixed(1)}px`,
-      backgroundImage: `url(${bg.image})`,
+      backgroundImage: `url(${bg.imageSrc})`,
       backgroundRepeat: "no-repeat",
       backgroundSize: `${presetW}px 460px`,
       backgroundPosition: `-${offsetWidth}px -${indexSent * 46}px`,
@@ -81,7 +81,7 @@ function Word(props) {
         ? width + offset * presetW
         : presetW - 20
     let stylesClip = {
-      backgroundImage: `url(${bg.image})`,
+      backgroundImage: `url(${bg.imageSrc})`,
       backgroundSize: `${presetW}px 460px`,
       backgroundPosition: `-${offsetForCircle.toFixed(0)}px ${-5 + indexSent * -46
         }px`,
@@ -117,7 +117,7 @@ function Word(props) {
     props.buildingWord,
     stateGame.currentSentence,
     stateGame.readyToContinue,
-    bg.image,
+    bg.imageSrc,
   ])
 
   useEffect(() => {

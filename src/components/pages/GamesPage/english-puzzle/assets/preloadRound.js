@@ -1,4 +1,4 @@
-/* eslint-disable no-param-reassign */
+/* eslint-disable */
 import getPages from "../api/getPages"
 import getWords from "../api/getWords"
 import shuffleArray from "./shuffleArray"
@@ -13,9 +13,9 @@ import rawData from "./rawData"
 
 async function makePage(dispatchGame, roundDifficulty) {
   const pages = await getPages({ group: roundDifficulty - 1 })
-  const pagesCount = pages.count - 1
-  dispatchGame({ type: "pages", value: pagesCount })
-  return Math.floor(Math.random() * pagesCount + 1)
+  const pagesCount = (pages.count - 1)
+  dispatchGame({ type: 'pages', value: pagesCount })
+  return Math.floor((Math.random() * pagesCount) + 1)
 }
 async function preloadRound(dispatchGame, stateGame, difficulty, page) {
   const sentences = []
@@ -66,8 +66,8 @@ async function preloadRound(dispatchGame, stateGame, difficulty, page) {
   else if (roundDifficulty === 6) paints = paintings6
   const paint = {
     ...paints[pageN],
-    image: rawData({ filename: paints[pageN].image, paint: true }),
-    cutSrc: rawData({ filename: paints[pageN].Src, paint: true }),
+    image: rawData({ filename: paints[pageN].imageSrc, paint: true }),
+    cutSrc: rawData({ filename: paints[pageN].cutSrc, paint: true }),
   }
   dispatchGame({ type: "roundImage", value: paint })
 }

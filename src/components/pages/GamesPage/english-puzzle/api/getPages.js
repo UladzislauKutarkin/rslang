@@ -5,8 +5,8 @@ async function getPages({ group }) {
   if (rawResponse.status !== 200) return { error: 'Failed to get pages' }
   const content = await rawResponse.json()
   console.log(content)
-  // return content
-  return { count: 30 }
+  const pages = {count: 30}
+  return pages
 }
 
 export default getPages
