@@ -3,7 +3,6 @@ import {
   FETCH_USER_REQUEST,
   // FETCH_USER_SUCSESS,
   // FETCH_USER_FAILURE,
-  // USER_SING_OUT,
 } from "../user"
 
 describe("SignUpReducer return state", () => {
@@ -34,7 +33,11 @@ describe("SignUpReducer return state", () => {
   // it("change user", () => {
   //   expect(
   //     SignUpReducer(
-  //       { user: { email: "test@test.com", password: "12345678" }, },
+  //       {
+  //         user: {},
+  //         isLoading: true,
+  //         error: "",
+  //       },
   //       {
   //         type: FETCH_USER_SUCSESS,
   //         user: { email: "test@test.com", password: "12345678" },
@@ -42,9 +45,9 @@ describe("SignUpReducer return state", () => {
   //       }
   //     )
   //   ).toEqual({
-  //     user: { email: "test@test.com", password: "12345678" },
   //     isLoading: false,
   //     error: "",
+  //     user: { email: "test@test.com", password: "12345678" },
   //   })
   // })
 })
