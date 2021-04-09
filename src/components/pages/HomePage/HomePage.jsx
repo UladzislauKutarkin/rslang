@@ -1,6 +1,7 @@
 // import { useDispatch } from "react-redux"
 // import { useState } from "react"
 // import { setPageActionCreator } from "../../../redux/pages/pages"
+import React from "react"
 import TeamMarket from "./TeamMarket"
 import imgHeaderPromo from "../../../assets/img/english_promo_header.jpg"
 import Footer from "../../Footer/Footer"
