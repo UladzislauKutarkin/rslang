@@ -15,13 +15,6 @@ function Hints() {
   return (
     <div className={styles.gameHints}>
       <Button
-        icon="volume-up"
-        className={`${styles.hintBtn} ${
-          stateGame.hints.autoAudio ? styles.active : ""
-        }`}
-        onClick={() => handleClick({ autoAudio: !stateGame.hints.autoAudio })}
-      />
-      <Button
         icon="file-alt"
         className={`${styles.hintBtn} ${
           stateGame.hints.transHint ? styles.active : ""

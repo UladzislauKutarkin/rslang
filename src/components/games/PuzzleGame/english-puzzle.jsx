@@ -12,7 +12,7 @@ import { DndProvider } from "react-dnd"
 import { HTML5Backend } from "react-dnd-html5-backend"
 import Game from "./components/gameComponents/Game"
 import { StateOfGameProvider } from "./components/storeGame"
-import "./sass/puzzleStyles.scss"
+import "./sass/puzzleStyles.css"
 
 library.add(faImage, faVolumeUp, faFileAlt, faMusic, faCaretDown)
 

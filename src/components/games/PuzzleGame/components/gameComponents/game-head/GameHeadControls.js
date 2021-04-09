@@ -42,7 +42,7 @@ function GameHeadControls() {
         />
         <span>Pages:</span>
         <Select
-          values={pages}
+          values={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
           value={stateGame.page}
           onChange={(p) => handleClick({ type: "page", value: p })}
         />
