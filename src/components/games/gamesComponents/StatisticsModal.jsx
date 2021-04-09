@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import { Link, withRouter } from "react-router-dom"
 import PureModal from "react-pure-modal"
 import "react-pure-modal/dist/react-pure-modal.min.css"

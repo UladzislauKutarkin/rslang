@@ -21,7 +21,7 @@ const FooterLinks = ({ gitLink, gitName, icon }) => {
 export default FooterLinks
 
 FooterLinks.propTypes = {
-  icon: PropTypes.string.isRequired,
+  icon: PropTypes.objectOf(PropTypes.string).isRequired,
   gitLink: PropTypes.string,
   gitName: PropTypes.string,
 }

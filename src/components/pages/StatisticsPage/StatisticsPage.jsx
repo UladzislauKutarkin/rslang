@@ -1,3 +1,4 @@
+import React from "react"
 import imgHeader from "../../../assets/img/english_statistics_header+.jpg"
 import Footer from "../../Footer/Footer"
 
