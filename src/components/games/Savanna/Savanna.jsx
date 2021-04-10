@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
 import { useEffect, useState, useMemo, useRef } from "react"
 import { Link, withRouter } from "react-router-dom"
@@ -5,6 +6,8 @@ import PropTypes from "prop-types"
 
 import { useDispatch, useSelector } from "react-redux"
 import { createSelector } from "reselect"
+// eslint-disable-next-line no-unused-vars
+import { addWordToWordBook } from "../../../redux/wordBook/wordBook"
 
 import {
   getUserWordsVocabulary,
@@ -32,31 +35,15 @@ import correct from "../../../assets/sound/correct.mp3"
 import wrong from "../../../assets/sound/wrong.mp3"
 
 import { shuffle } from "../../../helpers/shuffle"
-
-import {
-  // eslint-disable-next-line no-unused-vars
-  loginUser,
-  // eslint-disable-next-line no-unused-vars
-  signThenGetWords,
-  // eslint-disable-next-line no-unused-vars
-  signThenGetAggregatedWords,
-  // eslint-disable-next-line no-unused-vars
-  signThenGetSpecWords,
-} from "../../../api/reqRespTest"
+import { signThenGetWords } from "../../../api/reqRespTest"
 
 const Savanna = ({ match }) => {
-  // loginUser({ email: "test@test.com", password: "12345678" })
-  // signThenGetWords({ email: "test@test.com", password: "12345678" })
-  // signThenGetAggregatedWords({ email: "test@test.com", password: "12345678" })
-  // signThenGetSpecWords({ email: "test@test.com", password: "12345678" })
-
-  // const { match } = props
-
   const referencePage = match.params.reference ?? ""
   const currentGroup = match.params.group ?? 0
   const currentPage = match.params.page ?? 0
 
   const [referenceFromBook, setReferenceFromBook] = useState(false)
+  // eslint-disable-next-line no-unused-vars
   const [isStartGame, setIsStartGame] = useState(false)
 
   const [wordGroup, setWordGroup] = useState(2)
@@ -65,8 +52,9 @@ const Savanna = ({ match }) => {
   const [shuffledAnswers, setShuffledAnswers] = useState(["dump"])
   const [statistics, setStatistics] = useState([])
   const [alive, setAlive] = useState(false)
-  const [title, setTitle] = useState("Savanna")
+  const [title, setTitle] = useState("")
   const [life, setLife] = useState(5)
+  const [startButton, setStartButton] = useState("loading...")
 
   const wordRef = useRef()
   const dropRef = useRef()
@@ -76,7 +64,8 @@ const Savanna = ({ match }) => {
   const isSelectRef = useRef()
 
   const InCycle = useMemo(() => ({ on: false }), [])
-  const speed = 5
+  const speed = 2
+  const game = "savanna"
 
   const shuffledAnswersGlob = useMemo(() => ({ shufl: ["test"] }), [])
 
@@ -103,26 +92,70 @@ const Savanna = ({ match }) => {
     cloneSelector = selectPageFromTextBook
   }
   const currentWordsPage = useSelector(cloneSelector)
-  // console.log("currentWordsPage", currentWordsPage)
+
+  // console.log("currentWordsPage 0", currentWordsPage[0].userWord)
+
   // console.log("wordsCount", wordsCount)
   const userCurrent = useSelector(({ user }) => user.user)
+  // eslint-disable-next-line no-unused-vars
+  const spinner = useSelector(({ vocabulary }) => vocabulary.isLoading)
+
+  useEffect(() => {
+    // const spinner1 = spinner ? "Загрузка..." : "Старт"
+    setStartButton(() => {
+      return spinner ? "Загрузка..." : "Старт"
+    })
+  }, [spinner])
+  // useEffect(() => {
+  //   console.log("currentWordsPage", currentWordsPage)
+  // }, [currentWordsPage])
 
   // Array.from({ length: 20 }, (_, i) => {
   //   return { word: `word-${i}`, wordTranslate: `translate-${i}` }
-  // })
 
-  const reduceLives = () => {
-    if (life > 0) {
-      setLife(life - 1)
+  useEffect(() => {
+    if (referencePage) {
+      console.log("referencePage")
+      if (referencePage === "textbook") {
+        console.log("referencePage -> textbook")
+        if (isAuthorized || userCurrent.userId) {
+          console.log("referencePage -> textbook -> aut")
+          dispatch(getUserWordsVocabulary(currentPage, currentGroup))
+        } else {
+          console.log("referencePage -> textbook -> not")
+          dispatch(getVocabulary(currentPage, currentGroup))
+        }
+      }
+    } else {
+      console.log("menu")
+      dispatch(getVocabulary(random(0, 29), 0))
     }
-  }
+
+    // if (match.params.reference) {
+    //   setReferenceFromBook(true)
+    //   if (referencePage === "textbook") {
+    //     console.log("disp textbook")
+    //     if (isAuthorized || userCurrent.userId) {
+    //       console.log("disp textbook => au")
+    //       dispatch(getUserWordsVocabulary(currentPage, currentGroup))
+    //     } else {
+    //       console.log("disp textbook => not au")
+    //       dispatch(getVocabulary(currentPage, currentGroup))
+    //     }
+    //   } else if (referencePage === "wordbook") {
+    //     dispatch(getCounterUser("hard"))
+    //   }
+    // } else {
+    //   dispatch(getVocabulary(random(0, 29), 0))
+    // }
+  }, [])
+
+  // })
 
   const addWordSToStatistic = (flag) => {
     const idx = statistics.findIndex((el) => el.id === shuffledAnswersGlob.id)
 
     if (idx === -1) {
-      console.log("new")
-      console.log(statistics.find((el) => el.id === shuffledAnswersGlob.id))
       setStatistics((prev) => [
         ...prev,
         {
@@ -132,103 +165,24 @@ const Savanna = ({ match }) => {
           right: flag ? 1 : 0,
           wrong: !flag ? 1 : 0,
           ok: flag,
+          game,
+          status: shuffledAnswersGlob.status,
         },
       ])
     } else {
-      console.log("add")
       setStatistics(() => {
-        console.log("+")
         const newStat = statistics
         newStat[idx] = {
           ...statistics[idx],
           right: flag ? statistics[idx].right + 0.5 : statistics[idx].right,
           wrong: !flag ? statistics[idx].wrong + 0.5 : statistics[idx].wrong,
           ok: flag,
+          game,
+          status: shuffledAnswersGlob.status,
         }
 
         return newStat
       })
-    }
-
-    // const filtered = statistics.filter(
-    //   (el) => el.word !== shuffledAnswersGlob.word
-    // )
-    // setStatistics([
-    //   ...filtered,
-    //   {
-    //     id: shuffledAnswersGlob.id,
-    //     word: shuffledAnswersGlob.word,
-    //     translate: shuffledAnswersGlob.translate,
-    //     right: flag ? 1 : 0,
-    //     wrong: !flag ? 1 : 0,
-    //     ok: flag,
-    //   },
-    // ])
-  }
-
-  const runCycle = () => {
-    if (wordsCount >= 0) {
-      InCycle.on = true
-
-      isSelectRef.current = false
-      isWrongSelectRef.current = false
-
-      setAlive(true)
-      wordRef.current.style.animation = "none"
-      buttonsRef.current.style.animation = "none"
-
-      setTimeout(() => {
-        wordRef.current.style.animation = `fallWord ${speed}s linear`
-        buttonsRef.current.style.animation = `appear 2s`
-      }, 20)
-
-      wordRef.current.innerHTML = currentWordsPage[wordsCount].word ?? ""
-      shuffledAnswersGlob.id = currentWordsPage[wordsCount].id
-      shuffledAnswersGlob.translate = currentWordsPage[wordsCount].wordTranslate
-      shuffledAnswersGlob.word = currentWordsPage[wordsCount].word
-
-      const answers = [currentWordsPage[wordsCount].wordTranslate] || []
-
-      while (answers.length < 4) {
-        if (currentWordsPage.length > 4) {
-          const candidate =
-            currentWordsPage[random(0, currentWordsPage.length - 1)]
-              .wordTranslate
-          if (!answers.includes(candidate)) {
-            answers.push(candidate)
-          }
-        } else {
-          answers.push("один", "два", "три")
-        }
-      }
-
-      shuffledAnswersGlob.shufl = shuffle(answers)
-
-      setShuffledAnswers(shuffledAnswersGlob.shufl)
-      setTimeout(() => {
-        setAlive(false)
-        InCycle.on = false
-
-        if (wordRef.current) wordRef.current.innerHTML = ""
-        if (!isSelectRef.current || isWrongSelectRef.current) {
-          reduceLives()
-          setTitle(
-            `${currentWordsPage[wordsCount].word} - ${currentWordsPage[wordsCount].wordTranslate}`
-          )
-          addWordSToStatistic(false)
-        } else setTitle("Savanna")
-
-        if (wordsCount >= 0) {
-          setWordsCount(wordsCount - 1)
-        }
-      }, speed * 1000)
-    }
-  }
-
-  const startGame = () => {
-    setIsStartGame(true)
-    if (wordsCount >= 0 && InCycle.on === false && life > 0) {
-      runCycle()
     }
   }
 
@@ -280,28 +234,6 @@ const Savanna = ({ match }) => {
     isWrongSelectRef.current = true
   }
 
-  useEffect(() => {
-    if (match.params.reference) {
-      setReferenceFromBook(true)
-      if (referencePage === "textbook") {
-        if (isAuthorized || userCurrent.userId) {
-          dispatch(getUserWordsVocabulary(currentPage, currentGroup))
-        }
-        dispatch(getVocabulary(currentPage, currentGroup))
-      } else if (referencePage === "wordbook") {
-        dispatch(getCounterUser("hard"))
-      }
-    } else {
-      dispatch(getVocabulary(random(0, 29), 0))
-    }
-  }, [])
-
-  useEffect(() => {
-    if (wordsCount >= 0 && isStartGame && InCycle.on === false && life > 0) {
-      runCycle()
-    }
-  }, [wordsCount])
-
   const keyCompareHandler = (e) => {
     if (e.key === "1" || e.key === "2" || e.key === "3" || e.key === "4") {
       if (!isSelectRef.current) {
@@ -323,16 +255,13 @@ const Savanna = ({ match }) => {
     return () => {
       document.removeEventListener("keypress", keyCompareHandler)
     }
-  }, [])
+  })
 
   useEffect(() => {
     setWordsCount(() => {
       if (currentWordsPage === undefined || currentWordsPage === null) {
         return 0
       }
-      // if (currentWordsPage.length <= 0) {
-      //   return 0
-      // }
       return currentWordsPage.length - 1
     })
   }, [currentWordsPage])
@@ -369,14 +298,133 @@ const Savanna = ({ match }) => {
     }
   }
 
+  const SaveStatData = async () => {
+    const filtered = statistics.filter((el) => el.status !== "hard")
+    console.log("statistics", statistics)
+    console.log("filtered", filtered)
+
+    while (filtered.length > 0) {
+      try {
+        dispatch(addWordToWordBook(filtered.pop().id, "studied"))
+      } catch (e) {
+        console.log("есть", e)
+      }
+    }
+
+    // const promises = statistics.map(() => {
+    //   return dispatch(addWordToWordBook(statistics[0].id, "studied"))
+    // })
+    // await Promise.all(promises)
+    // // ждем когда всё промисы будут выполнены
+    // await Promise.all(promises)
+    // for (let index = 0; index < statistics.length; index += 1) {
+    //   await   dispatch(addWordToWordBook(statistics[0].id, "studied"))
+    // }
+
+    // if (statistics[0]) {
+    //   dispatch(addWordToWordBook(statistics[0].id, "studied"))
+    // }
+    signThenGetWords({ email: "test@test.com", password: "12345678" })
+  }
+
+  const reduceLives = () => {
+    if (life > 0) {
+      setLife((prev) => prev - 1)
+      console.log("life", life)
+    }
+  }
+
+  const runCycle = () => {
+    if (wordsCount >= 0) {
+      InCycle.on = true
+
+      isSelectRef.current = false
+      isWrongSelectRef.current = false
+
+      setAlive(true)
+      wordRef.current.style.animation = "none"
+      buttonsRef.current.style.animation = "none"
+
+      setTimeout(() => {
+        wordRef.current.style.animation = `fallWord ${speed}s linear`
+        buttonsRef.current.style.animation = `appear 2s`
+      }, 20)
+
+      wordRef.current.innerHTML = currentWordsPage[wordsCount].word ?? ""
+      shuffledAnswersGlob.id = currentWordsPage[wordsCount].id
+      shuffledAnswersGlob.translate = currentWordsPage[wordsCount].wordTranslate
+      shuffledAnswersGlob.word = currentWordsPage[wordsCount].word
+      // shuffledAnswersGlob.num = wordsCount
+      shuffledAnswersGlob.status = currentWordsPage[wordsCount]?.userWord
+        ? currentWordsPage[wordsCount].userWord.difficulty
+        : "new"
+
+      console.log("---->", currentWordsPage[wordsCount]?.userWord)
+
+      const answers = [currentWordsPage[wordsCount].wordTranslate] || []
+
+      while (answers.length < 4) {
+        if (currentWordsPage.length > 4) {
+          const candidate =
+            currentWordsPage[random(0, currentWordsPage.length - 1)]
+              .wordTranslate
+          if (!answers.includes(candidate)) {
+            answers.push(candidate)
+          }
+        } else {
+          answers.push("один", "два", "три")
+        }
+      }
+
+      shuffledAnswersGlob.shufl = shuffle(answers)
+
+      setShuffledAnswers(shuffledAnswersGlob.shufl)
+      setTimeout(() => {
+        setAlive(false)
+        InCycle.on = false
+
+        if (wordRef.current) wordRef.current.innerHTML = ""
+        if (!isSelectRef.current || isWrongSelectRef.current) {
+          reduceLives()
+          setTitle(
+            `${currentWordsPage[wordsCount].word} - ${currentWordsPage[wordsCount].wordTranslate}`
+          )
+          addWordSToStatistic(false)
+        } else setTitle("")
+
+        if (wordsCount >= 0) {
+          setWordsCount(wordsCount - 1)
+        }
+
+        console.log(`${wordsCount} ----- ${life}`)
+      }, speed * 1000)
+    }
+  }
+
+  useEffect(() => {
+    if (wordsCount >= 0 && isStartGame && InCycle.on === false && life > 0) {
+      runCycle()
+    } else SaveStatData()
+  }, [wordsCount])
+
+  const startGame = () => {
+    if (!spinner) {
+      console.log("currentWordsPage", currentWordsPage)
+      setIsStartGame(true)
+      if (wordsCount >= 0 && InCycle.on === false && life > 0) {
+        runCycle()
+      }
+    }
+  }
+
   return (
     <div
-      className="h-screen  w-full bg-cover bg-center"
+      className="h-screen relative w-full bg-cover bg-center"
       style={{ backgroundImage: `url(${savannaBack})` }}
     >
       <h1 className="text-3xl text-center pt-8  hidden  lg:block">{title}</h1>
 
-      <div className=" absolute top-24 left-1  md:left-10 md:top-20">
+      <div className=" absolute top-16 left-1  md:left-14 md:top-10">
         <h1 className="5xl"> {referenceFromBook}</h1>
         <div className="">
           {!referenceFromBook && (
@@ -402,7 +450,7 @@ const Savanna = ({ match }) => {
               hover:shadow-lg hover:bg-red-500 hover:text-white focus:outline-none"
             onClick={musicControlHandler}
           >
-            Musuc
+            Мелодия
           </button>
           <button
             type="button"
@@ -411,12 +459,12 @@ const Savanna = ({ match }) => {
         hover:shadow-lg hover:bg-green-900 focus:outline-none"
             onClick={startGame}
           >
-            start
+            {startButton}
           </button>
         </div>
       </div>
 
-      <div className="absolute  flex top-20 md:top-20 right-24">
+      <div className="absolute  flex top-5  right-24">
         {[...Array(life)].map((el, idx) => (
           // eslint-disable-next-line react/no-array-index-key
           <img key={idx} className="mx-0.5 w-6" src={heart} alt="life" />
@@ -424,13 +472,13 @@ const Savanna = ({ match }) => {
       </div>
 
       {/* exit */}
-      <div className="absolute top-20 right-5">
+      <div className="absolute top-5 right-5">
         <Link to="/games/">
           <img className="w-4" src={close} alt="X" />
         </Link>
       </div>
 
-      <div className="absolute top-20 right-14">
+      <div className="absolute top-5 right-14">
         <button type="button" onClick={doFullscreen}>
           <img className="w-6" src={fullscreen} alt="full" />
         </button>

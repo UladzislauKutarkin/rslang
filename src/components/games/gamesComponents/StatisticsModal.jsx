@@ -43,6 +43,7 @@ const StatisticsModal = ({ show, statistics, setWordsCount, setLife }) => {
               <strong>{`${filteredEl.word}`} </strong> -
               {`${filteredEl.translate}`}
               {` ${filteredEl.right}-${filteredEl.wrong}`}
+              {`--${filteredEl.status}--`}
             </div>
           ))}
       </div>
@@ -60,6 +61,7 @@ const StatisticsModal = ({ show, statistics, setWordsCount, setLife }) => {
               <strong>{`${filteredEl.word}`} </strong> -
               {`${filteredEl.translate}`}
               {` ${filteredEl.right}-${filteredEl.wrong}`}
+              {` ${filteredEl.status}`}
             </div>
           ))}
       </div>

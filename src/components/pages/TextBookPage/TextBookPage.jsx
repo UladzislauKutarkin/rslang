@@ -38,7 +38,7 @@ const TextBookPage = () => {
   // YA
   console.log(
     "all",
-    useSelector((state) => state)
+    useSelector((vocabulary) => vocabulary)
   )
   console.log("pagination.group, pagination.page ", group, pageNumber)
 

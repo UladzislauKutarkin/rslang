@@ -8,7 +8,7 @@ export const FETCH_VOCABULARY_COUNT = "FETCH_VOCABULARY_COUNT"
 
 const initialState = {
   vocabulary: null,
-  isLoading: false,
+  isLoading: true,
 }
 
 const VocabularyReducer = (state = initialState, action) => {
@@ -30,7 +30,7 @@ const VocabularyReducer = (state = initialState, action) => {
     case FETCH_VOCABULARY_FAILURE:
       return {
         ...state,
-        isLoading: false,
+        isLoading: true,
         vocabulary: null,
         error: action.payload,
       }
@@ -69,7 +69,8 @@ export const getUserWordsVocabulary = (page, group) => (dispatch) => {
   const { userID } = JSON.parse(localStorage.getItem("user"))
   axios
     .get(
-      `/users/${userID}/aggregatedWords?wordsPerPage=20&page=${page}&group=${group}&filter=%7B%22$or%22:[%7B%22userWord.difficulty%22:%22hard%22%7D,%7B%22userWord%22:null%7D]%7D`,
+      `/users/${userID}/aggregatedWords?wordsPerPage=20&page=${page}
+      &group=${group}&filter=%7B%22$or%22:[%7B%22userWord.difficulty%22:%22hard%22%7D,%7B%22userWord%22:null%7D]%7D`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
