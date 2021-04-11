@@ -20,7 +20,7 @@ const loginUser = async (user) => {
 
 // loginUser({ email: "test@test.com", password: "12345678" })
 
-// get users words
+// get users word
 const getUserWord = async ({ userId, wordId, token }) => {
   const rawResponse = await fetch(
     `https://rs-lang-back.herokuapp.com/users/${userId}/words/${wordId}`,
@@ -179,6 +179,55 @@ const signThenCreateUsersWord = async (user, wordId, word) => {
 //   },
 // })
 
+// del all words
+
+const signThenGetWordsThenDelAll = async (user) => {
+  const rawResponse = await fetch("https://rs-lang-back.herokuapp.com/signin", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(user),
+  })
+  const userData = await rawResponse.json()
+  const wordsResponse = await fetch(
+    `https://rs-lang-back.herokuapp.com/users/${userData.userId}/words/`,
+    {
+      method: "GET",
+      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${userData.token}`,
+        Accept: "application/json",
+      },
+    }
+  )
+
+  const userWords = await wordsResponse.json()
+
+  console.log("signThenGetWords", userWords)
+  // eslint-disable-next-line no-restricted-syntax
+  for (const word of userWords) {
+    console.log(word.id)
+    // eslint-disable-next-line no-await-in-loop
+    const res = await fetch(
+      `https://rs-lang-back.herokuapp.com/users/${userData.userId}/words/${word.id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${userData.token}`,
+        },
+      }
+    )
+    // eslint-disable-next-line no-await-in-loop
+    const res1 = await res.text()
+    console.log(res1)
+    // eslint-disable-next-line no-await-in-loop
+    // const res = await Response.json()
+    // console.log(res)
+  }
+}
+
 export {
   loginUser,
   getUserWord,
@@ -186,4 +235,5 @@ export {
   signThenGetAggregatedWords,
   signThenGetSpecWords,
   signThenCreateUsersWord,
+  signThenGetWordsThenDelAll,
 }

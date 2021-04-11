@@ -35,9 +35,15 @@ import correct from "../../../assets/sound/correct.mp3"
 import wrong from "../../../assets/sound/wrong.mp3"
 
 import { shuffle } from "../../../helpers/shuffle"
-import { signThenGetWords } from "../../../api/reqRespTest"
+import {
+  getUserWord,
+  signThenGetWords,
+  signThenGetWordsThenDelAll,
+} from "../../../api/reqRespTest"
 
 const Savanna = ({ match }) => {
+  // signThenGetWordsThenDelAll({ email: "test@test.com", password: "12345678" })
+
   const referencePage = match.params.reference ?? ""
   const currentGroup = match.params.group ?? 0
   const currentPage = match.params.page ?? 0
@@ -93,61 +99,36 @@ const Savanna = ({ match }) => {
   }
   const currentWordsPage = useSelector(cloneSelector)
 
-  // console.log("currentWordsPage 0", currentWordsPage[0].userWord)
-
-  // console.log("wordsCount", wordsCount)
   const userCurrent = useSelector(({ user }) => user.user)
   // eslint-disable-next-line no-unused-vars
   const spinner = useSelector(({ vocabulary }) => vocabulary.isLoading)
 
   useEffect(() => {
-    // const spinner1 = spinner ? "Загрузка..." : "Старт"
     setStartButton(() => {
       return spinner ? "Загрузка..." : "Старт"
     })
   }, [spinner])
-  // useEffect(() => {
-  //   console.log("currentWordsPage", currentWordsPage)
-  // }, [currentWordsPage])
 
   // Array.from({ length: 20 }, (_, i) => {
   //   return { word: `word-${i}`, wordTranslate: `translate-${i}` }
 
   useEffect(() => {
     if (referencePage) {
-      console.log("referencePage")
       if (referencePage === "textbook") {
-        console.log("referencePage -> textbook")
         if (isAuthorized || userCurrent.userId) {
-          console.log("referencePage -> textbook -> aut")
           dispatch(getUserWordsVocabulary(currentPage, currentGroup))
         } else {
-          console.log("referencePage -> textbook -> not")
           dispatch(getVocabulary(currentPage, currentGroup))
         }
       }
     } else {
-      console.log("menu")
+      //  console.log(" from menu")
       dispatch(getVocabulary(random(0, 29), 0))
     }
 
-    // if (match.params.reference) {
-    //   setReferenceFromBook(true)
-    //   if (referencePage === "textbook") {
-    //     console.log("disp textbook")
-    //     if (isAuthorized || userCurrent.userId) {
-    //       console.log("disp textbook => au")
-    //       dispatch(getUserWordsVocabulary(currentPage, currentGroup))
-    //     } else {
-    //       console.log("disp textbook => not au")
-    //       dispatch(getVocabulary(currentPage, currentGroup))
-    //     }
-    //   } else if (referencePage === "wordbook") {
+    //   }  if (referencePage === "wordbook") {
     //     dispatch(getCounterUser("hard"))
     //   }
-    // } else {
-    //   dispatch(getVocabulary(random(0, 29), 0))
-    // }
   }, [])
 
   // })
@@ -300,37 +281,39 @@ const Savanna = ({ match }) => {
 
   const SaveStatData = async () => {
     const filtered = statistics.filter((el) => el.status !== "hard")
-    console.log("statistics", statistics)
-    console.log("filtered", filtered)
+    // console.log("statistics", statistics)
+    // console.log("filtered", filtered)
 
-    while (filtered.length > 0) {
-      try {
-        dispatch(addWordToWordBook(filtered.pop().id, "studied"))
-      } catch (e) {
-        console.log("есть", e)
+    const { token } = JSON.parse(localStorage.getItem("user"))
+    const { userID } = JSON.parse(localStorage.getItem("user"))
+
+    const wordsResponse = await fetch(
+      `https://rs-lang-back.herokuapp.com/users/${userID}/words/`,
+      {
+        method: "GET",
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+      }
+    )
+
+    const userWords = await wordsResponse.json()
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const statItem of filtered) {
+      const wordMatch = userWords.find((item) => item.wordId === statItem.id)
+      if (wordMatch === undefined) {
+        // eslint-disable-next-line no-await-in-loop
+        await dispatch(addWordToWordBook(filtered.pop().id, "studied"))
       }
     }
-
-    // const promises = statistics.map(() => {
-    //   return dispatch(addWordToWordBook(statistics[0].id, "studied"))
-    // })
-    // await Promise.all(promises)
-    // // ждем когда всё промисы будут выполнены
-    // await Promise.all(promises)
-    // for (let index = 0; index < statistics.length; index += 1) {
-    //   await   dispatch(addWordToWordBook(statistics[0].id, "studied"))
-    // }
-
-    // if (statistics[0]) {
-    //   dispatch(addWordToWordBook(statistics[0].id, "studied"))
-    // }
-    signThenGetWords({ email: "test@test.com", password: "12345678" })
   }
 
   const reduceLives = () => {
     if (life > 0) {
       setLife((prev) => prev - 1)
-      console.log("life", life)
     }
   }
 
@@ -358,8 +341,6 @@ const Savanna = ({ match }) => {
       shuffledAnswersGlob.status = currentWordsPage[wordsCount]?.userWord
         ? currentWordsPage[wordsCount].userWord.difficulty
         : "new"
-
-      console.log("---->", currentWordsPage[wordsCount]?.userWord)
 
       const answers = [currentWordsPage[wordsCount].wordTranslate] || []
 
@@ -395,8 +376,6 @@ const Savanna = ({ match }) => {
         if (wordsCount >= 0) {
           setWordsCount(wordsCount - 1)
         }
-
-        console.log(`${wordsCount} ----- ${life}`)
       }, speed * 1000)
     }
   }
@@ -404,12 +383,13 @@ const Savanna = ({ match }) => {
   useEffect(() => {
     if (wordsCount >= 0 && isStartGame && InCycle.on === false && life > 0) {
       runCycle()
-    } else SaveStatData()
+    } else if (wordsCount === -1 || life === 0) {
+      SaveStatData()
+    }
   }, [wordsCount])
 
   const startGame = () => {
     if (!spinner) {
-      console.log("currentWordsPage", currentWordsPage)
       setIsStartGame(true)
       if (wordsCount >= 0 && InCycle.on === false && life > 0) {
         runCycle()
