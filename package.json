@@ -58,7 +58,7 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "craco build && tailwindcss build /src/styles.css -o /public/styles.css",
+    "build": "craco build",
     "test": "jest",
     "eject": "react-scripts eject",
     "lint": "eslint ./src --fix"
