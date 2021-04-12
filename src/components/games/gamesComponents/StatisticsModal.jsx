@@ -65,7 +65,7 @@ const StatisticsModal = ({ show, statistics, setWordsCount, setLife }) => {
             </div>
           ))}
       </div>
-      <div className=" mt-8">
+      <div className="justify-around flex flex-wrap mt-8">
         <button
           type="button"
           className="focus:outline-none mx-5 text-white text-sm py-1 px-5 rounded-md bg-purple-800 hover:bg-purple-900 hover:shadow-lg"
