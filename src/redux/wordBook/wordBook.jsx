@@ -75,12 +75,12 @@ export const getUsersWords = (page = 0, queryDifficulty, group = 0) => (
     })
 }
 
-export const getStudied = (queryDifficulty) => (dispatch) => {
+export const getStudied = () => (dispatch) => {
   const { token } = JSON.parse(localStorage.getItem("user"))
   const { userID } = JSON.parse(localStorage.getItem("user"))
   axios
     .get(
-      `users/${userID}/aggregatedWords?wordsPerPage=20&filter={"userWord.difficulty":"${queryDifficulty}"}`,
+      `users/${userID}/aggregatedWords?wordsPerPage=20&filter=%7B%22$or%22:[%7B%22userWord.difficulty%22:%22hard%22%7D,%7B%22userWord.difficulty%22:%22studied%22%7D]%7D`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

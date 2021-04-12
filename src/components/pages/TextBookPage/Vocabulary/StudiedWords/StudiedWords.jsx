@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { getUsersWords } from "../../../../../redux/wordBook/wordBook"
+import { getStudied } from "../../../../../redux/wordBook/wordBook"
 import WordCard from "../WordCard"
 import { getCounterUser } from "../../../../../redux/vocabulary/vocabulary"
 import { changePage } from "../../../../../redux/pagination/pagination"
@@ -15,7 +15,7 @@ const StudiedWords = () => {
     ({ pagination }) => pagination.pageStudiedVocabulary
   )
   useEffect(() => {
-    dispatch(getUsersWords(pageNumber, "hard"))
+    dispatch(getStudied())
     dispatch(getCounterUser("hard"))
   }, [dispatch, pageNumber])
 
