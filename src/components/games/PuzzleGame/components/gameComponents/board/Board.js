@@ -46,7 +46,7 @@ function Board() {
         <div
           className={`${styles.img} ${styles.appear}`}
           style={{
-            backgroundImage: `url(${bg.imageSrc})`,
+            backgroundImage: `url(${bg.image})`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "863px 460px",
           }}

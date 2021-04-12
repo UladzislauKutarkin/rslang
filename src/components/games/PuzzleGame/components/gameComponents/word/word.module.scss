@@ -31,18 +31,12 @@
     white-space: nowrap;
     user-select: none;
 }
-.word span {
-    user-select: none;
-    -moz-user-select: none;
-}
-
 .word::before {
     position: absolute;
     z-index: 4;
     width: 27px;
     height: 32px;
     background-color: transparent;
-    -webkit-clip-path: url(#my-clip-path);
     clip-path: url(#my-clip-path);
     content: '';
     left: 0;
@@ -57,7 +51,6 @@
     width: 24px;
     height: 30px;
     background-color: #fbd6d6;
-    -webkit-clip-path: url(#my-clip-path);
     clip-path: url(#my-clip-path);
 }
 .clipped2 {
@@ -67,7 +60,6 @@
     width: 25px;
     height: 34px;
     background-color: #333333c2;
-    -webkit-clip-path: url(#my-clip-path);
     clip-path: url(#my-clip-path);
 }
 .word:hover {

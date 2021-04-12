@@ -3,12 +3,6 @@ import getPages from "../api/getPages"
 import getWords from "../api/getWords"
 import shuffleArray from "./shuffleArray"
 import settingsStored from "../localStorage/settings"
-import paintings1 from "../paints/level1"
-import paintings2 from "../paints/level2"
-import paintings3 from "../paints/level3"
-import paintings4 from "../paints/level4"
-import paintings5 from "../paints/level5"
-import paintings6 from "../paints/level6"
 import rawData from "./rawData"
 
 async function makePage(dispatchGame, roundDifficulty) {
@@ -58,16 +52,11 @@ async function preloadRound(dispatchGame, stateGame, difficulty, page) {
       currWordIndex,
     },
   })
-  let paints = paintings1
-  if (roundDifficulty === 2) paints = paintings2
-  else if (roundDifficulty === 3) paints = paintings3
-  else if (roundDifficulty === 4) paints = paintings4
-  else if (roundDifficulty === 5) paints = paintings5
-  else if (roundDifficulty === 6) paints = paintings6
+  let paints = words
   const paint = {
     ...paints[pageN],
-    image: rawData({ filename: paints[pageN].imageSrc, paint: true }),
-    cutSrc: rawData({ filename: paints[pageN].cutSrc, paint: true }),
+    image: rawData({ filename: paints[pageN].image, paint: true }),
+    cutSrc: rawData({ filename: paints[pageN].image, paint: true }),
   }
   dispatchGame({ type: "roundImage", value: paint })
 }

@@ -1,9 +1,9 @@
-const url = "https://raw.githubusercontent.com/AlekseyGrimm/Lang-Data/master/"
+const url = "https://rs-lang-back.herokuapp.com/"
 
 function rawData({ filename, paint }) {
-  if (!paint) return url + filename
+  if (paint) return url + filename
 
-  const url2 = `https://raw.githubusercontent.com/AlekseyGrimm/RS_Lang_rawData/master/${filename}`
+  const url2 = `https://rs-lang-back.herokuapp.com/${filename}`
   return url2
 }
 

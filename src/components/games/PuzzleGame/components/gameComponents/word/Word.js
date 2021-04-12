@@ -3,7 +3,7 @@ import React, { useContext, useState, useEffect, useRef } from "react"
 import { useDrag, useDrop } from "react-dnd"
 import { storeGame } from "../../storeGame"
 import ItemTypes from "../ItemTypes"
-import styles from "./word.module.css"
+import styles from "./word.module.scss"
 
 function Word(props) {
   const gameState = useContext(storeGame)
@@ -71,7 +71,7 @@ function Word(props) {
       : 9 - stateGame.currWordIndex
     let stylesWordBg = {
       width: `${width.toFixed(1)}px`,
-      backgroundImage: `url(${bg.imageSrc})`,
+      backgroundImage: `url(${bg.image})`,
       backgroundRepeat: "no-repeat",
       backgroundSize: `${presetW}px 460px`,
       backgroundPosition: `-${offsetWidth}px -${indexSent * 46}px`,
@@ -81,7 +81,7 @@ function Word(props) {
         ? width + offset * presetW
         : presetW - 20
     let stylesClip = {
-      backgroundImage: `url(${bg.imageSrc})`,
+      backgroundImage: `url(${bg.image})`,
       backgroundSize: `${presetW}px 460px`,
       backgroundPosition: `-${offsetForCircle.toFixed(0)}px ${-5 + indexSent * -46
         }px`,
@@ -117,7 +117,7 @@ function Word(props) {
     props.buildingWord,
     stateGame.currentSentence,
     stateGame.readyToContinue,
-    bg.imageSrc,
+    bg.image,
   ])
   useEffect(() => {
     if (!props.mistake) setCheckClass("")
@@ -155,7 +155,7 @@ function Word(props) {
     },
     canDrop,
   })
-  
+
   const [{ isDragging }, drag] = useDrag({
     item: {
       type: ItemTypes.WORD,
