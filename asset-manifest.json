@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/rslang/static/css/main.e09808e6.chunk.css",
+    "main.css": "/rslang/static/css/main.71f53413.chunk.css",
     "main.js": "/rslang/static/js/main.cf79f2d8.chunk.js",
     "main.js.map": "/rslang/static/js/main.cf79f2d8.chunk.js.map",
     "runtime-main.js": "/rslang/static/js/runtime-main.ae423699.js",
@@ -10,7 +10,7 @@
     "static/js/2.3064e703.chunk.js.map": "/rslang/static/js/2.3064e703.chunk.js.map",
     "index.html": "/rslang/index.html",
     "static/css/2.4dc972f6.chunk.css.map": "/rslang/static/css/2.4dc972f6.chunk.css.map",
-    "static/css/main.e09808e6.chunk.css.map": "/rslang/static/css/main.e09808e6.chunk.css.map",
+    "static/css/main.71f53413.chunk.css.map": "/rslang/static/css/main.71f53413.chunk.css.map",
     "static/js/2.3064e703.chunk.js.LICENSE.txt": "/rslang/static/js/2.3064e703.chunk.js.LICENSE.txt",
     "static/media/audio_promo.2b5f25c1.jpg": "/rslang/static/media/audio_promo.2b5f25c1.jpg",
     "static/media/back_audio.aae09786.jpg": "/rslang/static/media/back_audio.aae09786.jpg",
@@ -46,7 +46,7 @@
     "static/js/runtime-main.ae423699.js",
     "static/css/2.4dc972f6.chunk.css",
     "static/js/2.3064e703.chunk.js",
-    "static/css/main.e09808e6.chunk.css",
+    "static/css/main.71f53413.chunk.css",
     "static/js/main.cf79f2d8.chunk.js"
   ]
 }
