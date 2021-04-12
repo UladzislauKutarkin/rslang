@@ -36,7 +36,7 @@ module.exports = {
         "100%": { transform: "rotateY(180deg)" },
       },
       fallWord: {
-        "0%": { top: "22vh" },
+        "0%": { top: "250px" },
         "100%": { top: "75vh" },
       },
       disappear: {
