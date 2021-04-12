@@ -7,7 +7,10 @@ import PropTypes from "prop-types"
 import { useDispatch, useSelector } from "react-redux"
 import { createSelector } from "reselect"
 // eslint-disable-next-line no-unused-vars
-import { addWordToWordBook } from "../../../redux/wordBook/wordBook"
+import {
+  addWordToWordBook,
+  getUsersWords,
+} from "../../../redux/wordBook/wordBook"
 
 import {
   getUserWordsVocabulary,
@@ -80,28 +83,44 @@ const Savanna = ({ match }) => {
   const wrongSound = useMemo(() => new Audio(wrong), [])
   const dispatch = useDispatch()
   let cloneSelector
+  let cloneSpinner
+
+  const spinnerFromTextBook = createSelector(
+    (state) => state.vocabulary,
+    (vocabulary) => vocabulary.isLoading
+  )
+
+  const spinnerFromWordBook = createSelector(
+    (state) => state.wordBook,
+    (wordBook) => wordBook.isLoading
+  )
+
   const selectPageFromTextBook = createSelector(
     (state) => state.vocabulary,
     (vocabulary) => vocabulary.vocabulary
   )
 
-  // eslint-disable-next-line no-unused-vars
-  const selectPageStudied = createSelector(
+  const selectPageFromWordBook = createSelector(
     (state) => state.wordBook,
-    (wordBook) => wordBook.wordBook[0]?.paginatedResults
+    (wordBook) => wordBook.wordBook
   )
 
   // eslint-disable-next-line no-constant-condition
-  if (referencePage === "wordbook") {
-    cloneSelector = selectPageStudied
+  if (referencePage === "textbook") {
+    cloneSelector = selectPageFromTextBook
+    cloneSpinner = spinnerFromTextBook
+  } else if (referencePage === "wordbook" || referencePage === "studied") {
+    cloneSelector = selectPageFromWordBook
+    cloneSpinner = spinnerFromWordBook
   } else {
     cloneSelector = selectPageFromTextBook
+    cloneSpinner = spinnerFromTextBook
   }
   const currentWordsPage = useSelector(cloneSelector)
 
   const userCurrent = useSelector(({ user }) => user.user)
   // eslint-disable-next-line no-unused-vars
-  const spinner = useSelector(({ vocabulary }) => vocabulary.isLoading)
+  const spinner = useSelector(cloneSpinner)
 
   useEffect(() => {
     setStartButton(() => {
@@ -114,17 +133,27 @@ const Savanna = ({ match }) => {
 
   useEffect(() => {
     if (referencePage) {
+      setReferenceFromBook(true)
       if (referencePage === "textbook") {
+        console.log("dispatch textbook")
         if (isAuthorized || userCurrent.userId) {
           dispatch(getUserWordsVocabulary(currentPage, currentGroup))
         } else {
           dispatch(getVocabulary(currentPage, currentGroup))
         }
       } else if (referencePage === "wordbook") {
-        dispatch(getCounterUser("hard"))
+        console.log("dispatch textbook (hard)")
+        if (isAuthorized || userCurrent.userId) {
+          dispatch(getUsersWords(0, "hard", 0))
+        }
+      } else if (referencePage === "studied") {
+        console.log("dispatch textbook (studied)")
+        if (isAuthorized || userCurrent.userId) {
+          dispatch(getCounterUser("studied"))
+        }
       }
     } else {
-      //  console.log(" from menu")
+      console.log(" from menu")
       dispatch(getVocabulary(random(0, 29), 0))
     }
   }, [])
@@ -279,7 +308,7 @@ const Savanna = ({ match }) => {
 
   const SaveStatData = async () => {
     console.log("SaveStatData")
-    if (referencePage === "textbook") {
+    if ((isAuthorized || userCurrent.userId) && referencePage === "textbook") {
       console.log("go")
       const filtered = statistics.filter((el) => el.status !== "hard")
       const { token } = JSON.parse(localStorage.getItem("user"))
@@ -304,7 +333,7 @@ const Savanna = ({ match }) => {
         const wordMatch = userWords.find((item) => item.wordId === statItem.id)
         if (wordMatch === undefined) {
           // eslint-disable-next-line no-await-in-loop
-          await dispatch(addWordToWordBook(filtered.pop().id, "studied"))
+          await dispatch(addWordToWordBook(statItem.id, "studied"))
         }
       }
     }
@@ -403,7 +432,7 @@ const Savanna = ({ match }) => {
       <h1 className="text-3xl text-center pt-8  hidden  lg:block">{title}</h1>
 
       <div className=" absolute top-16 left-1  md:left-14">
-        <h1 className="5xl"> {referenceFromBook}</h1>
+        {/* <h1 className="5xl brd ">ad {referenceFromBook}</h1> */}
         <div className="">
           {!referenceFromBook && (
             /* eslint-disable-next-line jsx-a11y/no-onchange */
@@ -465,7 +494,7 @@ const Savanna = ({ match }) => {
       {/* word div */}
       <div
         ref={wordRef}
-        className="-m-32  brd w-64  absolute text-2xl text-center"
+        className="-m-32 w-64  absolute text-2xl text-center"
         style={{ top: "250px", left: "50vw" }}
       >
         {" "}

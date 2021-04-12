@@ -12,6 +12,7 @@ const initialState = {
   wordBook: null,
   deletedCounter: 0,
   hardWordCounter: 0,
+  isLoading: true,
 }
 
 const wordBookReducer = (state = initialState, action) => {
@@ -19,7 +20,7 @@ const wordBookReducer = (state = initialState, action) => {
     case ADD_USER_WORD:
       return { ...state, wordBook: action.payload }
     case GET_USER_WORD:
-      return { ...state, wordBook: action.payload }
+      return { ...state, wordBook: action.payload, isLoading: false }
     case STUDIED_USER_WORD:
       return { ...state, wordBook: action.payload }
     case DELETE_USER_WORD:
