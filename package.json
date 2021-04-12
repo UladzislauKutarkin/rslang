@@ -53,7 +53,7 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "babel src -d lib",
+    "build": "craco build",
     "test": "jest",
     "eject": "react-scripts eject",
     "lint": "eslint ./src --fix"
