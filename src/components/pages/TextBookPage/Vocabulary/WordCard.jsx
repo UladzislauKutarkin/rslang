@@ -74,6 +74,10 @@ const WordCard = ({
                     {
                       "border-2 border-red-800 rounded-lg":
                         item?.userWord?.difficulty === "hard",
+                    },
+                    {
+                      "border-2 border-black rounded-lg":
+                        item?.userWord?.difficulty === "studied",
                     }
                   )}
                 >

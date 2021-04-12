@@ -103,7 +103,7 @@ const TextBookPage = () => {
             <div
               key={item.id}
               className={cn(
-                "flex-auto self-stretch items-stretch justify-center",
+                "flex-auto self-stretch  rounded-lg items-stretch justify-center",
                 {
                   "border-2 border-red-800 rounded-lg":
                     complicatedWords.includes(item.id) ||

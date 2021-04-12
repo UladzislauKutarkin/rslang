@@ -15,8 +15,8 @@ const StudiedWords = () => {
     ({ pagination }) => pagination.pageStudiedVocabulary
   )
   useEffect(() => {
-    dispatch(getStudied())
-    dispatch(getCounterUser("hard"))
+    dispatch(getStudied(pageNumber))
+    dispatch(getCounterUser("studied"))
   }, [dispatch, pageNumber])
 
   const handleButtonClick = useCallback(
