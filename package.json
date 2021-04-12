@@ -83,7 +83,7 @@
   "devDependencies": {
     "@babel/preset-env": "^7.13.12",
     "@babel/preset-react": "^7.13.13",
-    "@tailwindcss/postcss7-compat": "^2.0.4",
+    "@tailwindcss/postcss7-compat": "^2.1.0",
     "autoprefixer": "9",
     "enzyme": "^3.11.0",
     "eslint-config-airbnb": "^18.2.1",
