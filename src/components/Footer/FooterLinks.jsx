@@ -9,7 +9,7 @@ const FooterLinks = ({ gitLink, gitName, icon }) => {
           <img
             className="transform hover:scale-110 motion-reduce:transform-none bg-white text-lightBlue-400 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
             src={icon}
-            alt="logo"
+            alt="icon"
           />
         </a>
       </div>
@@ -21,7 +21,8 @@ const FooterLinks = ({ gitLink, gitName, icon }) => {
 export default FooterLinks
 
 FooterLinks.propTypes = {
-  icon: PropTypes.objectOf(PropTypes.string).isRequired,
+  icon: PropTypes.string.isRequired,
+  // icon: PropTypes.objectOf(PropTypes.string).isRequired,
   gitLink: PropTypes.string,
   gitName: PropTypes.string,
 }

@@ -73,7 +73,7 @@ const Savanna = ({ match }) => {
   const isSelectRef = useRef()
 
   const InCycle = useMemo(() => ({ on: false }), [])
-  const speed = 2
+  const speed = 5
   const game = "savanna"
 
   const shuffledAnswersGlob = useMemo(() => ({ shufl: ["test"] }), [])
@@ -135,25 +135,21 @@ const Savanna = ({ match }) => {
     if (referencePage) {
       setReferenceFromBook(true)
       if (referencePage === "textbook") {
-        console.log("dispatch textbook")
         if (isAuthorized || userCurrent.userId) {
           dispatch(getUserWordsVocabulary(currentPage, currentGroup))
         } else {
           dispatch(getVocabulary(currentPage, currentGroup))
         }
       } else if (referencePage === "wordbook") {
-        console.log("dispatch textbook (hard)")
         if (isAuthorized || userCurrent.userId) {
           dispatch(getUsersWords(0, "hard", 0))
         }
       } else if (referencePage === "studied") {
-        console.log("dispatch textbook (studied)")
         if (isAuthorized || userCurrent.userId) {
           dispatch(getCounterUser("studied"))
         }
       }
     } else {
-      console.log(" from menu")
       dispatch(getVocabulary(random(0, 29), 0))
     }
   }, [])
@@ -161,7 +157,9 @@ const Savanna = ({ match }) => {
   // })
 
   const addWordSToStatistic = (flag) => {
-    const idx = statistics.findIndex((el) => el.id === shuffledAnswersGlob.id)
+    const idx = statistics.findIndex((el) => {
+      return el.id === shuffledAnswersGlob.id
+    })
 
     if (idx === -1) {
       setStatistics((prev) => [
@@ -307,9 +305,7 @@ const Savanna = ({ match }) => {
   }
 
   const SaveStatData = async () => {
-    console.log("SaveStatData")
     if ((isAuthorized || userCurrent.userId) && referencePage === "textbook") {
-      console.log("go")
       const filtered = statistics.filter((el) => el.status !== "hard")
       const { token } = JSON.parse(localStorage.getItem("user"))
       const { userID } = JSON.parse(localStorage.getItem("user"))
@@ -392,13 +388,17 @@ const Savanna = ({ match }) => {
         InCycle.on = false
 
         if (wordRef.current) wordRef.current.innerHTML = ""
+
         if (!isSelectRef.current || isWrongSelectRef.current) {
           reduceLives()
           setTitle(
             `${currentWordsPage[wordsCount].word} - ${currentWordsPage[wordsCount].wordTranslate}`
           )
-          addWordSToStatistic(false)
         } else setTitle("")
+
+        if (!isSelectRef.current) {
+          addWordSToStatistic(false)
+        }
 
         if (wordsCount >= 0) {
           setWordsCount(wordsCount - 1)
