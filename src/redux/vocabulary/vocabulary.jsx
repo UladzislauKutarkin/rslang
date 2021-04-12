@@ -54,7 +54,7 @@ export const fetchVocabularyFailure = (error) => ({
   payload: error.message,
 })
 
-export const getVocabulary = (page, group) => (dispatch) => {
+export const getVocabulary = (page = 0, group = 0) => (dispatch) => {
   axios
     .get(`https://rs-lang-back.herokuapp.com/words?page=${page}&group=${group}`)
     .then(({ data }) => {
@@ -64,7 +64,7 @@ export const getVocabulary = (page, group) => (dispatch) => {
     .catch((error) => dispatch(fetchVocabularyFailure(error)))
 }
 
-export const getUserWordsVocabulary = (page, group) => (dispatch) => {
+export const getUserWordsVocabulary = (page = 0, group = 0) => (dispatch) => {
   const { token } = JSON.parse(localStorage.getItem("user"))
   const { userID } = JSON.parse(localStorage.getItem("user"))
   axios

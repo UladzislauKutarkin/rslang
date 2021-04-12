@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 
 const Counter = ({ counter }) => {
   return (
-    <div className="w-1/3 h-10">
+    <div className="h-20">
       <div className="inline-block">
         <div>
           <div className="flex flex-row bg-white shadow-sm rounded p-4">
