@@ -35,11 +35,11 @@ import correct from "../../../assets/sound/correct.mp3"
 import wrong from "../../../assets/sound/wrong.mp3"
 
 import { shuffle } from "../../../helpers/shuffle"
-import {
-  getUserWord,
-  signThenGetWords,
-  signThenGetWordsThenDelAll,
-} from "../../../api/reqRespTest"
+// import {
+//   getUserWord,
+//   signThenGetWords,
+//   signThenGetWordsThenDelAll,
+// } from "../../../api/reqRespTest"
 
 const Savanna = ({ match }) => {
   // signThenGetWordsThenDelAll({ email: "test@test.com", password: "12345678" })
@@ -120,15 +120,13 @@ const Savanna = ({ match }) => {
         } else {
           dispatch(getVocabulary(currentPage, currentGroup))
         }
+      } else if (referencePage === "wordbook") {
+        dispatch(getCounterUser("hard"))
       }
     } else {
       //  console.log(" from menu")
       dispatch(getVocabulary(random(0, 29), 0))
     }
-
-    //   }  if (referencePage === "wordbook") {
-    //     dispatch(getCounterUser("hard"))
-    //   }
   }, [])
 
   // })
@@ -280,33 +278,34 @@ const Savanna = ({ match }) => {
   }
 
   const SaveStatData = async () => {
-    const filtered = statistics.filter((el) => el.status !== "hard")
-    // console.log("statistics", statistics)
-    // console.log("filtered", filtered)
+    console.log("SaveStatData")
+    if (referencePage === "textbook") {
+      console.log("go")
+      const filtered = statistics.filter((el) => el.status !== "hard")
+      const { token } = JSON.parse(localStorage.getItem("user"))
+      const { userID } = JSON.parse(localStorage.getItem("user"))
 
-    const { token } = JSON.parse(localStorage.getItem("user"))
-    const { userID } = JSON.parse(localStorage.getItem("user"))
+      const wordsResponse = await fetch(
+        `https://rs-lang-back.herokuapp.com/users/${userID}/words/`,
+        {
+          method: "GET",
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+        }
+      )
 
-    const wordsResponse = await fetch(
-      `https://rs-lang-back.herokuapp.com/users/${userID}/words/`,
-      {
-        method: "GET",
-        withCredentials: true,
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      }
-    )
+      const userWords = await wordsResponse.json()
 
-    const userWords = await wordsResponse.json()
-
-    // eslint-disable-next-line no-restricted-syntax
-    for (const statItem of filtered) {
-      const wordMatch = userWords.find((item) => item.wordId === statItem.id)
-      if (wordMatch === undefined) {
-        // eslint-disable-next-line no-await-in-loop
-        await dispatch(addWordToWordBook(filtered.pop().id, "studied"))
+      // eslint-disable-next-line no-restricted-syntax
+      for (const statItem of filtered) {
+        const wordMatch = userWords.find((item) => item.wordId === statItem.id)
+        if (wordMatch === undefined) {
+          // eslint-disable-next-line no-await-in-loop
+          await dispatch(addWordToWordBook(filtered.pop().id, "studied"))
+        }
       }
     }
   }
@@ -337,7 +336,6 @@ const Savanna = ({ match }) => {
       shuffledAnswersGlob.id = currentWordsPage[wordsCount].id
       shuffledAnswersGlob.translate = currentWordsPage[wordsCount].wordTranslate
       shuffledAnswersGlob.word = currentWordsPage[wordsCount].word
-      // shuffledAnswersGlob.num = wordsCount
       shuffledAnswersGlob.status = currentWordsPage[wordsCount]?.userWord
         ? currentWordsPage[wordsCount].userWord.difficulty
         : "new"
@@ -404,7 +402,7 @@ const Savanna = ({ match }) => {
     >
       <h1 className="text-3xl text-center pt-8  hidden  lg:block">{title}</h1>
 
-      <div className=" absolute top-16 left-1  md:left-14 md:top-10">
+      <div className=" absolute top-16 left-1  md:left-14">
         <h1 className="5xl"> {referenceFromBook}</h1>
         <div className="">
           {!referenceFromBook && (
@@ -467,8 +465,8 @@ const Savanna = ({ match }) => {
       {/* word div */}
       <div
         ref={wordRef}
-        className="-m-32  h-50 w-64  absolute text-2xl text-center"
-        style={{ top: "100px", left: "50vw" }}
+        className="-m-32  brd w-64  absolute text-2xl text-center"
+        style={{ top: "250px", left: "50vw" }}
       >
         {" "}
       </div>
