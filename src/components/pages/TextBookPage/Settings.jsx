@@ -132,7 +132,7 @@ const Settings = ({
                       "bg-green-200 hover:bg-green-600": index === 2,
                     },
                     {
-                      "bg-green-600 hover:bg-green-800": index === 3,
+                      "bg-purple-200 hover:bg-purple-600": index === 3,
                     },
                     {
                       "bg-yellow-200 hover:bg-yellow-600": index === 4,
@@ -164,11 +164,12 @@ Settings.propTypes = {
   isStudied: PropTypes.bool,
   isCounter: PropTypes.bool,
   location: PropTypes.string.isRequired,
-  groupType: PropTypes.string.isRequired,
+  groupType: PropTypes.string,
   pageType: PropTypes.string.isRequired,
 }
 
 Settings.defaultProps = {
+  groupType: "",
   isStudied: true,
   isCounter: false,
   userCounter: 0,
