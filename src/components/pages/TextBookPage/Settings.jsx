@@ -60,9 +60,9 @@ const Settings = ({
           <ChangeButtons />
         </PureModal>
       ) : null}
-      <div className="container mx-auto mb-0 mb-6">
+      <div className="flex flex-wrap mx-auto mb-0 mb-6">
+        {isCounter ? <Counter counter={userCounter} /> : null}
         <div className="flex flex-wrap w-auto mx-8 justify-between">
-          {isCounter ? <Counter counter={userCounter} /> : null}
           {[
             ["Cаванна", "savanna"],
             ["Аудиовызов", "audiocall"],
@@ -105,8 +105,8 @@ const Settings = ({
           </div>
         </div>
         {isStudied ? (
-          <div className="flex flex-wrap justify-center">
-            <div className="w-3/4  flex flex-wrap justify-between mt-8">
+          <div className="flex w-full  flex-wrap justify-center">
+            <div className=" flex flex-wrap justify-between mt-8">
               {[
                 "Группа 1",
                 "Группа 2",
