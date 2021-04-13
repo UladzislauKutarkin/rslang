@@ -4,15 +4,29 @@ import { Link, withRouter } from "react-router-dom"
 import PropTypes from "prop-types"
 
 import { useDispatch, useSelector } from "react-redux"
+import { createSelector } from "reselect"
+
+import { isAuthorized } from "../../../helpers/globals"
+
+import {
+  addWordToWordBook,
+  getUsersWords,
+} from "../../../redux/wordBook/wordBook"
+
+import {
+  getUserWordsVocabulary,
+  getVocabulary,
+  getCounterUser,
+} from "../../../redux/vocabulary/vocabulary"
+
 import { onNavbarAC, offNavbarAC } from "../../../redux/games/navbar"
 
 import StatisticsModal from "../gamesComponents/StatisticsModal"
 
 import sprintBack from "../../../assets/img/games/back_sprint.jpg"
 
-// eslint-disable-next-line no-unused-vars
 import ok from "../../../assets/img/icons/icon_ok.png"
-// eslint-disable-next-line no-unused-vars
+
 import not from "../../../assets/img/icons/icon_not.png"
 import owl1 from "../../../assets/img/games/owl1.png"
 import owl2 from "../../../assets/img/games/owl2.png"
@@ -20,46 +34,33 @@ import owl3 from "../../../assets/img/games/owl3.png"
 
 import close from "../../../assets/img/icons/icon_close.svg"
 import fullscreen from "../../../assets/img/icons/icon_fullscreen.svg"
-// eslint-disable-next-line no-unused-vars
-import speak from "../../../assets/img/icons/icon_speek.svg"
+
 import bellSound from "../../../assets/sound/bell-sound.mp3"
 import clickSound from "../../../assets/sound/click.mp3"
 
 import { getWordsPageAC } from "../../../redux/games/games"
 import random from "../../../helpers/random"
 
-import correct from "../../../assets/sound/correct.mp3"
-import wrong from "../../../assets/sound/wrong.mp3"
-
 // eslint-disable-next-line no-unused-vars
-const Sprint = ({ location }) => {
+const Sprint = ({ match }) => {
+  const referencePage = match.params.reference ?? ""
+  const currentGroup = match.params.group ?? 0
+  const currentPage = match.params.page ?? 0
+
   // eslint-disable-next-line no-unused-vars
-  const [isStartGame, setIsStartGame] = useState(false)
+  const [referenceFromBook, setReferenceFromBook] = useState(false)
   const [wordGroup, setWordGroup] = useState("0")
   const [wordsCount, setWordsCount] = useState(19)
   const [isRunGame, setIsRunGame] = useState(false)
-  // eslint-disable-next-line no-unused-vars
   const [score, setScore] = useState(0)
+  const [startButton, setStartButton] = useState("loading...")
 
   const [bonus, setBonus] = useState(0)
-  // eslint-disable-next-line no-unused-vars
   const [addToScore, setAddToScore] = useState(10)
-
-  // eslint-disable-next-line no-unused-vars
-  const [canvasSize, setCanvasSize] = useState({
+  const [canvasSize] = useState({
     width: 100,
     height: 100,
   })
-
-  // eslint-disable-next-line no-unused-vars
-  const [timer, setTimer] = useState(60)
-  // eslint-disable-next-line no-unused-vars
-  const [isActive, setIsActive] = useState(false)
-
-  // eslint-disable-next-line no-unused-vars
-  const [timerArcStep, setTimerArcStep] = useState(Math.PI / 60)
-
-  // eslint-disable-next-line no-unused-vars
 
   const [statistics, setStatistics] = useState([])
   // eslint-disable-next-line no-unused-vars
@@ -67,18 +68,17 @@ const Sprint = ({ location }) => {
   // eslint-disable-next-line no-unused-vars
   const [life, setLife] = useState(5)
   const [currentWord, setCurrentWord] = useState({
+    id: "",
     word: "",
     translate: "",
     possibleTranslate: "",
     isRight: false,
     isWrong: false,
     selected: false,
+    status: "",
+    game: "sprint",
   })
 
-  // eslint-disable-next-line no-unused-vars
-  const correctSound = useMemo(() => new Audio(correct), [])
-  // eslint-disable-next-line no-unused-vars
-  const wrongSound = useMemo(() => new Audio(wrong), [])
   const bell = useMemo(() => new Audio(bellSound), [])
   const click = useMemo(() => new Audio(clickSound), [])
 
@@ -92,9 +92,148 @@ const Sprint = ({ location }) => {
   let ctx = {}
 
   const dispatch = useDispatch()
+
+  // YA insert block start
+
+  let cloneSelector
+  let cloneSpinner
+
+  const spinnerFromTextBook = createSelector(
+    (state) => state.vocabulary,
+    (vocabulary) => vocabulary.isLoading
+  )
+
+  const spinnerFromWordBook = createSelector(
+    (state) => state.wordBook,
+    (wordBook) => wordBook.isLoading
+  )
+
+  const selectPageFromTextBook = createSelector(
+    (state) => state.vocabulary,
+    (vocabulary) => vocabulary.vocabulary
+  )
+
+  const selectPageFromWordBook = createSelector(
+    (state) => state.wordBook,
+    (wordBook) => wordBook.wordBook
+  )
+
+  if (referencePage === "textbook") {
+    cloneSelector = selectPageFromTextBook
+    cloneSpinner = spinnerFromTextBook
+  } else if (referencePage === "wordbook" || referencePage === "studied") {
+    cloneSelector = selectPageFromWordBook
+    cloneSpinner = spinnerFromWordBook
+  } else {
+    cloneSelector = selectPageFromTextBook
+    cloneSpinner = spinnerFromTextBook
+  }
+  const currentWordsPage = useSelector(cloneSelector)
+  const spinner = useSelector(cloneSpinner)
+
+  const userCurrent = useSelector(({ user }) => user.user)
+
+  useEffect(() => {
+    setStartButton(() => {
+      return spinner ? "Загрузка..." : "Старт"
+    })
+  }, [spinner])
+
+  // Array.from({ length: 20 }, (_, i) => {
+  //   return { word: `word-${i}`, wordTranslate: `translate-${i}` }
+
+  useEffect(() => {
+    if (referencePage) {
+      setReferenceFromBook(true)
+      if (referencePage === "textbook") {
+        if (isAuthorized || userCurrent.userId) {
+          dispatch(getUserWordsVocabulary(currentPage, currentGroup))
+        } else {
+          dispatch(getVocabulary(currentPage, currentGroup))
+        }
+      } else if (referencePage === "wordbook") {
+        if (isAuthorized || userCurrent.userId) {
+          dispatch(getUsersWords(0, "hard", 0))
+        }
+      } else if (referencePage === "studied") {
+        if (isAuthorized || userCurrent.userId) {
+          dispatch(getCounterUser("studied"))
+        }
+      }
+    } else {
+      dispatch(getVocabulary(random(0, 29), 0))
+    }
+  }, [])
+
+  const addWordSToStatistic = (flag) => {
+    const idx = statistics.findIndex((el) => {
+      return el.id === currentWord.id
+    })
+
+    if (idx === -1) {
+      setStatistics((prev) => [
+        ...prev,
+        {
+          id: currentWord.id,
+          word: currentWord.word,
+          translate: currentWord.translate,
+          right: flag ? 1 : 0,
+          wrong: !flag ? 1 : 0,
+          ok: flag,
+          game: currentWord.game,
+          status: currentWord.status,
+        },
+      ])
+    } else {
+      setStatistics(() => {
+        const newStat = statistics
+        newStat[idx] = {
+          ...statistics[idx],
+          right: flag ? statistics[idx].right + 0.5 : statistics[idx].right,
+          wrong: !flag ? statistics[idx].wrong + 0.5 : statistics[idx].wrong,
+          ok: flag,
+          game: currentWord.game,
+          status: currentWord.status,
+        }
+
+        return newStat
+      })
+    }
+  }
+
   // eslint-disable-next-line no-unused-vars
-  const currentWordsPage =
-    useSelector(({ wordsPage }) => wordsPage.wordsPage, []) || []
+  const SaveStatData = async () => {
+    if ((isAuthorized || userCurrent.userId) && referencePage === "textbook") {
+      const filtered = statistics.filter((el) => el.status !== "hard")
+      const { token } = JSON.parse(localStorage.getItem("user"))
+      const { userID } = JSON.parse(localStorage.getItem("user"))
+
+      const wordsResponse = await fetch(
+        `https://rs-lang-back.herokuapp.com/users/${userID}/words/`,
+        {
+          method: "GET",
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+        }
+      )
+
+      const userWords = await wordsResponse.json()
+
+      // eslint-disable-next-line no-restricted-syntax
+      for (const statItem of filtered) {
+        const wordMatch = userWords.find((item) => item.wordId === statItem.id)
+        if (wordMatch === undefined) {
+          // eslint-disable-next-line no-await-in-loop
+          await dispatch(addWordToWordBook(statItem.id, "studied"))
+        }
+      }
+    }
+  }
+
+  // YA insert block end
 
   const doFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -114,19 +253,23 @@ const Sprint = ({ location }) => {
 
   const gameCycle = () => {
     if (wordsCount >= 0) {
-      console.log("wordsCount", wordsCount)
+      // console.log("wordsCount", wordsCount)
       const possibleTrans = Math.floor(random(0, 1))
         ? currentWordsPage[wordsCount]?.wordTranslate
         : currentWordsPage[random(0, 1)]?.wordTranslate
 
       setCurrentWord({
         ...currentWord,
+        id: currentWordsPage[wordsCount].id,
         word: currentWordsPage[wordsCount].word,
         translate: currentWordsPage[wordsCount].wordTranslate,
         possibleTranslate: possibleTrans,
         isRight: false,
         isWrong: false,
         selected: false,
+        status: currentWordsPage[wordsCount]?.userWord
+          ? currentWordsPage[wordsCount].userWord.difficulty
+          : "new",
       })
     }
     if (wordsCount >= 0) {
@@ -135,7 +278,6 @@ const Sprint = ({ location }) => {
     console.log("wordsCount", wordsCount, "currentWord", currentWord)
   }
 
-  // eslint-disable-next-line no-unused-vars
   const drawCircle = (time = 60) => {
     canvas = timerRef.current
     ctx = canvas.getContext("2d")
@@ -149,15 +291,11 @@ const Sprint = ({ location }) => {
       ctx.beginPath()
       ctx.arc(50, 50, 45, ang.ang, (3 / 2) * Math.PI, false)
       ctx.stroke()
-
-      // ctx.font = block.size + "px Arial";
       ctx.textAlign = "center"
       ctx.textBaseline = "middle"
       ctx.fillStyle = "#045a79"
       ctx.font = "40px  Arial"
       ctx.fillText(String(Math.round(ang.timer / 60)), 50, 50)
-
-      console.log("wordsCount-----", wordsCount)
 
       ang.ang += step
 
@@ -190,24 +328,11 @@ const Sprint = ({ location }) => {
       setBonus(0)
       setIsRunGame(true)
       bell.play()
-      setIsActive(true)
       gameCycle()
       drawCircle()
     }
     ctx.lineWidth = 10
     ctx.strokeStyle = "#0788b8"
-  }
-
-  const addWordSToStatistic = (flag) => {
-    const filtered = statistics.filter((el) => el.word !== currentWord.word)
-    setStatistics([
-      ...filtered,
-      {
-        word: `${currentWord.word}`,
-        translate: `${currentWord.translate}`,
-        ok: flag,
-      },
-    ])
   }
 
   const showChoice = (flag) => {
@@ -351,20 +476,22 @@ const Sprint = ({ location }) => {
       </h1>
 
       <div className=" absolute top-24 left-1  md:left-10 md:top-20">
-        <div className="">
-          {/* eslint-disable-next-line jsx-a11y/no-onchange */}
-          <select
-            className="bg-yellow-700 focus:border-gray-200 m-2  border-2 border-gray-500  h-full py-2 px-2 pr-7  text-gray-200 sm:text-sm rounded-md"
-            value={wordGroup}
-            onChange={getWordPage}
-          >
-            <option value="0">Простые </option>
-            <option value="1">Простые +</option>
-            <option value="2">Средние</option>
-            <option value="3">Средние +</option>
-            <option value="4">Сложные</option>
-            <option value="5">Сложные +</option>
-          </select>
+        <div>
+          {!referenceFromBook && (
+            // eslint-disable-next-line jsx-a11y/no-onchange
+            <select
+              className="bg-yellow-700 focus:border-gray-200 m-2  border-2 border-gray-500  h-full py-2 px-2 pr-7  text-gray-200 sm:text-sm rounded-md"
+              value={wordGroup}
+              onChange={getWordPage}
+            >
+              <option value="0">Простые </option>
+              <option value="1">Простые +</option>
+              <option value="2">Средние</option>
+              <option value="3">Средние +</option>
+              <option value="4">Сложные</option>
+              <option value="5">Сложные +</option>
+            </select>
+          )}
 
           <button
             type="button"
@@ -373,7 +500,7 @@ const Sprint = ({ location }) => {
         hover:shadow-lg hover:bg-green-900 focus:outline-none"
             onClick={startGame}
           >
-            start
+            {startButton}
           </button>
         </div>
       </div>
@@ -475,5 +602,5 @@ const Sprint = ({ location }) => {
 export default withRouter(Sprint)
 Sprint.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
-  location: PropTypes.any.isRequired,
+  match: PropTypes.any.isRequired,
 }
