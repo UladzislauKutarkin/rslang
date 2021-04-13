@@ -40,8 +40,6 @@ import { shuffle } from "../../../helpers/shuffle"
 
 // eslint-disable-next-line no-unused-vars
 const AudioCall = ({ match }) => {
-  // console.log("match", match)
-
   const referencePage = match.params.reference ?? ""
   const currentGroup = match.params.group ?? 0
   const currentPage = match.params.page ?? 0
@@ -67,6 +65,7 @@ const AudioCall = ({ match }) => {
     status: "",
     game: "audiocall",
   })
+  const [endGame, setEndGame] = useState(false)
 
   const [doGameCycle, setDoGameCycle] = useState(false)
 
@@ -189,10 +188,41 @@ const AudioCall = ({ match }) => {
     }
   }
 
+  const SaveStatData = async () => {
+    if ((isAuthorized || userCurrent.userId) && referencePage === "textbook") {
+      const filtered = statistics.filter((el) => el.status !== "hard")
+      const { token } = JSON.parse(localStorage.getItem("user"))
+      const { userID } = JSON.parse(localStorage.getItem("user"))
+
+      const wordsResponse = await fetch(
+        `https://rs-lang-back.herokuapp.com/users/${userID}/words/`,
+        {
+          method: "GET",
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+        }
+      )
+
+      const userWords = await wordsResponse.json()
+
+      // eslint-disable-next-line no-restricted-syntax
+      for (const statItem of filtered) {
+        const wordMatch = userWords.find((item) => item.wordId === statItem.id)
+        if (wordMatch === undefined) {
+          // eslint-disable-next-line no-await-in-loop
+          await dispatch(addWordToWordBook(statItem.id, "studied"))
+        }
+      }
+    }
+  }
+
   // YA insert block end
 
   const gameCycle = () => {
-    if (wordsCount > 0) {
+    if (wordsCount > 0 && !endGame) {
       gameBlockRef.current.style.animation = "none"
       setTimeout(() => {
         gameBlockRef.current.style.animation = `spaceInRight 0.8s`
@@ -210,9 +240,13 @@ const AudioCall = ({ match }) => {
 
       setCurrentWord({
         ...currentWord,
+        id: currentWordsPage[wordsCount].id,
         word: currentWordsPage[wordsCount].word,
         translate: currentWordsPage[wordsCount].wordTranslate,
         shuffled: shuffle(answers),
+        status: currentWordsPage[wordsCount]?.userWord
+          ? currentWordsPage[wordsCount].userWord.difficulty
+          : "new",
         isRight: false,
         isWrong: false,
         selected: false,
@@ -235,10 +269,28 @@ const AudioCall = ({ match }) => {
       }, 1000)
     }
 
-    setWordsCount(wordsCount - 1)
+    if (wordsCount > 0) {
+      setWordsCount(wordsCount - 1)
+    } else {
+      setTimeout(() => {
+        setEndGame(true)
+        setIsStartGame(false)
+        SaveStatData()
+      }, 500)
+    }
+
+    if (life <= 0) {
+      setTimeout(() => {
+        setEndGame(true)
+        setIsStartGame(false)
+        SaveStatData()
+      }, 500)
+    }
   }
 
   const startGame = () => {
+    setEndGame(false)
+
     if (!isStartGame) {
       shipBlockRef.current.style.animation = `spaceOutLeft 2s`
       setTimeout(() => {
@@ -298,8 +350,6 @@ const AudioCall = ({ match }) => {
     ) {
       if (!currentWord.selected) {
         setCurrentWord({ ...currentWord, selected: true })
-
-        console.log("e.key", e.key)
         if (
           currentWord.shuffled[+e.key - 1].toLowerCase() ===
           currentWord.translate.toLowerCase()
@@ -343,20 +393,22 @@ const AudioCall = ({ match }) => {
       </h1>
 
       <div className=" absolute top-24 left-1  md:left-10 md:top-20">
-        <div className="">
-          {/* eslint-disable-next-line jsx-a11y/no-onchange */}
-          <select
-            className="bg-blue-900 focus:border-gray-200 m-2  border-2 border-gray-500  h-full py-2 px-2 pr-7  text-gray-200 sm:text-sm rounded-md"
-            value={wordGroup}
-            onChange={getWordPage}
-          >
-            <option value="0">Простые </option>
-            <option value="1">Простые +</option>
-            <option value="2">Средние</option>
-            <option value="3">Средние +</option>
-            <option value="4">Сложные</option>
-            <option value="5">Сложные +</option>
-          </select>
+        <div>
+          {!referenceFromBook && (
+            // eslint-disable-next-line jsx-a11y/no-onchange
+            <select
+              className="bg-blue-900 focus:border-gray-200 m-2  border-2 border-gray-500  h-full py-2 px-2 pr-7  text-gray-200 sm:text-sm rounded-md"
+              value={wordGroup}
+              onChange={getWordPage}
+            >
+              <option value="0">Простые </option>
+              <option value="1">Простые +</option>
+              <option value="2">Средние</option>
+              <option value="3">Средние +</option>
+              <option value="4">Сложные</option>
+              <option value="5">Сложные +</option>
+            </select>
+          )}
 
           <button
             type="button"
@@ -498,7 +550,7 @@ hover:shadow-lg hover:bg-purple-500 hover:text-white focus:outline-none"
       {/* game block end */}
 
       <StatisticsModal
-        show={!wordsCount || !life}
+        show={wordsCount < 0 || life <= 0}
         statistics={statistics}
         setWordsCount={setWordsCount}
         setLife={setLife}
