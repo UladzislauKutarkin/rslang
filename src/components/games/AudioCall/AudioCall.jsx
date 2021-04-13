@@ -4,10 +4,23 @@ import React, { useEffect, useState, useMemo, useRef } from "react"
 import { Link, withRouter } from "react-router-dom"
 import PropTypes from "prop-types"
 import { useDispatch, useSelector } from "react-redux"
+import { createSelector } from "reselect"
 import { onNavbarAC, offNavbarAC } from "../../../redux/games/navbar"
 import StatisticsModal from "../gamesComponents/StatisticsModal"
+import { isAuthorized } from "../../../helpers/globals"
 
-import savannaBack from "../../../assets/img/games/back_audio.jpg"
+import {
+  addWordToWordBook,
+  getUsersWords,
+} from "../../../redux/wordBook/wordBook"
+
+import {
+  getUserWordsVocabulary,
+  getVocabulary,
+  getCounterUser,
+} from "../../../redux/vocabulary/vocabulary"
+
+import audiocallBack from "../../../assets/img/games/back_audio.jpg"
 import heart from "../../../assets/img/games/heart.png"
 import spaceship from "../../../assets/img/games/spaceship.png"
 import ok from "../../../assets/img/icons/icon_ok.png"
@@ -26,8 +39,15 @@ import wrong from "../../../assets/sound/wrong.mp3"
 import { shuffle } from "../../../helpers/shuffle"
 
 // eslint-disable-next-line no-unused-vars
-const AudioCall = ({ location }) => {
-  // console.log("location", location)
+const AudioCall = ({ match }) => {
+  // console.log("match", match)
+
+  const referencePage = match.params.reference ?? ""
+  const currentGroup = match.params.group ?? 0
+  const currentPage = match.params.page ?? 0
+
+  const [referenceFromBook, setReferenceFromBook] = useState(false)
+
   const [isStartGame, setIsStartGame] = useState(false)
   const [wordGroup, setWordGroup] = useState("0")
   const [wordsCount, setWordsCount] = useState(19)
@@ -35,6 +55,7 @@ const AudioCall = ({ location }) => {
   // eslint-disable-next-line no-unused-vars
   const [title, setTitle] = useState("Audio Call")
   const [life, setLife] = useState(5)
+  const [startButton, setStartButton] = useState("loading...")
   const [currentWord, setCurrentWord] = useState({
     id: "",
     word: "",
@@ -44,6 +65,7 @@ const AudioCall = ({ location }) => {
     isWrong: false,
     selected: false,
     status: "",
+    game: "audiocall",
   })
 
   const [doGameCycle, setDoGameCycle] = useState(false)
@@ -59,7 +81,115 @@ const AudioCall = ({ location }) => {
 
   const dispatch = useDispatch()
 
-  const currentWordsPage = useSelector(({ wordsPage }) => wordsPage.wordsPage)
+  // YA insert block start
+
+  let cloneSelector
+  let cloneSpinner
+
+  const spinnerFromTextBook = createSelector(
+    (state) => state.vocabulary,
+    (vocabulary) => vocabulary.isLoading
+  )
+
+  const spinnerFromWordBook = createSelector(
+    (state) => state.wordBook,
+    (wordBook) => wordBook.isLoading
+  )
+
+  const selectPageFromTextBook = createSelector(
+    (state) => state.vocabulary,
+    (vocabulary) => vocabulary.vocabulary
+  )
+
+  const selectPageFromWordBook = createSelector(
+    (state) => state.wordBook,
+    (wordBook) => wordBook.wordBook
+  )
+
+  if (referencePage === "textbook") {
+    cloneSelector = selectPageFromTextBook
+    cloneSpinner = spinnerFromTextBook
+  } else if (referencePage === "wordbook" || referencePage === "studied") {
+    cloneSelector = selectPageFromWordBook
+    cloneSpinner = spinnerFromWordBook
+  } else {
+    cloneSelector = selectPageFromTextBook
+    cloneSpinner = spinnerFromTextBook
+  }
+  const currentWordsPage = useSelector(cloneSelector)
+  const spinner = useSelector(cloneSpinner)
+
+  const userCurrent = useSelector(({ user }) => user.user)
+
+  useEffect(() => {
+    setStartButton(() => {
+      return spinner ? "Загрузка..." : "Старт"
+    })
+  }, [spinner])
+
+  // Array.from({ length: 20 }, (_, i) => {
+  //   return { word: `word-${i}`, wordTranslate: `translate-${i}` }
+
+  useEffect(() => {
+    if (referencePage) {
+      setReferenceFromBook(true)
+      if (referencePage === "textbook") {
+        if (isAuthorized || userCurrent.userId) {
+          dispatch(getUserWordsVocabulary(currentPage, currentGroup))
+        } else {
+          dispatch(getVocabulary(currentPage, currentGroup))
+        }
+      } else if (referencePage === "wordbook") {
+        if (isAuthorized || userCurrent.userId) {
+          dispatch(getUsersWords(0, "hard", 0))
+        }
+      } else if (referencePage === "studied") {
+        if (isAuthorized || userCurrent.userId) {
+          dispatch(getCounterUser("studied"))
+        }
+      }
+    } else {
+      dispatch(getVocabulary(random(0, 29), 0))
+    }
+  }, [])
+
+  const addWordSToStatistic = (flag) => {
+    const idx = statistics.findIndex((el) => {
+      return el.id === currentWord.id
+    })
+
+    if (idx === -1) {
+      setStatistics((prev) => [
+        ...prev,
+        {
+          id: currentWord.id,
+          word: currentWord.word,
+          translate: currentWord.translate,
+          right: flag ? 1 : 0,
+          wrong: !flag ? 1 : 0,
+          ok: flag,
+          game: currentWord.game,
+          status: currentWord.status,
+        },
+      ])
+    } else {
+      setStatistics(() => {
+        const newStat = statistics
+        newStat[idx] = {
+          ...statistics[idx],
+          right: flag ? statistics[idx].right + 0.5 : statistics[idx].right,
+          wrong: !flag ? statistics[idx].wrong + 0.5 : statistics[idx].wrong,
+          ok: flag,
+          game: currentWord.game,
+          status: currentWord.status,
+        }
+
+        return newStat
+      })
+    }
+  }
+
+  // YA insert block end
 
   const gameCycle = () => {
     if (wordsCount > 0) {
@@ -122,18 +252,6 @@ const AudioCall = ({ location }) => {
     const group = e.target.value || 0
     setWordGroup(group)
     dispatch(getWordsPageAC(group, random(0, 19)))
-  }
-
-  const addWordSToStatistic = (flag) => {
-    const filtered = statistics.filter((el) => el.word !== currentWord.word)
-    setStatistics([
-      ...filtered,
-      {
-        word: `${currentWord.word}`,
-        translate: `${currentWord.translate}`,
-        ok: flag,
-      },
-    ])
   }
 
   const correctSelect = () => {
@@ -218,7 +336,7 @@ const AudioCall = ({ location }) => {
   return (
     <div
       className="h-screen  w-full bg-cover bg-center"
-      style={{ backgroundImage: `url(${savannaBack})` }}
+      style={{ backgroundImage: `url(${audiocallBack})` }}
     >
       <h1 className="text-3xl text-center text-gray-400 pt-8  hidden  lg:block">
         {title}
@@ -247,7 +365,7 @@ const AudioCall = ({ location }) => {
         hover:shadow-lg hover:bg-green-900 focus:outline-none"
             onClick={startGame}
           >
-            start
+            {startButton}
           </button>
         </div>
       </div>
@@ -391,5 +509,5 @@ hover:shadow-lg hover:bg-purple-500 hover:text-white focus:outline-none"
 export default withRouter(AudioCall)
 AudioCall.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
-  location: PropTypes.any.isRequired,
+  match: PropTypes.any.isRequired,
 }

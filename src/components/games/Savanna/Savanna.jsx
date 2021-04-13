@@ -40,16 +40,6 @@ import wrong from "../../../assets/sound/wrong.mp3"
 import { shuffle } from "../../../helpers/shuffle"
 
 const Savanna = ({ match }) => {
-  const [currentWord, setCurrentWord] = useState({
-    id: null,
-    word: "",
-    translate: "",
-    shuffled: [],
-    isRight: false,
-    isWrong: false,
-    selected: false,
-    status: null,
-  })
   // signThenGetWordsThenDelAll({ email: "test@test.com", password: "12345678" })
 
   const referencePage = match.params.reference ?? ""
@@ -109,7 +99,6 @@ const Savanna = ({ match }) => {
     (wordBook) => wordBook.wordBook
   )
 
-  // eslint-disable-next-line no-constant-condition
   if (referencePage === "textbook") {
     cloneSelector = selectPageFromTextBook
     cloneSpinner = spinnerFromTextBook
@@ -121,10 +110,9 @@ const Savanna = ({ match }) => {
     cloneSpinner = spinnerFromTextBook
   }
   const currentWordsPage = useSelector(cloneSelector)
+  const spinner = useSelector(cloneSpinner)
 
   const userCurrent = useSelector(({ user }) => user.user)
-  // eslint-disable-next-line no-unused-vars
-  const spinner = useSelector(cloneSpinner)
 
   useEffect(() => {
     setStartButton(() => {
@@ -157,8 +145,6 @@ const Savanna = ({ match }) => {
       dispatch(getVocabulary(random(0, 29), 0))
     }
   }, [])
-
-  // })
 
   const addWordSToStatistic = (flag) => {
     const idx = statistics.findIndex((el) => {
@@ -436,8 +422,7 @@ const Savanna = ({ match }) => {
       <h1 className="text-3xl text-center pt-8  hidden  lg:block">{title}</h1>
 
       <div className=" absolute top-16 left-1  md:left-14">
-        {/* <h1 className="5xl brd ">ad {referenceFromBook}</h1> */}
-        <div className="">
+        <div>
           {!referenceFromBook && (
             /* eslint-disable-next-line jsx-a11y/no-onchange */
             <select

@@ -8,12 +8,6 @@ import PropTypes from "prop-types"
 const StatisticsModal = ({ show, statistics, setWordsCount, setLife }) => {
   const [modal, setModal] = useState(show)
 
-  // eslint-disable-next-line no-unused-vars
-  // const statisticsFake = [
-  //   { word: "boat", translate: "лодка", ok: true },
-  //   { word: "heart", translate: "сердце", ok: false },\
-  // ]
-
   useEffect(() => {
     setModal(show)
   }, [show])
