@@ -1,7 +1,7 @@
 import {
   SignUpReducer,
   FETCH_USER_REQUEST,
-  // FETCH_USER_SUCSESS,
+  FETCH_USER_SUCSESS,
   // FETCH_USER_FAILURE,
 } from "../user"
 
@@ -30,24 +30,23 @@ describe("SignUpReducer return state", () => {
     })
   })
 
-  // it("change user", () => {
-  //   expect(
-  //     SignUpReducer(
-  //       {
-  //         user: {},
-  //         isLoading: true,
-  //         error: "",
-  //       },
-  //       {
-  //         type: FETCH_USER_SUCSESS,
-  //         user: { email: "test@test.com", password: "12345678" },
-  //         isLoading: false,
-  //       }
-  //     )
-  //   ).toEqual({
-  //     isLoading: false,
-  //     error: "",
-  //     user: { email: "test@test.com", password: "12345678" },
-  //   })
-  // })
+  it("change user", () => {
+    expect(
+      SignUpReducer(
+        {
+          user: {},
+          isLoading: true,
+          error: "",
+        },
+        {
+          type: FETCH_USER_SUCSESS,
+          payload: { email: "test@test.com", password: "12345678" },
+        }
+      )
+    ).toEqual({
+      isLoading: false,
+      error: "",
+      user: { email: "test@test.com", password: "12345678" },
+    })
+  })
 })
