@@ -38,13 +38,18 @@ import correct from "../../../assets/sound/correct.mp3"
 import wrong from "../../../assets/sound/wrong.mp3"
 
 import { shuffle } from "../../../helpers/shuffle"
-// import {
-//   getUserWord,
-//   signThenGetWords,
-//   signThenGetWordsThenDelAll,
-// } from "../../../api/reqRespTest"
 
 const Savanna = ({ match }) => {
+  const [currentWord, setCurrentWord] = useState({
+    id: null,
+    word: "",
+    translate: "",
+    shuffled: [],
+    isRight: false,
+    isWrong: false,
+    selected: false,
+    status: null,
+  })
   // signThenGetWordsThenDelAll({ email: "test@test.com", password: "12345678" })
 
   const referencePage = match.params.reference ?? ""
@@ -52,7 +57,6 @@ const Savanna = ({ match }) => {
   const currentPage = match.params.page ?? 0
 
   const [referenceFromBook, setReferenceFromBook] = useState(false)
-  // eslint-disable-next-line no-unused-vars
   const [isStartGame, setIsStartGame] = useState(false)
 
   const [wordGroup, setWordGroup] = useState(2)

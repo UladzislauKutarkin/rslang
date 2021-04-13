@@ -36,12 +36,14 @@ const AudioCall = ({ location }) => {
   const [title, setTitle] = useState("Audio Call")
   const [life, setLife] = useState(5)
   const [currentWord, setCurrentWord] = useState({
+    id: "",
     word: "",
     translate: "",
     shuffled: [],
     isRight: false,
     isWrong: false,
     selected: false,
+    status: "",
   })
 
   const [doGameCycle, setDoGameCycle] = useState(false)

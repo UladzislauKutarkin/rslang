@@ -7,6 +7,7 @@ import imgHeaderPromo from "../../../assets/img/english_promo_header.jpg"
 import Footer from "../../Footer/Footer"
 import ForWhom from "./ForWhom"
 import LandingDescription from "./LandingDescription"
+import poster1 from "../../../assets/img/poster_1.jpg"
 import photo1 from "../../../assets/img/photo/beiduk.jpg"
 import photo2 from "../../../assets/img/photo/kutarkin.jpg"
 import photo3 from "../../../assets/img/photo/yakubouski.jpg"
@@ -141,9 +142,9 @@ const HomePage = () => {
             <div className="items-center flex flex-wrap">
               <div className="w-full md:w-4/12 ml-auto mr-auto px-4">
                 <img
-                  alt="..."
+                  alt="poster1"
                   className="max-w-full rounded-lg shadow-lg"
-                  src="https://images.unsplash.com/photo-1555212697-194d092e3b8f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80"
+                  src={poster1}
                 />
               </div>
               <div className="w-full md:w-5/12 ml-auto mr-auto px-4">
@@ -258,7 +259,7 @@ const HomePage = () => {
               <TeamMarket name="Yauheni Beiduk" photoURL={photo1} />
               <TeamMarket name="Uladzislau Kutarkin" photoURL={photo2} />
               <TeamMarket name="Alexandr Yakubouski" photoURL={photo3} />
-              <TeamMarket name="Alexey Stalpec" photoURL={photo3} />
+              <TeamMarket name="Alexey Stalpec" photoURL={null} />
             </div>
           </div>
         </section>
