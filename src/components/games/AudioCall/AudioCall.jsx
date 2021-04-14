@@ -275,7 +275,9 @@ const AudioCall = ({ match }) => {
       setTimeout(() => {
         setEndGame(true)
         setIsStartGame(false)
-        SaveStatData()
+        if (referencePage) {
+          SaveStatData()
+        }
       }, 500)
     }
 
@@ -283,7 +285,9 @@ const AudioCall = ({ match }) => {
       setTimeout(() => {
         setEndGame(true)
         setIsStartGame(false)
-        SaveStatData()
+        if (referencePage) {
+          SaveStatData()
+        }
       }, 500)
     }
   }

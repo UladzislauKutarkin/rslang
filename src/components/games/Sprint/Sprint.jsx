@@ -253,7 +253,6 @@ const Sprint = ({ match }) => {
 
   const gameCycle = () => {
     if (wordsCount >= 0) {
-      // console.log("wordsCount", wordsCount)
       const possibleTrans = Math.floor(random(0, 1))
         ? currentWordsPage[wordsCount]?.wordTranslate
         : currentWordsPage[random(0, 1)]?.wordTranslate
@@ -275,7 +274,6 @@ const Sprint = ({ match }) => {
     if (wordsCount >= 0) {
       setWordsCount((prevWordCount) => prevWordCount - 1)
     }
-    console.log("wordsCount", wordsCount, "currentWord", currentWord)
   }
 
   const drawCircle = (time = 60) => {
@@ -306,13 +304,18 @@ const Sprint = ({ match }) => {
         setIsRunGame(false)
         setWordsCount(() => -1)
         setCurrentWord({
+          id: "",
           word: "",
           translate: "",
           possibleTranslate: "",
           isRight: false,
           isWrong: false,
           selected: false,
+          status: "",
         })
+        if (referencePage) {
+          SaveStatData()
+        }
         reqRef.current = cancelAnimationFrame(reqRef.current)
         return
       }
@@ -394,13 +397,18 @@ const Sprint = ({ match }) => {
         setBonus(0)
         setIsRunGame(false)
         setCurrentWord({
+          id: "",
           word: "",
           translate: "",
           possibleTranslate: "",
           isRight: false,
           isWrong: false,
           selected: false,
+          status: "",
         })
+        if (referencePage) {
+          SaveStatData()
+        }
       }
     }
   }

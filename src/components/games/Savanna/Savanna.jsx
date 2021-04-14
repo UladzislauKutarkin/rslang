@@ -401,7 +401,9 @@ const Savanna = ({ match }) => {
     if (wordsCount >= 0 && isStartGame && InCycle.on === false && life > 0) {
       runCycle()
     } else if (wordsCount === -1 || life === 0) {
-      SaveStatData()
+      if (referencePage) {
+        SaveStatData()
+      }
     }
   }, [wordsCount])
 
