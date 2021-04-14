@@ -94,13 +94,13 @@ export default function ResponsiveNavbar() {
                 <div className="flex-shrink-0 flex items-center">
                   <Link to="/">
                     <img
-                      className="block  h-14 w-auto"
+                      className="block h-14 w-auto"
                       src={imgLogoSm}
                       alt="imgLogoSm"
                     />
                   </Link>
                 </div>
-                <div className="sm:block sm:ml-6 hidden">
+                <div className="hidden sm:ml-6 sm:block md:block lg:block xl:block">
                   <div className="flex space-x-4">
                     <Link
                       to="/textbook/"
