@@ -229,10 +229,9 @@ const AudioCall = ({ match }) => {
     }
   }
 
-  // YA insert block end
-
   const gameCycle = () => {
-    if (wordsCount > 0 && !endGame) {
+    // console.log("wordsCount ", wordsCount, "life ", life)
+    if (wordsCount >= 0 && life > 0) {
       gameBlockRef.current.style.animation = "none"
       setTimeout(() => {
         gameBlockRef.current.style.animation = `spaceInRight 0.8s`
@@ -242,7 +241,8 @@ const AudioCall = ({ match }) => {
       const answers = [currentWordsPage[wordsCount].wordTranslate] || []
 
       while (answers.length < 5) {
-        const candidate = currentWordsPage[random(0, 19)].wordTranslate
+        const candidate =
+          currentWordsPage[random(0, currentWordsPage.length - 1)].wordTranslate
         if (!answers.includes(candidate)) {
           answers.push(candidate)
         }
@@ -277,28 +277,15 @@ const AudioCall = ({ match }) => {
             })
         }
       }, 1000)
-    }
 
-    if (wordsCount > 0) {
       setWordsCount(wordsCount - 1)
     } else {
-      setTimeout(() => {
-        setEndGame(true)
-        setIsStartGame(false)
-        if (referencePage) {
-          SaveStatData()
-        }
-      }, 500)
-    }
-
-    if (life <= 0) {
-      setTimeout(() => {
-        setEndGame(true)
-        setIsStartGame(false)
-        if (referencePage) {
-          SaveStatData()
-        }
-      }, 500)
+      // console.log("else   --->", "wordsCount ", wordsCount, "life ", life)
+      setEndGame(true)
+      setIsStartGame(false)
+      if (referencePage) {
+        SaveStatData()
+      }
     }
   }
 
@@ -375,10 +362,6 @@ const AudioCall = ({ match }) => {
       }
     }
   }
-
-  useEffect(() => {
-    dispatch(getWordsPageAC(wordGroup, random(0, 19)))
-  }, [])
 
   useEffect(() => {
     document.addEventListener("keypress", keyCompareHandler)
@@ -467,7 +450,9 @@ const AudioCall = ({ match }) => {
 
       <div
         ref={gameBlockRef}
-        className="absolute   top-1/3  w-2/3"
+        className={`absolute  ${
+          !isStartGame ? "invisible" : ""
+        } top-1/3  w-2/3`}
         style={{ left: "15vw" }}
       >
         {doGameCycle && (
@@ -564,7 +549,7 @@ hover:shadow-lg hover:bg-purple-500 hover:text-white focus:outline-none"
       {/* game block end */}
 
       <StatisticsModal
-        show={wordsCount < 0 || life <= 0}
+        show={endGame}
         statistics={statistics}
         setWordsCount={setWordsCount}
         setLife={setLife}
