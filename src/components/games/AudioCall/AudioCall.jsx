@@ -48,7 +48,7 @@ const AudioCall = ({ match }) => {
 
   const [isStartGame, setIsStartGame] = useState(false)
   const [wordGroup, setWordGroup] = useState("0")
-  const [wordsCount, setWordsCount] = useState(19)
+  const [wordsCount, setWordsCount] = useState(1)
   const [statistics, setStatistics] = useState([])
   // eslint-disable-next-line no-unused-vars
   const [title, setTitle] = useState("Audio Call")
@@ -151,6 +151,15 @@ const AudioCall = ({ match }) => {
       dispatch(getVocabulary(random(0, 29), 0))
     }
   }, [])
+
+  useEffect(() => {
+    setWordsCount(() => {
+      if (currentWordsPage === undefined || currentWordsPage === null) {
+        return 0
+      }
+      return currentWordsPage.length - 1
+    })
+  }, [currentWordsPage])
 
   const addWordSToStatistic = (flag) => {
     const idx = statistics.findIndex((el) => {

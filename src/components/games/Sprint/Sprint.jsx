@@ -50,7 +50,7 @@ const Sprint = ({ match }) => {
   // eslint-disable-next-line no-unused-vars
   const [referenceFromBook, setReferenceFromBook] = useState(false)
   const [wordGroup, setWordGroup] = useState("0")
-  const [wordsCount, setWordsCount] = useState(19)
+  const [wordsCount, setWordsCount] = useState(1)
   const [isRunGame, setIsRunGame] = useState(false)
   const [score, setScore] = useState(0)
   const [startButton, setStartButton] = useState("loading...")
@@ -164,6 +164,15 @@ const Sprint = ({ match }) => {
       dispatch(getVocabulary(random(0, 29), 0))
     }
   }, [])
+
+  useEffect(() => {
+    setWordsCount(() => {
+      if (currentWordsPage === undefined || currentWordsPage === null) {
+        return 0
+      }
+      return currentWordsPage.length - 1
+    })
+  }, [currentWordsPage])
 
   const addWordSToStatistic = (flag) => {
     const idx = statistics.findIndex((el) => {
@@ -541,7 +550,7 @@ const Sprint = ({ match }) => {
 
       <div>
         {isRunGame && (
-          <div className="bg-blue-300  absolute top-56 text-center text-3xl right-56 rounded-lg px-4 h-10">
+          <div className="bg-blue-300  absolute top-40 text-center text-3xl right-56 rounded-lg px-4 h-10">
             {<span className="text-xl mr-3"> {`+${addToScore}`}</span>}{" "}
             {<span className=" text-3xl font-bold">{score}</span>}
           </div>
@@ -550,7 +559,7 @@ const Sprint = ({ match }) => {
 
       <canvas
         ref={timerRef}
-        className="absolute  top-48 right-20"
+        className="absolute  top-32 right-20"
         style={{
           width: `${canvasSize.width}px`,
           height: `${canvasSize.height}px"`,
