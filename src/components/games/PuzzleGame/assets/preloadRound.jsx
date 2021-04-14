@@ -1,12 +1,12 @@
 /* eslint-disable */
-import getPages from "../api/getPages"
+// import getPages from "../api/getPages"
 import getWords from "../api/getWords"
 import shuffleArray from "./shuffleArray"
 import settingsStored from "../localStorage/settings"
 import rawData from "./rawData"
 
-async function makePage(dispatchGame, roundDifficulty) {
-  const pages = await getPages({ group: roundDifficulty - 1 })
+async function makePage(dispatchGame) {
+  const pages = {count: 30}
   const pagesCount = (pages.count - 1)
   dispatchGame({ type: 'pages', value: pagesCount })
   return Math.floor((Math.random() * pagesCount) + 1)
