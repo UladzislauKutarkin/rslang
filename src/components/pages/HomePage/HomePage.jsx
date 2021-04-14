@@ -1,6 +1,3 @@
-// import { useDispatch } from "react-redux"
-// import { useState } from "react"
-// import { setPageActionCreator } from "../../../redux/pages/pages"
 import React from "react"
 import TeamMarket from "./TeamMarket"
 import imgHeaderPromo from "../../../assets/img/english_promo_header.jpg"
@@ -11,12 +8,9 @@ import poster1 from "../../../assets/img/poster_1.jpg"
 import photo1 from "../../../assets/img/photo/beiduk.jpg"
 import photo2 from "../../../assets/img/photo/kutarkin.jpg"
 import photo3 from "../../../assets/img/photo/yakubouski.jpg"
+import photo4 from "../../../assets/img/photo/stalpec.jpg"
 
 const HomePage = () => {
-  // const [page] = useState("home")
-  // const [showNavbar] = useState(true)
-  // const dispatch = useDispatch()
-  // dispatch(setPageActionCreator({ page, showNavbar }))
   return (
     <>
       <main>
@@ -259,7 +253,7 @@ const HomePage = () => {
               <TeamMarket name="Yauheni Beiduk" photoURL={photo1} />
               <TeamMarket name="Uladzislau Kutarkin" photoURL={photo2} />
               <TeamMarket name="Alexandr Yakubouski" photoURL={photo3} />
-              <TeamMarket name="Alexey Stalpec" photoURL={null} />
+              <TeamMarket name="Alexey Stalpec" photoURL={photo4} />
             </div>
           </div>
         </section>
