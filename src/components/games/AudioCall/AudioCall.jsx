@@ -412,7 +412,7 @@ const AudioCall = ({ match }) => {
       <div className="absolute  flex top-20 md:top-20 right-24">
         {[...Array(life)].map((el, idx) => (
           // eslint-disable-next-line react/no-array-index-key
-          <img key={idx} className="mx-0.5 w-6" src={heart} alt="life" />
+          <img key={idx} className="mx-0.5 h-6 w-6" src={heart} alt="life" />
         ))}
       </div>
       <div className="absolute top-20 right-5">

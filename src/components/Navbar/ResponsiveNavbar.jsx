@@ -100,7 +100,7 @@ export default function ResponsiveNavbar() {
                     />
                   </Link>
                 </div>
-                <div className="hidden sm:ml-6 sm:block md:block lg:block xl:block">
+                <div className="sm:ml-6 sm:block md:block lg:block xl:block">
                   <div className="flex space-x-4">
                     <Link
                       to="/textbook/"
