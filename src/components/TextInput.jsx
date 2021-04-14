@@ -1,4 +1,4 @@
-import { useCallback } from "react"
+import React from "react"
 import PropTypes from "prop-types"
 
 const TextInput = ({
@@ -9,12 +9,9 @@ const TextInput = ({
   type,
   value,
 }) => {
-  const handleInputChange = useCallback(
-    (e) => {
-      onChange(e.target.value)
-    },
-    [onChange]
-  )
+  const handleInputChange = (e) => {
+    onChange(e.target.value)
+  }
   return (
     <div className={className}>
       <label
@@ -24,6 +21,7 @@ const TextInput = ({
         {label}
       </label>
       <input
+        data-testid="customButton"
         value={value}
         onChange={handleInputChange}
         type={type}

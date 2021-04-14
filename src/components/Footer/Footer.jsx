@@ -1,6 +1,5 @@
 import React from "react"
 import FooterLinks from "./FooterLinks"
-import githubIcon from "../../assets/img/icons/github.png"
 import rs from "../../assets/img/icons/rs_school_js.svg"
 
 export default function Footer() {
@@ -26,28 +25,24 @@ export default function Footer() {
             />
           </svg>
         </div>
-        <div className="container min-h-screen-75 mx-auto px-4 mt-6 mb-0 mb-6">
+        <div className="container min-h-screen-75 mx-auto px-4 mt-6 mb-6">
           <div className="flex mx-auto flex-col">
             <div className="flex justify-center">
               <FooterLinks
                 gitLink="https://github.com/ya6"
                 gitName="Alexandr Yakubouski"
-                icon={githubIcon}
               />
               <FooterLinks
                 gitLink="https://github.com/yauheni-beiduk"
                 gitName="Yauheni Beiduk"
-                icon={githubIcon}
               />
               <FooterLinks
                 gitLink="https://github.com/UladzislauKutarkin"
                 gitName="Uladzislau Kutarkin"
-                icon={githubIcon}
               />
               <FooterLinks
                 gitLink="https://github.com/AlekseyGrimm"
                 gitName="Alexey Stalpec"
-                icon={githubIcon}
               />
             </div>
             <div className="flex justify-center mt-8">

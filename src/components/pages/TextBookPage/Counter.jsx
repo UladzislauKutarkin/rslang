@@ -1,8 +1,9 @@
+import React from "react"
 import PropTypes from "prop-types"
 
 const Counter = ({ counter }) => {
   return (
-    <div className="w-1/3 h-10">
+    <div className="h-20">
       <div className="inline-block">
         <div>
           <div className="flex flex-row bg-white shadow-sm rounded p-4">
@@ -24,7 +25,9 @@ const Counter = ({ counter }) => {
             </div>
             <div className="flex flex-col flex-grow ml-4">
               <div className="text-sm text-gray-500">Слов</div>
-              <div className="font-bold text-lg">{counter}</div>
+              <div data-testid="counter" className="font-bold text-lg">
+                {counter}
+              </div>
             </div>
           </div>
         </div>

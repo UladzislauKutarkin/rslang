@@ -11,7 +11,7 @@ const initialState = {
   error: "",
 }
 
-const SignUpReducer = (state = initialState, action) => {
+export const SignUpReducer = (state = initialState, action) => {
   switch (action.type) {
     case FETCH_USER_REQUEST:
       return { ...state, isLoading: true, user: {}, error: "" }

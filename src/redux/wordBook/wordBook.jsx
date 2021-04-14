@@ -12,6 +12,7 @@ const initialState = {
   wordBook: null,
   deletedCounter: 0,
   hardWordCounter: 0,
+  isLoading: true,
 }
 
 const wordBookReducer = (state = initialState, action) => {
@@ -19,7 +20,7 @@ const wordBookReducer = (state = initialState, action) => {
     case ADD_USER_WORD:
       return { ...state, wordBook: action.payload }
     case GET_USER_WORD:
-      return { ...state, wordBook: action.payload }
+      return { ...state, wordBook: action.payload, isLoading: false }
     case STUDIED_USER_WORD:
       return { ...state, wordBook: action.payload }
     case DELETE_USER_WORD:
@@ -75,12 +76,12 @@ export const getUsersWords = (page = 0, queryDifficulty, group = 0) => (
     })
 }
 
-export const getStudied = (queryDifficulty) => (dispatch) => {
+export const getStudied = (page = 0) => (dispatch) => {
   const { token } = JSON.parse(localStorage.getItem("user"))
   const { userID } = JSON.parse(localStorage.getItem("user"))
   axios
     .get(
-      `users/${userID}/aggregatedWords?wordsPerPage=20&filter={"userWord.difficulty":"${queryDifficulty}"}`,
+      `users/${userID}/aggregatedWords?wordsPerPage=20&page=${page}&filter=%7B%22$or%22:[%7B%22userWord.difficulty%22:%22hard%22%7D,%7B%22userWord.difficulty%22:%22studied%22%7D]%7D`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

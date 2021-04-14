@@ -1,3 +1,4 @@
+import React from "react"
 import { Switch, Route, Redirect } from "react-router-dom"
 import HomePage from "./components/pages/HomePage/HomePage"
 import TextBookPage from "./components/pages/TextBookPage/TextBookPage"
@@ -33,9 +34,18 @@ function App() {
           path="/savanna/:reference/:group/:page"
           component={Savanna}
         />
-        <Route path="/audiocall" component={AudioCall} />
-        <Route path="/sprint" component={Sprint} />
-        <Route path="/puzzle" component={EnglishPuzzle} />
+        <Route exact path="/audiocall" component={AudioCall} />
+        <Route
+          exact
+          path="/audiocall/:reference/:group/:page"
+          component={AudioCall}
+        />
+        <Route exact path="/sprint" component={Sprint} />
+        <Route
+          exact
+          path="/sprint/:reference/:group/:page"
+          component={Sprint}
+        />
         <Route exact path="/vocabulary/" component={Vocabulary} />
         <Route exact path="/wordbook/" component={WordBook} />
         <Route exact path="/studied/" component={StudiedWords} />

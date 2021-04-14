@@ -60,9 +60,9 @@ const Settings = ({
           <ChangeButtons />
         </PureModal>
       ) : null}
-      <div className="container mx-auto mb-0 mb-6">
+      <div className="flex flex-wrap mx-auto mb-0 mb-6">
+        {isCounter ? <Counter counter={userCounter} /> : null}
         <div className="flex flex-wrap w-auto mx-8 justify-between">
-          {isCounter ? <Counter counter={userCounter} /> : null}
           {[
             ["Cаванна", "savanna"],
             ["Аудиовызов", "audiocall"],
@@ -105,8 +105,8 @@ const Settings = ({
           </div>
         </div>
         {isStudied ? (
-          <div className="flex flex-wrap justify-center">
-            <div className="w-3/4  flex flex-wrap justify-between mt-8">
+          <div className="flex w-full  flex-wrap justify-center">
+            <div className=" flex flex-wrap justify-between mt-8">
               {[
                 "Группа 1",
                 "Группа 2",
@@ -132,7 +132,7 @@ const Settings = ({
                       "bg-green-200 hover:bg-green-600": index === 2,
                     },
                     {
-                      "bg-green-600 hover:bg-green-800": index === 3,
+                      "bg-purple-200 hover:bg-purple-600": index === 3,
                     },
                     {
                       "bg-yellow-200 hover:bg-yellow-600": index === 4,
@@ -164,11 +164,12 @@ Settings.propTypes = {
   isStudied: PropTypes.bool,
   isCounter: PropTypes.bool,
   location: PropTypes.string.isRequired,
-  groupType: PropTypes.string.isRequired,
+  groupType: PropTypes.string,
   pageType: PropTypes.string.isRequired,
 }
 
 Settings.defaultProps = {
+  groupType: "",
   isStudied: true,
   isCounter: false,
   userCounter: 0,
