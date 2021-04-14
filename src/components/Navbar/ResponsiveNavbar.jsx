@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import React, { useCallback, useState } from "react"
-import imgLogo from "../../assets/img/logo_rslang.png"
 import imgLogoSm from "../../assets/img/logo_rslang_sm.png"
 import { logoutUser } from "../../redux/auth/user"
 import { isAuthorized } from "../../helpers/globals"
@@ -95,16 +94,9 @@ export default function ResponsiveNavbar() {
                 <div className="flex-shrink-0 flex items-center">
                   <Link to="/">
                     <img
-                      className="block lg:hidden h-14 w-auto"
+                      className="block  h-14 w-auto"
                       src={imgLogoSm}
                       alt="imgLogoSm"
-                    />
-                  </Link>
-                  <Link to="/">
-                    <img
-                      className="hidden lg:block h-8 w-auto"
-                      src={imgLogo}
-                      alt="imgLogo"
                     />
                   </Link>
                 </div>
@@ -171,8 +163,8 @@ export default function ResponsiveNavbar() {
             </div>
           </div>
           {showMobileMenu && (
-            <div className="  animate-slowGrow sm:hidden" id="mobile-menu">
-              <div className="   px-2 pt-2 pb-3 space-y-1">
+            <div className="animate-slowGrow sm:hidden" id="mobile-menu">
+              <div className=" px-2 pt-2 pb-3 space-y-1">
                 <Link
                   to="/textbook/"
                   className="text-indigo-900 hover:bg-blue-900 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
