@@ -20,7 +20,7 @@ function Messages() {
       setSrc(audioSrc)
     }
   }, [stateGame.words, stateGame.currWordIndex])
-
+  console.log(rawData)
   return (
     <div className={styles.messages}>
       {(stateGame.hints.audioHint || stateGame.hints.autoAudio) && (
