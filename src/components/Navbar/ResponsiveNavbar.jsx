@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
-import React, { useCallback, useState } from "react"
+import React, { useCallback, useState, useEffect } from "react"
 import imgLogoSm from "../../assets/img/logo_rslang_sm.png"
 import { logoutUser } from "../../redux/auth/user"
 import { isAuthorized } from "../../helpers/globals"
@@ -41,6 +41,24 @@ export default function ResponsiveNavbar() {
       </div>
     )
   }
+
+  const useWindowSize = () => {
+    const [windowSize, setWindowSize] = useState({
+      width: undefined,
+    })
+    useEffect(() => {
+      function handleResize() {
+        setWindowSize({
+          width: window.innerWidth,
+        })
+      }
+      window.addEventListener("resize", handleResize)
+      handleResize()
+      return () => window.removeEventListener("resize", handleResize)
+    }, [])
+    return windowSize
+  }
+  const abc = useWindowSize()
 
   return (
     <>
@@ -100,7 +118,7 @@ export default function ResponsiveNavbar() {
                     />
                   </Link>
                 </div>
-                <div className="sm:ml-6 sm:block md:block lg:block xl:block">
+                <div className={abc.width <= 600 ? "hidden" : "block"}>
                   <div className="flex space-x-4">
                     <Link
                       to="/textbook/"
