@@ -250,10 +250,26 @@ const HomePage = () => {
             </div>
 
             <div className="flex flex-wrap">
-              <TeamMarket name="Yauheni Beiduk" photoURL={photo1} />
-              <TeamMarket name="Uladzislau Kutarkin" photoURL={photo2} />
-              <TeamMarket name="Alexandr Yakubouski" photoURL={photo3} />
-              <TeamMarket name="Alexey Stalpec" photoURL={photo4} />
+              <TeamMarket
+                name="Yauheni Beiduk"
+                photoURL={photo1}
+                description="Реализовал форму входа,адаптивный дизайн приложения, подключил Backend и базы данных,страницу словаря, карточку словаря, настроил пагинацию страниц учебника.Разработал пользовательский интерфейс и UX дизайн. Написал unit-тесты."
+              />
+              <TeamMarket
+                name="Uladzislau Kutarkin"
+                photoURL={photo2}
+                description="Реализовал страницу настроек,адаптивный дизайн приложения, страницы электронного учебника, настроил пагинацию страниц словаря.Разработал пользовательский интерфейс и UX дизайн."
+              />
+              <TeamMarket
+                name="Alexandr Yakubouski"
+                photoURL={photo3}
+                description="Реализовал игру 'Саванна', игру 'Аудиовызов' и 'Спринт',реализовал мобильное меню и навигацию, подключил статистику, настроил пути.Разработал пользовательский интерфейс и UX дизайн."
+              />
+              <TeamMarket
+                name="Alexey Stalpec"
+                photoURL={photo4}
+                description="Реализовал игру 'Puzzle'"
+              />
             </div>
           </div>
         </section>

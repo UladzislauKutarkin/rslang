@@ -120,8 +120,8 @@ const GamesPage = () => {
               <br />
               <p className="pl-4 md:pl-8 mt-6 text-white">
                 Необходимо собрать <br />
-                слово <br />
-                из букв
+                предложение <br />
+                из слов
               </p>
               <div className="absolute z-50 bottom-32 md:bottom-10 right-0 transform translate-x-12 flex items-center justify-center w-20 h-20 rounded-full bg-white group-hover:bg-green-500 text-indigo-800 group-hover:text-white font-semibold cursor-pointer group-hover:scale-110 duration-500 select-none">
                 <Link to="/puzzle">Вперед</Link>
