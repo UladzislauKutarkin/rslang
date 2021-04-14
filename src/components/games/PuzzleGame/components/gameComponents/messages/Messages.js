@@ -15,12 +15,14 @@ function Messages() {
       stateGame.currWordIndex <= stateGame.words.length
     ) {
       const audioSrc = rawData({
-        filename: stateGame.words[stateGame.currWordIndex].audioExample,
+        filename:
+          stateGame?.words[stateGame?.currWordIndex]?.audioExample ||
+          "files/02_0026_example.mp3",
       })
+
       setSrc(audioSrc)
     }
   }, [stateGame.words, stateGame.currWordIndex])
-  console.log(rawData)
   return (
     <div className={styles.messages}>
       {(stateGame.hints.audioHint || stateGame.hints.autoAudio) && (

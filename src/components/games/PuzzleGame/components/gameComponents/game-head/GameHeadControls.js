@@ -11,8 +11,6 @@ function GameHeadControls() {
   const dispatchGame = gameState.dispatch
   const stateGame = gameState.state
   const [pages, setPages] = useState([])
-  console.log(pages)
-
   function handleClick(types) {
     if (types.type === "difficulty") {
       nextRound(dispatchGame, stateGame, types.value, 1)

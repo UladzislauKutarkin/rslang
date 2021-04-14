@@ -24,7 +24,6 @@ async function preloadRound(dispatchGame, stateGame, difficulty, page) {
   let words = await getWords({ page: pageN, group: roundDifficulty - 1 })
   if (Array.isArray(words)) {
     words = shuffleArray(words)
-    console.log(words)
   } else return
   words.forEach((word) => {
     let trimmedWord = word.textExample.replace("<b>", "")

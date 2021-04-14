@@ -3,7 +3,7 @@ import React, { useContext, useState, useEffect, useRef } from "react"
 import { useDrag, useDrop } from "react-dnd"
 import { storeGame } from "../../storeGame"
 import ItemTypes from "../ItemTypes"
-import styles from "./word.module.scss"
+import styles from "./word.module.css"
 
 function Word(props) {
   const gameState = useContext(storeGame)

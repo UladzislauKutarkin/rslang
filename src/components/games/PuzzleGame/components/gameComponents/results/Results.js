@@ -35,8 +35,9 @@ function Results() {
               {stateGame.results.notKnow.length}
             </span>
           </h4>
-          {stateGame.results.notKnow.map((wordSentence) => (
-            <span className={styles.resultSent}>
+          {stateGame.results.notKnow.map((wordSentence, j) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <span key={j} className={styles.resultSent}>
               <MiniPlay
                 src={rawData({ filename: wordSentence.audioExample })}
               />

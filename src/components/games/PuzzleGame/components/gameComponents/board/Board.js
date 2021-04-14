@@ -8,11 +8,18 @@ function Board() {
   const gameState = useContext(storeGame)
   const stateGame = gameState.state
   const [bg, setBg] = useState(false)
-
+  const dispatchGame = gameState.dispatch
   useEffect(() => {
+    if (stateGame.sentences.length === 10) {
+      dispatchGame({ type: "finishRound" })
+    }
     setBg(stateGame.roundImage)
-  }, [stateGame.roundImage])
-
+  }, [
+    dispatchGame,
+    gameState.isRoundFinished,
+    stateGame.roundImage,
+    stateGame.sentences.length,
+  ])
   return (
     <div
       className={`${styles.board} ${
@@ -50,11 +57,7 @@ function Board() {
             backgroundRepeat: "no-repeat",
             backgroundSize: "863px 460px",
           }}
-        >
-          <span className={styles.paintName}>
-            {`${bg.author} – ${bg.name} ${bg.year}`}
-          </span>
-        </div>
+        />
       )}
       {!stateGame.isRoundFinished && (
         <Sentence

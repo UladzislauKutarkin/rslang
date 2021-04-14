@@ -22,7 +22,7 @@ function continueLevel(dispatchGame, stateGame) {
           currWordIndex,
         },
       })
-    } else {
+    } else if (sentences.length === 10) {
       const next = calcNext(
         stateGame.difficulty,
         stateGame.page,
