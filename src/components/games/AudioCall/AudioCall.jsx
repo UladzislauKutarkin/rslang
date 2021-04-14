@@ -48,7 +48,7 @@ const AudioCall = ({ match }) => {
 
   const [isStartGame, setIsStartGame] = useState(false)
   const [wordGroup, setWordGroup] = useState("0")
-  const [wordsCount, setWordsCount] = useState(1)
+  const [wordsCount, setWordsCount] = useState(null)
   const [statistics, setStatistics] = useState([])
   // eslint-disable-next-line no-unused-vars
   const [title, setTitle] = useState("Audio Call")
@@ -159,6 +159,7 @@ const AudioCall = ({ match }) => {
       }
       return currentWordsPage.length - 1
     })
+    // console.log("---", currentWordsPage.length)
   }, [currentWordsPage])
 
   const addWordSToStatistic = (flag) => {

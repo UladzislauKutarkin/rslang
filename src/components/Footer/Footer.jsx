@@ -25,7 +25,7 @@ export default function Footer() {
             />
           </svg>
         </div>
-        <div className="container min-h-screen-75 mx-auto px-4 mt-6 mb-0 mb-6">
+        <div className="container min-h-screen-75 mx-auto px-4 mt-6 mb-6">
           <div className="flex mx-auto flex-col">
             <div className="flex justify-center">
               <FooterLinks
