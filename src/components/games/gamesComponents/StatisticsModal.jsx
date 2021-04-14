@@ -64,7 +64,6 @@ const StatisticsModal = ({ show, statistics, setWordsCount, setLife }) => {
           type="button"
           className="focus:outline-none mx-5 text-white text-sm py-1 px-5 rounded-md bg-purple-800 hover:bg-purple-900 hover:shadow-lg"
           onClick={() => {
-            // setWordsCount(19)
             setLife(5)
             setModal(false)
           }}

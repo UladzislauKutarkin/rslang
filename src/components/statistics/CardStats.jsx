@@ -44,10 +44,14 @@ export default function CardStats({ game }) {
 }
 
 CardStats.propTypes = {
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
   all: PropTypes.number.isRequired,
   right: PropTypes.number.isRequired,
   wrong: PropTypes.number.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   game: PropTypes.any.isRequired,
+}
+
+CardStats.defaultProps = {
+  title: "",
 }

@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-/* eslint-disable no-console */
 import React, { useEffect, useState, useMemo, useRef } from "react"
 import { Link, withRouter } from "react-router-dom"
 import PropTypes from "prop-types"
@@ -38,7 +37,6 @@ import wrong from "../../../assets/sound/wrong.mp3"
 
 import { shuffle } from "../../../helpers/shuffle"
 
-// eslint-disable-next-line no-unused-vars
 const AudioCall = ({ match }) => {
   const referencePage = match.params.reference ?? ""
   const currentGroup = match.params.group ?? 0
@@ -50,7 +48,6 @@ const AudioCall = ({ match }) => {
   const [wordGroup, setWordGroup] = useState("0")
   const [wordsCount, setWordsCount] = useState(null)
   const [statistics, setStatistics] = useState([])
-  // eslint-disable-next-line no-unused-vars
   const [title, setTitle] = useState("Audio Call")
   const [life, setLife] = useState(5)
   const [startButton, setStartButton] = useState("loading...")
@@ -79,8 +76,6 @@ const AudioCall = ({ match }) => {
   const shipBlockRef = useRef()
 
   const dispatch = useDispatch()
-
-  // YA insert block start
 
   let cloneSelector
   let cloneSpinner
@@ -126,9 +121,6 @@ const AudioCall = ({ match }) => {
     })
   }, [spinner])
 
-  // Array.from({ length: 20 }, (_, i) => {
-  //   return { word: `word-${i}`, wordTranslate: `translate-${i}` }
-
   useEffect(() => {
     if (referencePage) {
       setReferenceFromBook(true)
@@ -150,7 +142,7 @@ const AudioCall = ({ match }) => {
     } else {
       dispatch(getVocabulary(random(0, 29), 0))
     }
-  }, [])
+  }, [currentGroup, currentPage, dispatch, referencePage, userCurrent.userId])
 
   useEffect(() => {
     setWordsCount(() => {
@@ -159,7 +151,6 @@ const AudioCall = ({ match }) => {
       }
       return currentWordsPage.length - 1
     })
-    // console.log("---", currentWordsPage.length)
   }, [currentWordsPage])
 
   const addWordSToStatistic = (flag) => {
@@ -280,7 +271,6 @@ const AudioCall = ({ match }) => {
 
       setWordsCount(wordsCount - 1)
     } else {
-      // console.log("else   --->", "wordsCount ", wordsCount, "life ", life)
       setEndGame(true)
       setIsStartGame(false)
       if (referencePage) {
@@ -425,8 +415,6 @@ const AudioCall = ({ match }) => {
           <img key={idx} className="mx-0.5 w-6" src={heart} alt="life" />
         ))}
       </div>
-
-      {/* exit */}
       <div className="absolute top-20 right-5">
         <Link to="/games/">
           <img className="w-4" src={close} alt="X" />
@@ -439,7 +427,6 @@ const AudioCall = ({ match }) => {
         </button>
       </div>
 
-      {/* game block */}
       {!isStartGame && (
         <div ref={shipBlockRef} className=" absolute inset-x-1/4 top-1/3 w-1/2">
           <div className="mx-auto flex justify-center items-center">
@@ -546,7 +533,6 @@ hover:shadow-lg hover:bg-purple-500 hover:text-white focus:outline-none"
           </>
         )}
       </div>
-      {/* game block end */}
 
       <StatisticsModal
         show={endGame}

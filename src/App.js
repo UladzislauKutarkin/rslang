@@ -50,6 +50,7 @@ function App() {
         <Route exact path="/wordbook/" component={WordBook} />
         <Route exact path="/studied/" component={StudiedWords} />
         <Route exact path="/deleted/" component={DeletedWords} />
+        <Route exact path="/puzzle" component={EnglishPuzzle} />
         <Redirect from="*" to="/" />
       </Switch>
     </div>

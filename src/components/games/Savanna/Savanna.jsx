@@ -1,12 +1,9 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-console */
 import React, { useEffect, useState, useMemo, useRef } from "react"
 import { Link, withRouter } from "react-router-dom"
 import PropTypes from "prop-types"
 
 import { useDispatch, useSelector } from "react-redux"
 import { createSelector } from "reselect"
-// eslint-disable-next-line no-unused-vars
 import {
   addWordToWordBook,
   getUsersWords,
@@ -40,8 +37,6 @@ import wrong from "../../../assets/sound/wrong.mp3"
 import { shuffle } from "../../../helpers/shuffle"
 
 const Savanna = ({ match }) => {
-  // signThenGetWordsThenDelAll({ email: "test@test.com", password: "12345678" })
-
   const referencePage = match.params.reference ?? ""
   const currentGroup = match.params.group ?? 0
   const currentPage = match.params.page ?? 0
@@ -120,9 +115,6 @@ const Savanna = ({ match }) => {
     })
   }, [spinner])
 
-  // Array.from({ length: 20 }, (_, i) => {
-  //   return { word: `word-${i}`, wordTranslate: `translate-${i}` }
-
   useEffect(() => {
     if (referencePage) {
       setReferenceFromBook(true)
@@ -144,7 +136,7 @@ const Savanna = ({ match }) => {
     } else {
       dispatch(getVocabulary(random(0, 29), 0))
     }
-  }, [])
+  }, [currentGroup, currentPage, dispatch, referencePage, userCurrent.userId])
 
   const addWordSToStatistic = (flag) => {
     const idx = statistics.findIndex((el) => {
@@ -468,8 +460,6 @@ const Savanna = ({ match }) => {
           <img key={idx} className="mx-0.5 w-6" src={heart} alt="life" />
         ))}
       </div>
-
-      {/* exit */}
       <div className="absolute top-5 right-5">
         <Link to="/games/">
           <img className="w-4" src={close} alt="X" />
@@ -481,8 +471,6 @@ const Savanna = ({ match }) => {
           <img className="w-6" src={fullscreen} alt="full" />
         </button>
       </div>
-
-      {/* word div */}
       <div
         ref={wordRef}
         className="-m-32 w-64  absolute text-2xl text-center"
@@ -490,8 +478,6 @@ const Savanna = ({ match }) => {
       >
         {" "}
       </div>
-
-      {/* prop div */}
       <div
         ref={dropRef}
         className="-m-6 h-50 w-12  absolute"
@@ -499,8 +485,6 @@ const Savanna = ({ match }) => {
       >
         {" "}
       </div>
-
-      {/* buttons */}
       <div
         ref={buttonsRef}
         className=" animate-appear absolute w-full text-2xl   top-2/3"
@@ -522,8 +506,6 @@ const Savanna = ({ match }) => {
           </div>
         )}
       </div>
-
-      {/* lotos */}
       <div ref={lotosRef} className="absolute  bottom-10 w-full">
         <img
           className={`
