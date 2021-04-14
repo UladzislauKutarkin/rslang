@@ -118,7 +118,7 @@ export default function ResponsiveNavbar() {
                     />
                   </Link>
                 </div>
-                <div className={abc.width <= 600 ? "hidden" : "block"}>
+                <div className={abc.width <= 640 ? "hidden" : "block"}>
                   <div className="flex space-x-4">
                     <Link
                       to="/textbook/"
