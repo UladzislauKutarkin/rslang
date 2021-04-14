@@ -1,0 +1,31 @@
+.bottomControls {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 55px auto 0;
+}
+
+.bottomControls button {
+    max-height: 100px;
+    background-color: #1958DB;
+    color: white;
+    text-transform: uppercase;
+    border: none;
+    margin: 4px 2.5px 9px;
+    padding: 12px 16px;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0;
+    cursor: pointer;
+    transition: all .2s;
+}
+
+.bottomControls button:hover {
+    background: #ffffff;
+    color: #1958DB;
+}
+
+.bottomControls button:active {
+    transform: scale(.9);
+}
+

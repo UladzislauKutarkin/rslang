@@ -1,0 +1,64 @@
+.resultsWindow {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 20px auto 0;
+    border-radius: 5px;
+    background-color: #ffffff;
+    padding: 14px 14px 25px 14px;
+}
+.results {
+    max-width: 500px;
+    max-height: 500px;
+    margin: 0 auto;
+    overflow-y: scroll;
+}
+.resultsBtns {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 15px auto 0;
+}
+.resultsBtns button {
+    background-color: #a09f9f;
+    border: none;
+    margin: 0 4px;
+    padding: 4px 13px;
+    font-size: 1rem;
+}
+.resultsBtns button:hover {
+    color: #444444;
+    background-color: #c5c4c4;
+}
+.numberRed,
+.numberGreen {
+    display: inline-flex;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 0 0 0 4px;
+    color: #ffffff;
+    width: 23px;
+    height: 23px;
+    padding: 2px;
+    line-height: 19px;
+}
+.numberRed {
+    background-color: #da0303;
+}
+.numberGreen {
+    background-color: #03da55;
+}
+.results > span {
+    display: block;
+    text-align: center;
+}
+.resultsImg {
+    display: block;
+    max-width: 300px;
+    margin: 0 auto 5px;
+}
+.resultSent {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}

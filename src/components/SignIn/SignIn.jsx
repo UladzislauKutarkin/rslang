@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Link, Redirect } from "react-router-dom"
-import axios from "axios"
 import TextInput from "../TextInput"
 import { loginUser } from "../../redux/auth/user"
 
@@ -31,21 +30,6 @@ const SignIn = () => {
       setIsData(true)
     }
   }, [userData, dispatch, form])
-
-  const handleUploadButton = useCallback((e) => {
-    const data = new FormData()
-    const file = e.target.files[0]
-    data.append("file", file)
-    data.append("upload_preset", "ml_default")
-    axios
-      .post("https://api.cloudinary.com/v1_1/yauheni-beiduk/image/upload", data)
-      .then((response) => {
-        localStorage.setItem("avatar", response.data.secure_url)
-      })
-      .catch(function err(errors) {
-        console.log(errors)
-      })
-  }, [])
 
   if (isData) {
     return <Redirect to="/" />
@@ -90,28 +74,6 @@ const SignIn = () => {
                   </button>
                 </div>
               </form>
-              <div className="flex w-full items-center justify-center bg-grey-lighter">
-                <label className="w-64 flex flex-col items-center px-1 py-2 bg-white text-blue rounded-lg shadow-lg tracking-wide border border-blue cursor-pointer hover:bg-black hover:text-white">
-                  <svg
-                    className="w-8 h-8"
-                    fill="currentColor"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
-                  </svg>
-                  <span className="mt-2 text-base leading-normal">
-                    Upload photo
-                  </span>
-                  <input
-                    data-cloudinary-field="image_id"
-                    data-form-data="{ 'transformation': {'crop':'limit','tags':'samples','width':3000,'height':2000}}"
-                    onChange={handleUploadButton}
-                    type="file"
-                    className="hidden"
-                  />
-                </label>
-              </div>
               <div className="text-blueGray-400 text-center mt-6 font-bold">
                 <Link
                   to="/register/"

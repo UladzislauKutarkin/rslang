@@ -10,6 +10,7 @@ import ResponsiveNavbar from "./components/Navbar/ResponsiveNavbar"
 import Savanna from "./components/games/Savanna/Savanna"
 import AudioCall from "./components/games/AudioCall/AudioCall"
 import Sprint from "./components/games/Sprint/Sprint"
+import EnglishPuzzle from "./components/games/PuzzleGame/english-puzzle"
 
 import WordBook from "./components/pages/TextBookPage/Vocabulary/WordBook/WordBook"
 import Vocabulary from "./components/pages/TextBookPage/Vocabulary/Vocabulary"
@@ -49,6 +50,7 @@ function App() {
         <Route exact path="/wordbook/" component={WordBook} />
         <Route exact path="/studied/" component={StudiedWords} />
         <Route exact path="/deleted/" component={DeletedWords} />
+        <Route exact path="/puzzle" component={EnglishPuzzle} />
         <Redirect from="*" to="/" />
       </Switch>
     </div>

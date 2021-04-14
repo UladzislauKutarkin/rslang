@@ -1,0 +1,41 @@
+.switch {
+    display: inline-block;
+    position: relative;
+    background-color: #ec5990;
+    cursor: pointer;
+    margin-right: 8px;
+    font-family: 'Montserrat', sans-serif;
+    border-radius: 30px;
+    border: 2px solid #1958DB;
+    color: #1958DB;
+    background-color: #ffffff;
+}
+
+.switch select {
+    position: relative;
+    z-index: 1;
+    width: 53px;
+    padding: 4px 5px;
+    font-size: 18px;
+    border-radius: 30px;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: transparent;
+    color: #1958DB;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+.switch select:hover,
+.switch select:active,
+.switch select:focus {
+    background-color: #fbfbfb;
+    color: #1958DB;
+}
+.switch svg {
+    position: absolute;
+    font-size: 1.4rem;
+    top: 15%;
+    right: 5px;
+}

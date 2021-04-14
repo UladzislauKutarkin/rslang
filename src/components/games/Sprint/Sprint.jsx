@@ -1,18 +1,13 @@
-/* eslint-disable no-console */
 import React, { useEffect, useState, useMemo, useRef } from "react"
 import { Link, withRouter } from "react-router-dom"
 import PropTypes from "prop-types"
-
 import { useDispatch, useSelector } from "react-redux"
 import { createSelector } from "reselect"
-
 import { isAuthorized } from "../../../helpers/globals"
-
 import {
   addWordToWordBook,
   getUsersWords,
 } from "../../../redux/wordBook/wordBook"
-
 import {
   getUserWordsVocabulary,
   getVocabulary,
@@ -20,34 +15,25 @@ import {
 } from "../../../redux/vocabulary/vocabulary"
 
 import { onNavbarAC, offNavbarAC } from "../../../redux/games/navbar"
-
 import StatisticsModal from "../gamesComponents/StatisticsModal"
-
 import sprintBack from "../../../assets/img/games/back_sprint.jpg"
-
 import ok from "../../../assets/img/icons/icon_ok.png"
-
 import not from "../../../assets/img/icons/icon_not.png"
 import owl1 from "../../../assets/img/games/owl1.png"
 import owl2 from "../../../assets/img/games/owl2.png"
 import owl3 from "../../../assets/img/games/owl3.png"
-
 import close from "../../../assets/img/icons/icon_close.svg"
 import fullscreen from "../../../assets/img/icons/icon_fullscreen.svg"
-
 import bellSound from "../../../assets/sound/bell-sound.mp3"
 import clickSound from "../../../assets/sound/click.mp3"
 
 import { getWordsPageAC } from "../../../redux/games/games"
 import random from "../../../helpers/random"
 
-// eslint-disable-next-line no-unused-vars
 const Sprint = ({ match }) => {
   const referencePage = match.params.reference ?? ""
   const currentGroup = match.params.group ?? 0
   const currentPage = match.params.page ?? 0
-
-  // eslint-disable-next-line no-unused-vars
   const [referenceFromBook, setReferenceFromBook] = useState(false)
   const [wordGroup, setWordGroup] = useState("0")
   const [wordsCount, setWordsCount] = useState(1)
@@ -65,7 +51,6 @@ const Sprint = ({ match }) => {
   const [statistics, setStatistics] = useState([])
   // eslint-disable-next-line no-unused-vars
   const [title, setTitle] = useState("Sprint")
-  // eslint-disable-next-line no-unused-vars
   const [life, setLife] = useState(5)
   const [currentWord, setCurrentWord] = useState({
     id: "",
@@ -84,17 +69,11 @@ const Sprint = ({ match }) => {
 
   const timerRef = useRef()
   const choiceRef = useRef()
-  // eslint-disable-next-line no-unused-vars
   const reqRef = useRef()
   let canvas = {}
-
-  // eslint-disable-next-line no-unused-vars
   let ctx = {}
 
   const dispatch = useDispatch()
-
-  // YA insert block start
-
   let cloneSelector
   let cloneSpinner
 
@@ -139,9 +118,6 @@ const Sprint = ({ match }) => {
     })
   }, [spinner])
 
-  // Array.from({ length: 20 }, (_, i) => {
-  //   return { word: `word-${i}`, wordTranslate: `translate-${i}` }
-
   useEffect(() => {
     if (referencePage) {
       setReferenceFromBook(true)
@@ -163,7 +139,7 @@ const Sprint = ({ match }) => {
     } else {
       dispatch(getVocabulary(random(0, 29), 0))
     }
-  }, [])
+  }, [currentGroup, currentPage, dispatch, referencePage, userCurrent.userId])
 
   useEffect(() => {
     setWordsCount(() => {
@@ -210,7 +186,6 @@ const Sprint = ({ match }) => {
     }
   }
 
-  // eslint-disable-next-line no-unused-vars
   const SaveStatData = async () => {
     if ((isAuthorized || userCurrent.userId) && referencePage === "textbook") {
       const filtered = statistics.filter((el) => el.status !== "hard")
@@ -241,8 +216,6 @@ const Sprint = ({ match }) => {
       }
     }
   }
-
-  // YA insert block end
 
   const doFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -292,7 +265,7 @@ const Sprint = ({ match }) => {
     const step = (2 * Math.PI) / (time * 60)
 
     const innerDraw = () => {
-      ctx.clearRect(0, 0, canvasSize.width, canvasSize.height) // clear canvas
+      ctx.clearRect(0, 0, canvasSize.width, canvasSize.height)
       ctx.lineWidth = 10
       ctx.strokeStyle = "#0788b8"
       ctx.beginPath()
@@ -481,7 +454,7 @@ const Sprint = ({ match }) => {
 
   useEffect(() => {
     dispatch(getWordsPageAC(wordGroup, random(0, 19)))
-  }, [])
+  }, [dispatch, wordGroup])
 
   return (
     <div
@@ -524,7 +497,6 @@ const Sprint = ({ match }) => {
 
       <div className="absolute  flex top-20 md:top-20 right-24"> </div>
 
-      {/* exit */}
       <div className="absolute top-20 right-5">
         <Link to="/games/">
           <img className="w-4" src={close} alt="X" />
@@ -536,8 +508,6 @@ const Sprint = ({ match }) => {
           <img className="w-6" src={fullscreen} alt="full" />
         </button>
       </div>
-
-      {/* game block */}
 
       <div
         className=" absolute  justify-end  w-1/3 flex mx-1 top-72 left-0 md:left-20"
@@ -605,7 +575,6 @@ const Sprint = ({ match }) => {
           Не верно
         </button>
       </div>
-      {/* game block end */}
 
       <StatisticsModal
         show={life === 0}

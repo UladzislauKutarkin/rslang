@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import CardTable from "../../statistics/CardTable"
 import CardStats from "../../statistics/CardStats"
 import imgHeader from "../../../assets/img/english_statistics_header+.jpg"

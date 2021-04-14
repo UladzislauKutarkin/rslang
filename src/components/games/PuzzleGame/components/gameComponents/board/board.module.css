@@ -1,0 +1,116 @@
+.board {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 865px;
+    max-width: 865px;
+    margin: 10px auto;
+    border: 1px solid #ffffff;
+    max-height: 470px;
+    min-height: 460px;
+    background-color: #eeecec21;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding-right: 2px;
+}
+.finished {
+    animation: disappear .7s linear 1;
+    border-radius: 3px;
+}
+.boardLine {
+    position: relative;
+    display: flex;
+    min-height: 47px;
+    max-height: 47px;
+    flex-direction: row;
+    width: 100%;
+    margin: 0 auto;
+    border-bottom: 1px solid #ffffff;
+    padding: 2px 30px 2px 2px;
+    overflow: hidden;
+}
+.boardLine:nth-child(10) {
+    border: none;
+}
+
+.board i {
+    color: #eeecec;
+}
+.boardLineNumber {
+    position: absolute;
+    left: -36px;
+    top: 7px;
+    background-color: #01324ea2;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    text-align: center;
+    vertical-align: middle;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.finished .boardLine {
+    border-color: transparent;;
+}
+.img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 863px;
+    max-width: 863px;
+    height: 458px;
+    max-height: 458px;
+}
+.disappear {
+    animation: disappear 1s linear 1;
+}
+.appear {
+    display: flex;
+    justify-content: center;
+    animation: appear 2s linear 1;
+}
+.paintName {
+    position: absolute;
+    bottom: -30px;
+    color: #ffffff;
+    width: 100%;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    padding: 4px 5px;
+    background-color: #bdbdbd67;
+}
+
+@media (max-width: 1200px) {
+    .board {
+        width: 100%;
+    }
+    .img {
+        width: 100%;
+    }
+}
+
+@media (max-width: 1020px) {
+
+}
+
+@media (max-width: 768px) {
+
+}
+@keyframes appear {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+@keyframes disappear {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
