@@ -9,8 +9,10 @@ const FooterLinks = ({ gitLink, gitName }) => {
         <a href={gitLink} target="_blank" rel="noopener noreferrer">
           <img
             className="transform hover:scale-110 motion-reduce:transform-none bg-white text-lightBlue-400 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
-            src={githubIcon}
-            alt="logo"
+
+            src={icon}
+            alt="icon"
+
           />
         </a>
       </div>

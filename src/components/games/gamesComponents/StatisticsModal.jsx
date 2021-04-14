@@ -8,12 +8,6 @@ import PropTypes from "prop-types"
 const StatisticsModal = ({ show, statistics, setWordsCount, setLife }) => {
   const [modal, setModal] = useState(show)
 
-  // eslint-disable-next-line no-unused-vars
-  // const statisticsFake = [
-  //   { word: "boat", translate: "лодка", ok: true },
-  //   { word: "heart", translate: "сердце", ok: false },\
-  // ]
-
   useEffect(() => {
     setModal(show)
   }, [show])
@@ -65,12 +59,12 @@ const StatisticsModal = ({ show, statistics, setWordsCount, setLife }) => {
             </div>
           ))}
       </div>
-      <div className=" mt-8">
+      <div className="justify-around flex flex-wrap mt-8">
         <button
           type="button"
           className="focus:outline-none mx-5 text-white text-sm py-1 px-5 rounded-md bg-purple-800 hover:bg-purple-900 hover:shadow-lg"
           onClick={() => {
-            setWordsCount(19)
+            // setWordsCount(19)
             setLife(5)
             setModal(false)
           }}

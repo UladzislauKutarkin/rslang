@@ -28,5 +28,5 @@ export default TeamMarket
 
 TeamMarket.propTypes = {
   name: PropTypes.string.isRequired,
-  photoURL: PropTypes.objectOf(PropTypes.string).isRequired,
+  photoURL: PropTypes.string.isRequired,
 }

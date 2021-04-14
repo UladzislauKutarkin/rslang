@@ -38,11 +38,6 @@ import correct from "../../../assets/sound/correct.mp3"
 import wrong from "../../../assets/sound/wrong.mp3"
 
 import { shuffle } from "../../../helpers/shuffle"
-// import {
-//   getUserWord,
-//   signThenGetWords,
-//   signThenGetWordsThenDelAll,
-// } from "../../../api/reqRespTest"
 
 const Savanna = ({ match }) => {
   // signThenGetWordsThenDelAll({ email: "test@test.com", password: "12345678" })
@@ -52,7 +47,6 @@ const Savanna = ({ match }) => {
   const currentPage = match.params.page ?? 0
 
   const [referenceFromBook, setReferenceFromBook] = useState(false)
-  // eslint-disable-next-line no-unused-vars
   const [isStartGame, setIsStartGame] = useState(false)
 
   const [wordGroup, setWordGroup] = useState(2)
@@ -73,7 +67,7 @@ const Savanna = ({ match }) => {
   const isSelectRef = useRef()
 
   const InCycle = useMemo(() => ({ on: false }), [])
-  const speed = 2
+  const speed = 5
   const game = "savanna"
 
   const shuffledAnswersGlob = useMemo(() => ({ shufl: ["test"] }), [])
@@ -105,7 +99,6 @@ const Savanna = ({ match }) => {
     (wordBook) => wordBook.wordBook
   )
 
-  // eslint-disable-next-line no-constant-condition
   if (referencePage === "textbook") {
     cloneSelector = selectPageFromTextBook
     cloneSpinner = spinnerFromTextBook
@@ -117,10 +110,9 @@ const Savanna = ({ match }) => {
     cloneSpinner = spinnerFromTextBook
   }
   const currentWordsPage = useSelector(cloneSelector)
+  const spinner = useSelector(cloneSpinner)
 
   const userCurrent = useSelector(({ user }) => user.user)
-  // eslint-disable-next-line no-unused-vars
-  const spinner = useSelector(cloneSpinner)
 
   useEffect(() => {
     setStartButton(() => {
@@ -135,33 +127,29 @@ const Savanna = ({ match }) => {
     if (referencePage) {
       setReferenceFromBook(true)
       if (referencePage === "textbook") {
-        console.log("dispatch textbook")
         if (isAuthorized || userCurrent.userId) {
           dispatch(getUserWordsVocabulary(currentPage, currentGroup))
         } else {
           dispatch(getVocabulary(currentPage, currentGroup))
         }
       } else if (referencePage === "wordbook") {
-        console.log("dispatch textbook (hard)")
         if (isAuthorized || userCurrent.userId) {
           dispatch(getUsersWords(0, "hard", 0))
         }
       } else if (referencePage === "studied") {
-        console.log("dispatch textbook (studied)")
         if (isAuthorized || userCurrent.userId) {
           dispatch(getCounterUser("studied"))
         }
       }
     } else {
-      console.log(" from menu")
       dispatch(getVocabulary(random(0, 29), 0))
     }
   }, [])
 
-  // })
-
   const addWordSToStatistic = (flag) => {
-    const idx = statistics.findIndex((el) => el.id === shuffledAnswersGlob.id)
+    const idx = statistics.findIndex((el) => {
+      return el.id === shuffledAnswersGlob.id
+    })
 
     if (idx === -1) {
       setStatistics((prev) => [
@@ -307,9 +295,7 @@ const Savanna = ({ match }) => {
   }
 
   const SaveStatData = async () => {
-    console.log("SaveStatData")
     if ((isAuthorized || userCurrent.userId) && referencePage === "textbook") {
-      console.log("go")
       const filtered = statistics.filter((el) => el.status !== "hard")
       const { token } = JSON.parse(localStorage.getItem("user"))
       const { userID } = JSON.parse(localStorage.getItem("user"))
@@ -392,13 +378,17 @@ const Savanna = ({ match }) => {
         InCycle.on = false
 
         if (wordRef.current) wordRef.current.innerHTML = ""
+
         if (!isSelectRef.current || isWrongSelectRef.current) {
           reduceLives()
           setTitle(
             `${currentWordsPage[wordsCount].word} - ${currentWordsPage[wordsCount].wordTranslate}`
           )
-          addWordSToStatistic(false)
         } else setTitle("")
+
+        if (!isSelectRef.current) {
+          addWordSToStatistic(false)
+        }
 
         if (wordsCount >= 0) {
           setWordsCount(wordsCount - 1)
@@ -411,7 +401,9 @@ const Savanna = ({ match }) => {
     if (wordsCount >= 0 && isStartGame && InCycle.on === false && life > 0) {
       runCycle()
     } else if (wordsCount === -1 || life === 0) {
-      SaveStatData()
+      if (referencePage) {
+        SaveStatData()
+      }
     }
   }, [wordsCount])
 
@@ -432,8 +424,7 @@ const Savanna = ({ match }) => {
       <h1 className="text-3xl text-center pt-8  hidden  lg:block">{title}</h1>
 
       <div className=" absolute top-16 left-1  md:left-14">
-        {/* <h1 className="5xl brd ">ad {referenceFromBook}</h1> */}
-        <div className="">
+        <div>
           {!referenceFromBook && (
             /* eslint-disable-next-line jsx-a11y/no-onchange */
             <select
