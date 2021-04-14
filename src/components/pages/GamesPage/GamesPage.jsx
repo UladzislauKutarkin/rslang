@@ -48,8 +48,7 @@ const GamesPage = () => {
               />
             </div>
           </div>
-          {/* card end */}
-          {/* card */}
+
           <div className="bg-gradient-to-r from-purple-900 via-pink-900 to-red-900 max-w-lg flex max-h-96 m-4 md:m-6 rounded-lg hover:bg-indigo-100">
             <div className="  relative group sm:w-full md:w-1/2   rounded-lg">
               <h1
@@ -79,9 +78,7 @@ const GamesPage = () => {
               />
             </div>
           </div>
-          {/* card end */}
 
-          {/* card  */}
           <div className="bg-gradient-to-r from-purple-900 via-pink-900 to-red-900 max-w-lg flex max-h-96 m-4 md:m-6 rounded-lg hover:bg-indigo-100">
             <div className="  relative group sm:w-full md:w-1/2   rounded-lg">
               <h1
@@ -112,16 +109,14 @@ const GamesPage = () => {
               />
             </div>
           </div>
-          {/* card end */}
 
-          {/* card  */}
           <div className="bg-gradient-to-r from-purple-900 via-pink-900 to-red-900 max-w-lg flex max-h-96 m-4 md:m-6 rounded-lg hover:bg-indigo-100">
             <div className="  relative group sm:w-full md:w-1/2   rounded-lg">
               <h1
                 className="pl-4 md:pl-8 mt-6 md:mt-8 text-2xl text-white font-serif transform group-hover:translate-x-6
          duration-300 uppercase leading-snug"
               >
-                Своя игра <br />
+                Puzzle игра <br />
               </h1>
               <h3 className="pl-4 md:pl-8 mt-6 text-white text-xl">
                 Развиваем <br /> словарный запас
@@ -144,7 +139,6 @@ const GamesPage = () => {
               />
             </div>
           </div>
-          {/* card end */}
         </div>
       </div>
       <Footer />
