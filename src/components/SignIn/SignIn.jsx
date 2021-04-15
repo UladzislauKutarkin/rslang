@@ -6,8 +6,8 @@ import { loginUser } from "../../redux/auth/user"
 
 const SignIn = () => {
   const [form, setForm] = useState({
-    email: "test@test.com",
-    password: "12345678",
+    email: "",
+    password: "",
   })
   const [isData, setIsData] = useState(false)
 
